@@ -6,11 +6,11 @@
   "content_scripts": [
     {
       "js": ["src/content.tsx"],
-      "matches": ["https://www.google.com/*"]
+      "matches": ["http://*/*", "https://*/*"]
     }
   ],
   "background": {
     "service_worker": "src/background.ts"
   },
-  "permissions": ["tabs", "http://*/*", "https://*/*", "activeTab"]
+  "permissions": ["tabs", "http://*/*", "https://*/*", "activeTab", "tabGroups"]
 }

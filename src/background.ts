@@ -14,3 +14,10 @@ async function getCurrentTab() {
 }
 
 getCurrentTab();
+
+async function getAllTabs() {
+  let [tab] = await Browser.tabs.query({ active: false });
+  console.log("allTabs", tab);
+  return tab;
+}
+getAllTabs();
