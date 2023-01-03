@@ -10,7 +10,6 @@
     }
   ],
   "background": {
-    "service_worker": "src/background.ts",
-    "type": "module"
+    "service_worker": "src/background.ts"
   }
 }
