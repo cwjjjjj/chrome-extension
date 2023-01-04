@@ -1,3 +1,6 @@
+import TabsList from "./components/TabsList";
+import Tab from "./components/Tab";
+
 function App() {
   return (
     <div
@@ -8,8 +11,8 @@ function App() {
         background: "red",
       }}
     >
-      123123
-      <button>button</button>
+      <Tab />
+      <TabsList />
     </div>
   );
 }
