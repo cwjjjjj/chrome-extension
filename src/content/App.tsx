@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "rsuite";
 
 export default function App() {
   return (
@@ -15,7 +14,6 @@ export default function App() {
       }}
     >
       App
-      <Button>213</Button>
     </div>
   );
 }

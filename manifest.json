@@ -12,12 +12,5 @@
   "background": {
     "service_worker": "src/background"
   },
-  "permissions": [
-    "tabs",
-    "http://*/*",
-    "https://*/*",
-    "activeTab",
-    "tabGroups",
-    "<all_urls>"
-  ]
+  "permissions": ["tabs", "activeTab", "tabGroups"]
 }
