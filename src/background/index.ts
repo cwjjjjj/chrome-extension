@@ -1,39 +1,39 @@
 import Browser from "webextension-polyfill";
-import pRetry from "p-retry";
+
+let tabs: any[] = [];
 
 const port = Browser.runtime.connect();
 
 const getAllTabs = async () => {
   const tabs = await Browser.tabs.query({ currentWindow: true });
-  console.log("tabs", tabs);
-  // await pRetry(
-  //   () =>
-  //     new Promise((resolve, reject) => {
-  //       console.log("retry...");
-  //       port.postMessage(JSON.stringify(tabs));
-  //       resolve("test");
-  //     }),
-  //   {
-  //     retries: 5,
-  //   }
-  // );
   return tabs;
 };
-getAllTabs();
+
+export const saveTabsToLocal = async () => {
+  tabs = await getAllTabs();
+  console.log("storage new tabs", tabs);
+  return Browser.storage.local.set({ tabs });
+};
 
 Browser.tabs.onCreated.addListener(async (res) => {
-  console.log("tab created", res);
-  port.postMessage(await getAllTabs());
+  await saveTabsToLocal();
+  console.log("tab created", res, tabs);
+
+  await port?.postMessage(tabs);
 });
 
 Browser.tabs.onRemoved.addListener(async (res) => {
   console.log("tab removed", res);
-  port.postMessage(await getAllTabs());
+  await saveTabsToLocal();
+
+  await port.postMessage(tabs);
 });
 
 Browser.tabs.onDetached.addListener(async (res) => {
   console.log("tab detached", res);
-  port.postMessage("onDetached");
+  await saveTabsToLocal();
+
+  await port.postMessage("onDetached");
 });
 
 Browser.tabs.onActivated.addListener(async (res) => {
@@ -65,9 +65,11 @@ Browser.tabs.onZoomChange.addListener(async (res) => {
 });
 
 Browser.runtime.onConnect.addListener(async (port) => {
+  saveTabsToLocal();
   port.onMessage.addListener(async (msg) => {
+    console.log("localtabs", tabs);
     console.log("background received msg", msg);
-    getAllTabs();
-    port.postMessage(await getAllTabs());
+    // getAllTabs();
+    port.postMessage(tabs);
   });
 });

@@ -5,6 +5,15 @@ import { useState } from "react";
 export default function App() {
   const [sendMsg, setSendMsg] = useState<number>(1);
   const [receiveMsg, setReceiveMsg] = useState();
+  const [storageTabs, setStorageTabs] = useState<any[]>([]);
+
+  useEffect(() => {
+    Browser.storage.onChanged.addListener((res) => {
+      console.log("change", res);
+      setStorageTabs(res.tabs.newValue);
+    });
+  }, []);
+
   console.log("receiveMsg", receiveMsg);
 
   const listener = (res: any) => {
@@ -42,7 +51,7 @@ export default function App() {
         setSendMsg((prev) => prev + 1);
       }}
     >
-      {receiveMsg?.map((item) => {
+      {storageTabs.map((item) => {
         return <div>{item?.title}</div>;
       })}
     </div>

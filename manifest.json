@@ -12,5 +12,5 @@
   "background": {
     "service_worker": "src/background"
   },
-  "permissions": ["tabs", "activeTab", "tabGroups"]
+  "permissions": ["tabs", "activeTab", "tabGroups", "storage"]
 }
