@@ -5,8 +5,8 @@
   "action": { "default_popup": "index.html" },
   "content_scripts": [
     {
-      "js": ["src/content.tsx"],
-      "matches": ["http://*/*", "https://*/*"]
+      "js": ["src/content/index.tsx"],
+      "matches": ["http://*/*", "https://*/*", "<all_urls>"]
     }
   ],
   "background": {
