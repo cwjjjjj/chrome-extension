@@ -6,7 +6,7 @@
   "content_scripts": [
     {
       "js": ["src/content/index.tsx"],
-      "matches": ["http://*/*", "https://*/*", "<all_urls>"]
+      "matches": ["<all_urls>"]
     }
   ],
   "background": {

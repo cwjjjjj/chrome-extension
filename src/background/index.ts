@@ -5,21 +5,21 @@ export const test = () => {
 };
 test();
 
-async function getCurrentTab() {
+export const getCurrentTab = async () => {
   let queryOptions = { active: true, lastFocusedWindow: true };
   // `tab` will either be a `tabs.Tab` instance or `undefined`.
   let [tab] = await Browser.tabs.query(queryOptions);
   console.log("tab", tab);
   return tab;
-}
+};
 
 getCurrentTab();
 
-async function getAllTabs() {
+const getAllTabs = async () => {
   let tab = await Browser.tabs.query({ currentWindow: true });
   console.log("allTabs", tab);
   return tab;
-}
+};
 getAllTabs();
 
 const handleCreateTab = async () => {
@@ -112,3 +112,12 @@ const handleonZoomChangeTab = async () => {
   });
 };
 handleonZoomChangeTab();
+
+Browser.runtime.onConnect.addListener(async (port) => {
+  const a = await getAllTabs();
+  console.log("a", a);
+  port.onMessage.addListener(async (msg) => {
+    console.log("background received msg", msg);
+    port.postMessage({ bgpost: a });
+  });
+});
