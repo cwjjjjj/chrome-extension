@@ -19,21 +19,21 @@ Browser.tabs.onCreated.addListener(async (res) => {
   await saveTabsToLocal();
   console.log("tab created", res, tabs);
 
-  await port?.postMessage(tabs);
+  // await port.postMessage(tabs);
 });
 
 Browser.tabs.onRemoved.addListener(async (res) => {
   console.log("tab removed", res);
   await saveTabsToLocal();
 
-  await port.postMessage(tabs);
+  // await port.postMessage(tabs);
 });
 
 Browser.tabs.onDetached.addListener(async (res) => {
   console.log("tab detached", res);
   await saveTabsToLocal();
 
-  await port.postMessage("onDetached");
+  // await port.postMessage("onDetached");
 });
 
 Browser.tabs.onActivated.addListener(async (res) => {
@@ -64,12 +64,12 @@ Browser.tabs.onZoomChange.addListener(async (res) => {
   console.log("tab onZoomChange", res);
 });
 
-Browser.runtime.onConnect.addListener(async (port) => {
-  saveTabsToLocal();
-  port.onMessage.addListener(async (msg) => {
-    console.log("localtabs", tabs);
-    console.log("background received msg", msg);
-    // getAllTabs();
-    port.postMessage(tabs);
-  });
-});
+// Browser.runtime.onConnect.addListener(async (port) => {
+//   saveTabsToLocal();
+//   port.onMessage.addListener(async (msg) => {
+//     console.log("localtabs", tabs);
+// console.log("background received msg", msg);
+// getAllTabs();
+// port.postMessage(tabs);
+//   });
+// });
