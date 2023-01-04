@@ -43,8 +43,7 @@ export default function App() {
   return (
     <div
       style={{
-        height: "100px",
-        width: "100px",
+        width: "500px",
         backgroundColor: "pink",
         position: "fixed",
         top: "0px",
@@ -60,7 +59,14 @@ export default function App() {
       // }}
     >
       {storageTabs.map((item) => {
-        return <div key={item?.id}>{item?.title}</div>;
+        return (
+          <div
+            key={item?.id}
+            style={{ backgroundColor: "orange", margin: "5px" }}
+          >
+            {item?.title}
+          </div>
+        );
       })}
     </div>
   );
