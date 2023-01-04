@@ -12,5 +12,12 @@
   "background": {
     "service_worker": "src/background.ts"
   },
-  "permissions": ["tabs", "http://*/*", "https://*/*", "activeTab", "tabGroups"]
+  "permissions": [
+    "tabs",
+    "http://*/*",
+    "https://*/*",
+    "activeTab",
+    "tabGroups",
+    "<all_urls>"
+  ]
 }
