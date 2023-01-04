@@ -5,6 +5,7 @@ import { useState } from "react";
 export default function App() {
   const [sendMsg, setSendMsg] = useState<number>(1);
   const [receiveMsg, setReceiveMsg] = useState();
+  console.log("receiveMsg", receiveMsg);
 
   const listener = (res: any) => {
     console.log("content res", res);
@@ -12,7 +13,6 @@ export default function App() {
   };
 
   const port = Browser.runtime.connect();
-  port.onMessage.addListener(listener);
 
   useEffect(() => {
     port.onMessage.addListener(listener);
@@ -28,10 +28,10 @@ export default function App() {
       style={{
         height: "100px",
         width: "100px",
-        backgroundColor: "orange",
+        backgroundColor: "pink",
         position: "fixed",
         top: "0px",
-        right: "0px",
+        left: "0px",
         zIndex: "99999",
       }}
       onMouseEnter={() => {
@@ -42,8 +42,8 @@ export default function App() {
         setSendMsg((prev) => prev + 1);
       }}
     >
-      {receiveMsg?.bgpost?.map((item) => {
-        return <div>{item.url}</div>;
+      {receiveMsg?.map((item) => {
+        return <div>{item?.title}</div>;
       })}
     </div>
   );

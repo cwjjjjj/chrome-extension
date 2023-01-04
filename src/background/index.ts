@@ -1,123 +1,73 @@
 import Browser from "webextension-polyfill";
+import pRetry from "p-retry";
 
-export const test = () => {
-  console.log("background");
-};
-test();
-
-export const getCurrentTab = async () => {
-  let queryOptions = { active: true, lastFocusedWindow: true };
-  // `tab` will either be a `tabs.Tab` instance or `undefined`.
-  let [tab] = await Browser.tabs.query(queryOptions);
-  console.log("tab", tab);
-  return tab;
-};
-
-getCurrentTab();
+const port = Browser.runtime.connect();
 
 const getAllTabs = async () => {
-  let tab = await Browser.tabs.query({ currentWindow: true });
-  console.log("allTabs", tab);
-  return tab;
+  const tabs = await Browser.tabs.query({ currentWindow: true });
+  console.log("tabs", tabs);
+  // await pRetry(
+  //   () =>
+  //     new Promise((resolve, reject) => {
+  //       console.log("retry...");
+  //       port.postMessage(JSON.stringify(tabs));
+  //       resolve("test");
+  //     }),
+  //   {
+  //     retries: 5,
+  //   }
+  // );
+  return tabs;
 };
 getAllTabs();
 
-const handleCreateTab = async () => {
-  Browser.tabs.onCreated.addListener((res) => {
-    console.log("tab created", res);
-  });
-};
-handleCreateTab();
+Browser.tabs.onCreated.addListener(async (res) => {
+  console.log("tab created", res);
+  port.postMessage(await getAllTabs());
+});
 
-const handleCloseTab = async () => {
-  Browser.tabs.onRemoved.addListener((res) => {
-    console.log("tab removed", res);
-  });
-};
-handleCloseTab();
+Browser.tabs.onRemoved.addListener(async (res) => {
+  console.log("tab removed", res);
+  port.postMessage(await getAllTabs());
+});
 
-const handleDetachTab = async () => {
-  Browser.tabs.onDetached.addListener((res) => {
-    console.log("tab detached", res);
-  });
-};
-handleDetachTab();
+Browser.tabs.onDetached.addListener(async (res) => {
+  console.log("tab detached", res);
+  port.postMessage("onDetached");
+});
 
-const handleActivetTab = async () => {
-  Browser.tabs.onActivated.addListener((res) => {
-    console.log("tab onActivated", res);
-  });
-};
-handleActivetTab();
+Browser.tabs.onActivated.addListener(async (res) => {
+  console.log("tab onActivated", res);
+});
 
-// const handleonActiveChanged = async () => {
-//   Browser.tabs?.onActiveChanged.addListener((res) => {
-//     console.log("tab onActiveChanged", res);
-//   });
-// };
-// handleonActiveChanged();
+Browser.tabs.onAttached.addListener(async (res) => {
+  console.log("tab onAttached", res);
+});
 
-const handleAttached = async () => {
-  Browser.tabs.onAttached.addListener((res) => {
-    console.log("tab onAttached", res);
-  });
-};
-handleAttached();
+Browser.tabs.onHighlighted.addListener(async (res) => {
+  console.log("tab onHighlighted", res);
+});
 
-// const handleonHighlightChanged = async () => {
-//   Browser.tabs?.onHighlightChanged.addListener((res) => {
-//     console.log("tab onAttaconHighlightChangedhed", res);
-//   });
-// };
-// handleonHighlightChanged();
+Browser.tabs.onMoved.addListener(async (res) => {
+  console.log("tab onMoved", res);
+});
 
-const handleonHighlightedTab = async () => {
-  Browser.tabs.onHighlighted.addListener((res) => {
-    console.log("tab onHighlighted", res);
-  });
-};
-handleonHighlightedTab();
+Browser.tabs.onReplaced.addListener(async (res) => {
+  console.log("tab onReplaced", res);
+});
 
-const handleonMovedTab = async () => {
-  Browser.tabs.onMoved.addListener((res) => {
-    console.log("tab onMoved", res);
-  });
-};
-handleonMovedTab();
+Browser.tabs.onUpdated.addListener(async (res) => {
+  console.log("tab onUpdated", res);
+});
 
-const handleonReplacedTab = async () => {
-  Browser.tabs.onReplaced.addListener((res) => {
-    console.log("tab onReplaced", res);
-  });
-};
-handleonReplacedTab();
-
-// const handleonSelectionChangedTab = async () => {
-//   Browser.tabs.onSelectionChanged.addListener((res) => {
-//     console.log("tab onSelectionChanged", res);
-//   });
-// };
-// handleonSelectionChangedTab();
-
-const handleonUpdatedTab = async () => {
-  Browser.tabs.onUpdated.addListener((res) => {
-    console.log("tab onUpdated", res);
-  });
-};
-handleonUpdatedTab();
-
-const handleonZoomChangeTab = async () => {
-  Browser.tabs.onZoomChange.addListener((res) => {
-    console.log("tab onZoomChange", res);
-  });
-};
-handleonZoomChangeTab();
+Browser.tabs.onZoomChange.addListener(async (res) => {
+  console.log("tab onZoomChange", res);
+});
 
 Browser.runtime.onConnect.addListener(async (port) => {
-  const a = await getAllTabs();
-  console.log("a", a);
   port.onMessage.addListener(async (msg) => {
     console.log("background received msg", msg);
-    port.postMessage({ bgpost: a });
+    getAllTabs();
+    port.postMessage(await getAllTabs());
   });
 });
