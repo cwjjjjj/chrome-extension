@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import Browser from "webextension-polyfill";
 import { useState } from "react";
+import { TAB_ACTION } from "../constant/tabAction";
 
 export default function App() {
   const [receiveMsg, setReceiveMsg] = useState();
@@ -62,10 +63,44 @@ export default function App() {
             key={item?.id}
             style={{ backgroundColor: "orange", margin: "5px" }}
           >
-            {item?.title}
+            <span>{item?.title ?? "loading..."}</span>
+            <button
+              style={{
+                marginLeft: "5px",
+              }}
+              onClick={() => {
+                console.log("remove", item.title);
+                port.postMessage({
+                  type: TAB_ACTION.REMOVE,
+                  tab: item,
+                });
+              }}
+            >
+              -
+            </button>
           </div>
         );
       })}
+      <div
+        style={{
+          height: "50px",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <button
+          onClick={() => {
+            console.log("add");
+            port.postMessage({
+              type: TAB_ACTION.CREATE,
+            });
+          }}
+        >
+          add
+        </button>
+      </div>
     </div>
   );
 }

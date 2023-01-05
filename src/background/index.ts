@@ -1,5 +1,6 @@
 import Browser from "webextension-polyfill";
 import pRetry from "p-retry";
+import { TAB_ACTION } from "../constant/tabAction";
 
 let tabs: any[] = [];
 
@@ -71,10 +72,17 @@ Browser.runtime.onConnect.addListener(async (port) => {
    * 在 tabs onCreated 时 tab 在 loading 中无法获取到 title
    */
   saveTabsToLocal();
-  port.onMessage.addListener(async (msg) => {
-    console.log("localtabs", tabs);
+  port.onMessage.addListener(async (msg: Record<string, any>) => {
+    // console.log("localtabs", tabs);
     console.log("background received msg", msg);
-    getAllTabs();
-    port.postMessage(tabs);
+    if (msg.type === TAB_ACTION.REMOVE) {
+      Browser.tabs.remove([msg.tab.id]);
+    }
+    if (msg.type === TAB_ACTION.CREATE) {
+      console.log("create");
+      Browser.tabs.create({});
+    }
+    // getAllTabs();
+    // port.postMessage(tabs);
   });
 });
