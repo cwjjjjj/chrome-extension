@@ -2,11 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 
-const root = document.createElement("div");
+let root = document.createElement("div");
+// root = root.attachShadow({ mode: "open" });
+const testRoot = root.attachShadow({ mode: "open" });
+root.append(testRoot);
 root.id = "crx-root";
 document.body.append(root);
+document.body.append(testRoot);
 
-ReactDOM.createRoot(root).render(
+ReactDOM.createRoot(testRoot).render(
   // <React.StrictMode>
   <App />
   // </React.StrictMode>

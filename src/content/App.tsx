@@ -6,7 +6,7 @@ import { TAB_ACTION } from "../constant/tabAction";
 export default function App() {
   const [receiveMsg, setReceiveMsg] = useState();
   const [storageTabs, setStorageTabs] = useState<any[]>([]);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const isFirstRef = useRef(true);
 
   useEffect(() => {
@@ -19,7 +19,9 @@ export default function App() {
       });
     } else {
       Browser.storage.onChanged.addListener((res) => {
+        // setTimeout(() => {
         setStorageTabs(res.tabs.newValue);
+        // }, 300);
         console.log("change", res);
       });
     }
@@ -43,7 +45,7 @@ export default function App() {
   return (
     <div
       style={{
-        width: `${isExpanded ? "500px" : "50px"}`,
+        width: `${isExpanded ? "200px" : "5px"}`,
         backgroundColor: "pink",
         position: "fixed",
         top: "0px",
@@ -51,24 +53,28 @@ export default function App() {
         zIndex: "99999",
         height: "100vh",
         overflow: "auto",
-        transition: "width .6s ",
+        transition: "all .6s ",
+        opacity: `${isExpanded ? 1 : 0}`,
+        fontSize: "18px",
+        color: "pink",
       }}
       onMouseEnter={() => {
         setIsExpanded(true);
       }}
       onMouseLeave={() => {
-        setIsExpanded(false);
+        setIsExpanded(true);
       }}
-      // onClick={() => {
-      //   console.log("onClick");
-      //   setSendMsg((prev) => prev + 1);
-      // }}
     >
       {storageTabs.map((item) => {
         return (
           <div
             key={item?.id}
-            style={{ backgroundColor: "orange", margin: "5px" }}
+            style={{
+              backgroundColor: "orange",
+              margin: "5px",
+              display: "flex",
+              alignItems: "center",
+            }}
           >
             <button
               style={{
@@ -84,7 +90,16 @@ export default function App() {
             >
               -
             </button>
-            <img src={item?.favIconUrl} alt="" />
+            {item?.favIconUrl && (
+              <img
+                src={item.favIconUrl}
+                alt="icon"
+                style={{
+                  width: "20px",
+                  height: "20px",
+                }}
+              />
+            )}
             <span>{item?.title}</span>
           </div>
         );
