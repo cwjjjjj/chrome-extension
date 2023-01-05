@@ -1,11 +1,16 @@
 import React, { useEffect, useRef } from "react";
-import Browser from "webextension-polyfill";
+import Browser, { Tabs } from "webextension-polyfill";
 import { useState } from "react";
 import { TAB_ACTION } from "../constant/tabAction";
+import { Button } from "rsuite";
+import "rsuite/dist/rsuite.min.css";
+import TabsTree from "./components/TabsTree";
+import "./index.css";
+import { css } from "@emotion/react";
 
 export default function App() {
   const [receiveMsg, setReceiveMsg] = useState();
-  const [storageTabs, setStorageTabs] = useState<any[]>([]);
+  const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
   const [isExpanded, setIsExpanded] = useState(true);
   const isFirstRef = useRef(true);
 
@@ -56,8 +61,17 @@ export default function App() {
         transition: "all .6s ",
         opacity: `${isExpanded ? 1 : 0}`,
         fontSize: "18px",
-        color: "pink",
+        // color: "pink",
       }}
+      css={css`
+        color: red;
+
+        .rs-tree {
+          height: 100% !important;
+          max-height: unset;
+          overflow: hidden auto;
+        }
+      `}
       onMouseEnter={() => {
         setIsExpanded(true);
       }}
@@ -65,7 +79,18 @@ export default function App() {
         setIsExpanded(true);
       }}
     >
-      {storageTabs.map((item) => {
+      <TabsTree
+        data={storageTabs}
+        valueKey="id"
+        labelKey="title"
+        draggable
+        className="my-tree"
+        // style={{
+        //   height: "unset !important",
+        //   maxHeight: "unset !important",
+        // }}
+      />
+      {/* {storageTabs.map((item) => {
         return (
           <div
             key={item?.id}
@@ -103,7 +128,7 @@ export default function App() {
             <span>{item?.title}</span>
           </div>
         );
-      })}
+      })} */}
       <div
         style={{
           height: "50px",
@@ -113,7 +138,7 @@ export default function App() {
           alignItems: "center",
         }}
       >
-        <button
+        <Button
           onClick={() => {
             console.log("add");
             port.postMessage({
@@ -122,7 +147,7 @@ export default function App() {
           }}
         >
           add
-        </button>
+        </Button>
       </div>
     </div>
   );

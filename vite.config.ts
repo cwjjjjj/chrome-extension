@@ -5,4 +5,11 @@ import manifest from "./manifest.json";
 
 export default defineConfig({
   plugins: [react(), crx({ manifest })],
+  esbuild: {
+    jsxFactory: "jsx",
+    jsxInject: `
+      import React from 'react'  
+      import { jsx } from '@emotion/react'
+    `,
+  },
 });

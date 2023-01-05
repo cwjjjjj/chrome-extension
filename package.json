@@ -11,9 +11,11 @@
     "czp": "yarn cz && git push -u origin HEAD"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
     "p-retry": "^5.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rsuite": "^5.24.0",
     "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
