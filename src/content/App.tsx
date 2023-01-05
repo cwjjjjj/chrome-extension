@@ -3,8 +3,7 @@ import Browser from "webextension-polyfill";
 import { useState } from "react";
 
 export default function App() {
-  // const [sendMsg, setSendMsg] = useState<number>(1);
-  // const [receiveMsg, setReceiveMsg] = useState();
+  const [receiveMsg, setReceiveMsg] = useState();
   const [storageTabs, setStorageTabs] = useState<any[]>([]);
   const isFirstRef = useRef(true);
 
@@ -24,22 +23,21 @@ export default function App() {
     }
   }, [isFirstRef.current]);
 
-  // const listener = (res: any) => {
-  //   console.log("content res", res);
-  //   setReceiveMsg(res);
-  // };
+  const listener = (res: any) => {
+    console.log("content res", res);
+    setReceiveMsg(res);
+  };
 
-  // const port = Browser.runtime.connect();
+  const port = Browser.runtime.connect();
 
-  // useEffect(() => {
-  //   port.onMessage.addListener(listener);
-  //   port.postMessage(JSON.stringify({ content: sendMsg }));
-  //   console.log("post", sendMsg);
-  //   return () => {
-  //     port.onMessage.removeListener(listener);
-  //     port.disconnect();
-  //   };
-  // }, [sendMsg]);
+  useEffect(() => {
+    port.onMessage.addListener(listener);
+    // port.postMessage(JSON.stringify({ content: sendMsg }));
+    return () => {
+      port.onMessage.removeListener(listener);
+      port.disconnect();
+    };
+  }, []);
   return (
     <div
       style={{

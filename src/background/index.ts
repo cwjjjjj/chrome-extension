@@ -1,4 +1,5 @@
 import Browser from "webextension-polyfill";
+import pRetry from "p-retry";
 
 let tabs: any[] = [];
 
@@ -64,12 +65,16 @@ Browser.tabs.onZoomChange.addListener(async (res) => {
   console.log("tab onZoomChange", res);
 });
 
-// Browser.runtime.onConnect.addListener(async (port) => {
-//   saveTabsToLocal();
-//   port.onMessage.addListener(async (msg) => {
-//     console.log("localtabs", tabs);
-// console.log("background received msg", msg);
-// getAllTabs();
-// port.postMessage(tabs);
-//   });
-// });
+Browser.runtime.onConnect.addListener(async (port) => {
+  /**
+   * 创建新标签时 更新其他页面的 tabs 数据 ，此时可以获取到新 tab 的 title 等信息
+   * 在 tabs onCreated 时 tab 在 loading 中无法获取到 title
+   */
+  saveTabsToLocal();
+  port.onMessage.addListener(async (msg) => {
+    console.log("localtabs", tabs);
+    console.log("background received msg", msg);
+    getAllTabs();
+    port.postMessage(tabs);
+  });
+});
