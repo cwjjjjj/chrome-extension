@@ -6,6 +6,7 @@ import { TAB_ACTION } from "../constant/tabAction";
 export default function App() {
   const [receiveMsg, setReceiveMsg] = useState();
   const [storageTabs, setStorageTabs] = useState<any[]>([]);
+  const [isExpanded, setIsExpanded] = useState(false);
   const isFirstRef = useRef(true);
 
   useEffect(() => {
@@ -42,16 +43,22 @@ export default function App() {
   return (
     <div
       style={{
-        width: "500px",
+        width: `${isExpanded ? "500px" : "50px"}`,
         backgroundColor: "pink",
         position: "fixed",
         top: "0px",
         left: "0px",
         zIndex: "99999",
+        height: "100vh",
+        overflow: "auto",
+        transition: "width .6s ",
       }}
-      // onMouseEnter={() => {
-      //   console.log("onMouseEnter");
-      // }}
+      onMouseEnter={() => {
+        setIsExpanded(true);
+      }}
+      onMouseLeave={() => {
+        setIsExpanded(false);
+      }}
       // onClick={() => {
       //   console.log("onClick");
       //   setSendMsg((prev) => prev + 1);
@@ -63,10 +70,9 @@ export default function App() {
             key={item?.id}
             style={{ backgroundColor: "orange", margin: "5px" }}
           >
-            <span>{item?.title ?? "loading..."}</span>
             <button
               style={{
-                marginLeft: "5px",
+                margin: "5px",
               }}
               onClick={() => {
                 console.log("remove", item.title);
@@ -78,6 +84,8 @@ export default function App() {
             >
               -
             </button>
+            <img src={item?.favIconUrl} alt="" />
+            <span>{item?.title}</span>
           </div>
         );
       })}
