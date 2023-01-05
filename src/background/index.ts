@@ -18,7 +18,7 @@ export const saveTabsToLocal = async () => {
 };
 
 Browser.tabs.onCreated.addListener(async (res) => {
-  await saveTabsToLocal();
+  // await saveTabsToLocal();
   console.log("tab created", res, tabs);
 
   // await port.postMessage(tabs);
@@ -26,14 +26,14 @@ Browser.tabs.onCreated.addListener(async (res) => {
 
 Browser.tabs.onRemoved.addListener(async (res) => {
   console.log("tab removed", res);
-  await saveTabsToLocal();
+  // await saveTabsToLocal();
 
   // await port.postMessage(tabs);
 });
 
 Browser.tabs.onDetached.addListener(async (res) => {
   console.log("tab detached", res);
-  await saveTabsToLocal();
+  // await saveTabsToLocal();
 
   // await port.postMessage("onDetached");
 });
@@ -71,7 +71,7 @@ Browser.runtime.onConnect.addListener(async (port) => {
    * 创建新标签时 更新其他页面的 tabs 数据 ，此时可以获取到新 tab 的 title 等信息
    * 在 tabs onCreated 时 tab 在 loading 中无法获取到 title
    */
-  saveTabsToLocal();
+  // saveTabsToLocal();
   port.onMessage.addListener(async (msg: Record<string, any>) => {
     // console.log("localtabs", tabs);
     console.log("background received msg", msg);

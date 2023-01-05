@@ -3,10 +3,10 @@ import Browser, { Tabs } from "webextension-polyfill";
 import { useState } from "react";
 import { TAB_ACTION } from "../constant/tabAction";
 import { Button } from "rsuite";
-import "rsuite/dist/rsuite.min.css";
 import TabsTree from "./components/TabsTree";
-import "./index.css";
 import { css } from "@emotion/react";
+import "rsuite/dist/rsuite.min.css";
+import Tab from "./components/Tab";
 
 export default function App() {
   const [receiveMsg, setReceiveMsg] = useState();
@@ -68,7 +68,7 @@ export default function App() {
 
         .rs-tree {
           height: 100% !important;
-          max-height: unset;
+          max-height: 90%;
           overflow: hidden auto;
         }
       `}
@@ -85,6 +85,26 @@ export default function App() {
         labelKey="title"
         draggable
         className="my-tree"
+        onDrop={({ createUpdateDataFunction }, event) => {
+          const a = createUpdateDataFunction(storageTabs);
+          console.log("a", a);
+          setStorageTabs(a);
+          Browser.storage.local.set({ tabs: a });
+          // setTreeData(createUpdateDataFunction(treeData));
+        }}
+        renderTreeNode={(item) => {
+          return (
+            <Tab
+              onRemove={() => {
+                port.postMessage({
+                  type: TAB_ACTION.REMOVE,
+                  tab: item,
+                });
+              }}
+              data={item as Tabs.Tab}
+            />
+          );
+        }}
         // style={{
         //   height: "unset !important",
         //   maxHeight: "unset !important",
