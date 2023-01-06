@@ -3,7 +3,7 @@ import pRetry from "p-retry";
 import { TAB_ACTION } from "../constant/tabAction";
 import { MyTab, removeTab } from "../utils/tabs";
 
-let storageTabs: any[] = [];
+let TABS: any[] = [];
 let isFirst = true;
 
 const port = Browser.runtime.connect();
@@ -25,30 +25,26 @@ clearStorage();
 const updateTabs = async () => {
   console.log("isFirst", isFirst);
   if (isFirst) {
-    storageTabs = await getAllTabs();
-    await setTabs(storageTabs);
+    TABS = await getAllTabs();
+    await setTabs(TABS);
     isFirst = false;
   } else {
     const { tabs } = await Browser.storage.local.get(["tabs"]);
-    storageTabs = tabs;
+    TABS = tabs;
   }
-  console.log("storage new tabs", storageTabs);
+  console.log("storage new tabs", TABS);
 };
 
 Browser.tabs.onCreated.addListener(async (res) => {
-  await updateTabs();
-  const newTabs = [...storageTabs, res];
+  const newTabs = [...TABS, res];
   await setTabs(newTabs);
-  console.log("tab created", Date.now(), res, storageTabs, storageTabs);
+  console.log("tab created", Date.now(), res, TABS, TABS);
 });
 
 Browser.tabs.onRemoved.addListener(async (res) => {
   console.log("tab removed", res);
-  const result = removeTab(
-    storageTabs as MyTab[],
-    (tab: MyTab) => tab.id !== res
-  );
-  storageTabs = result;
+  const result = removeTab(TABS as MyTab[], (tab: MyTab) => tab.id !== res);
+  TABS = result;
   console.log("tab removed", result);
   await setTabs(result);
 });
@@ -78,16 +74,15 @@ Browser.tabs.onAttached.addListener(async (res) => {
 // });
 
 Browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  await updateTabs();
-  console.log("stoarge", storageTabs);
+  console.log("stoarge", TABS);
   console.log("tab onUpdated", tabId, changeInfo, tab);
   if (changeInfo?.status === "complete") {
-    const index = storageTabs.findIndex((item) => item.id === tabId);
+    const index = TABS.findIndex((item) => item.id === tabId);
     console.log("find", index, tab);
     if (index !== -1) {
-      storageTabs.splice(index, 1, tab);
-      console.log("update", storageTabs);
-      await setTabs(storageTabs);
+      TABS.splice(index, 1, tab);
+      console.log("update", TABS);
+      await setTabs(TABS);
     }
   }
 });
@@ -101,7 +96,7 @@ Browser.runtime.onConnect.addListener(async (port) => {
    * 创建新标签时 更新其他页面的 tabs 数据 ，此时可以获取到新 tab 的 title 等信息
    * 在 tabs onCreated 时 tab 在 loading 中无法获取到 title
    */
-  // setTabs();
+  await updateTabs();
   port.onMessage.addListener(async (msg: Record<string, any>) => {
     if (msg.type === TAB_ACTION.REMOVE) {
       await Browser.tabs.remove(msg.tabIds);
