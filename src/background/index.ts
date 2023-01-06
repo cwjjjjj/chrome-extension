@@ -1,9 +1,11 @@
 import Browser from "webextension-polyfill";
 import pRetry from "p-retry";
 import { TAB_ACTION } from "../constant/tabAction";
-import { MyTab } from "../utils/tabs";
+import { MyTab, removeTab } from "../utils/tabs";
 
 let storageTabs: any[] = [];
+
+export const removeEventList: any[] = [];
 
 const port = Browser.runtime.connect();
 
@@ -19,7 +21,7 @@ export const setTabs = async (tabs: MyTab[]) => {
 const clearStorage = () => {
   return Browser.storage.local.clear();
 };
-// clearStorage();
+clearStorage();
 
 const initTabs = async () => {
   const { tabs } = await Browser.storage.local.get(["tabs"]);
@@ -43,6 +45,7 @@ Browser.tabs.onCreated.addListener(async (res) => {
 
 Browser.tabs.onRemoved.addListener(async (res) => {
   console.log("tab removed", res);
+  removeEventList.push(res);
   // await setTabs();
 
   // await port.postMessage(tabs);
@@ -103,7 +106,7 @@ Browser.runtime.onConnect.addListener(async (port) => {
     // console.log("localtabs", tabs);
     // console.log("background received msg", msg);
     if (msg.type === TAB_ACTION.REMOVE) {
-      Browser.tabs.remove([msg.tab.id]);
+      Browser.tabs.remove(msg.tabIds);
     }
     if (msg.type === TAB_ACTION.CREATE) {
       console.log("create");

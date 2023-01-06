@@ -7,7 +7,7 @@ import TabsTree from "./components/TabsTree";
 import { css } from "@emotion/react";
 import "rsuite/dist/rsuite.min.css";
 import Tab from "./components/Tab";
-import { MyTab, removeTab } from "../utils/tabs";
+import { getAllChildren, MyTab, removeTab } from "../utils/tabs";
 
 export default function App() {
   const [receiveMsg, setReceiveMsg] = useState();
@@ -98,23 +98,30 @@ export default function App() {
           return (
             <Tab
               onRemove={() => {
+                let removeIds: number[] = [];
                 const result = removeTab(
                   storageTabs as MyTab[],
                   (tab: MyTab) => tab.id !== item.id
                 );
-                // const result = removeNode(storageTabs, item.id);
-                console.log("result", result);
-                // port.postMessage({
-                //   type: TAB_ACTION.REMOVE,
-                //   tab: item,
-                // });
+                Browser.storage.local.set({ tabs: result });
+                removeIds.push(item.id);
+                if (item?.children) {
+                  const childrenIds = getAllChildren(item.children as MyTab[]);
+                  removeIds = [...removeIds, ...childrenIds];
+                }
+                console.log("removeIds", removeIds);
+
+                port.postMessage({
+                  type: TAB_ACTION.REMOVE,
+                  tabIds: removeIds,
+                });
               }}
               data={item as Tabs.Tab}
             />
           );
         }}
         // style={{
-        //   height: "unset !important",
+        //   height: "unset !important",s
         //   maxHeight: "unset !important",
         // }}
       />

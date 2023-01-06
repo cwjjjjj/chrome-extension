@@ -79,3 +79,12 @@ export function removeTab(tabs: MyTab[], predicate: any) {
 
 // console.log(JSON.stringify(result, null, 4));
 // console.log("result", result);
+
+export function getAllChildren(tabs: MyTab[], arr: number[] = []) {
+  for (let item of tabs) {
+    arr.push(item.id as number);
+    if (item.children && item.children.length)
+      getAllChildren(item.children, arr);
+  }
+  return arr;
+}
