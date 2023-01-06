@@ -5,8 +5,6 @@ import { MyTab, removeTab } from "../utils/tabs";
 
 let storageTabs: any[] = [];
 
-export const removeEventList: any[] = [];
-
 const port = Browser.runtime.connect();
 
 const getAllTabs = async () => {
@@ -45,7 +43,13 @@ Browser.tabs.onCreated.addListener(async (res) => {
 
 Browser.tabs.onRemoved.addListener(async (res) => {
   console.log("tab removed", res);
-  removeEventList.push(res);
+  const result = removeTab(
+    storageTabs as MyTab[],
+    (tab: MyTab) => tab.id !== res
+  );
+  storageTabs = result;
+  console.log("tab removed", result);
+  await Browser.storage.local.set({ tabs: result });
   // await setTabs();
 
   // await port.postMessage(tabs);
