@@ -1,6 +1,3 @@
-import TabsList from "./components/TabsList";
-import Tab from "./components/Tab";
-
 function App() {
   return (
     <div
@@ -11,8 +8,7 @@ function App() {
         background: "red",
       }}
     >
-      <Tab />
-      <TabsList />
+      popup
     </div>
   );
 }
