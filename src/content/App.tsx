@@ -10,25 +10,24 @@ import Tab from "./components/Tab";
 import { getAllChildren, MyTab, removeTab } from "../utils/tabs";
 
 export default function App() {
-  const [receiveMsg, setReceiveMsg] = useState();
   const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
   const [isExpanded, setIsExpanded] = useState(true);
   const isFirstRef = useRef(true);
+  console.log("storageTabs", storageTabs);
 
   useEffect(() => {
     console.log("isFirstRef", isFirstRef.current);
 
     if (isFirstRef.current) {
       Browser.storage.local.get(["tabs"]).then((res) => {
-        console.log("storageTabs", res);
+        console.log("useeffect first storageTabs", res);
         setStorageTabs(res.tabs);
         isFirstRef.current = false;
       });
     } else {
       Browser.storage.onChanged.addListener((res) => {
-        // setTimeout(() => {
+        console.log("useeffect change storageTabs", res);
         setStorageTabs(res.tabs.newValue);
-        // }, 300);
         console.log("change", res);
       });
     }
@@ -36,16 +35,13 @@ export default function App() {
 
   const listener = (res: any) => {
     console.log("content res", res);
-    setReceiveMsg(res);
   };
 
   const port = Browser.runtime.connect();
 
   useEffect(() => {
     port.onMessage.addListener(listener);
-    // port.postMessage(JSON.stringify({ content: sendMsg }));
     return () => {
-      port.onMessage.removeListener(listener);
       port.disconnect();
     };
   }, []);
@@ -63,7 +59,6 @@ export default function App() {
         transition: "all .6s ",
         opacity: `${isExpanded ? 1 : 0}`,
         fontSize: "18px",
-        // color: "pink",
       }}
       css={css`
         color: red;
@@ -88,11 +83,8 @@ export default function App() {
         draggable
         className="my-tree"
         onDrop={({ createUpdateDataFunction }, event) => {
-          const a = createUpdateDataFunction(storageTabs);
-          console.log("a", a);
-          // setStorageTabs(a);
-          Browser.storage.local.set({ tabs: a });
-          // setTreeData(createUpdateDataFunction(treeData));
+          const treeTabs = createUpdateDataFunction(storageTabs);
+          Browser.storage.local.set({ tabs: treeTabs });
         }}
         renderTreeNode={(item) => {
           return (
@@ -120,50 +112,8 @@ export default function App() {
             />
           );
         }}
-        // style={{
-        //   height: "unset !important",s
-        //   maxHeight: "unset !important",
-        // }}
       />
-      {/* {storageTabs.map((item) => {
-        return (
-          <div
-            key={item?.id}
-            style={{
-              backgroundColor: "orange",
-              margin: "5px",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <button
-              style={{
-                margin: "5px",
-              }}
-              onClick={() => {
-                console.log("remove", item.title);
-                port.postMessage({
-                  type: TAB_ACTION.REMOVE,
-                  tab: item,
-                });
-              }}
-            >
-              -
-            </button>
-            {item?.favIconUrl && (
-              <img
-                src={item.favIconUrl}
-                alt="icon"
-                style={{
-                  width: "20px",
-                  height: "20px",
-                }}
-              />
-            )}
-            <span>{item?.title}</span>
-          </div>
-        );
-      })} */}
+
       <div
         style={{
           height: "50px",

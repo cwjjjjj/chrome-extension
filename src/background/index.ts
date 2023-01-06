@@ -4,6 +4,7 @@ import { TAB_ACTION } from "../constant/tabAction";
 import { MyTab, removeTab } from "../utils/tabs";
 
 let storageTabs: any[] = [];
+let isFirst = true;
 
 const port = Browser.runtime.connect();
 
@@ -21,24 +22,24 @@ const clearStorage = () => {
 };
 clearStorage();
 
-const initTabs = async () => {
-  const { tabs } = await Browser.storage.local.get(["tabs"]);
-  console.log("initTabs", tabs);
-  if (tabs) {
-    storageTabs = tabs;
-  } else {
+const updateTabs = async () => {
+  console.log("isFirst", isFirst);
+  if (isFirst) {
     storageTabs = await getAllTabs();
+    await setTabs(storageTabs);
+    isFirst = false;
+  } else {
+    const { tabs } = await Browser.storage.local.get(["tabs"]);
+    storageTabs = tabs;
   }
   console.log("storage new tabs", storageTabs);
 };
 
 Browser.tabs.onCreated.addListener(async (res) => {
-  await initTabs();
+  await updateTabs();
   const newTabs = [...storageTabs, res];
   await setTabs(newTabs);
-  console.log("tab created", res, storageTabs);
-
-  // await port.postMessage(tabs);
+  console.log("tab created", Date.now(), res, storageTabs, storageTabs);
 });
 
 Browser.tabs.onRemoved.addListener(async (res) => {
@@ -49,17 +50,11 @@ Browser.tabs.onRemoved.addListener(async (res) => {
   );
   storageTabs = result;
   console.log("tab removed", result);
-  await Browser.storage.local.set({ tabs: result });
-  // await setTabs();
-
-  // await port.postMessage(tabs);
+  await setTabs(result);
 });
 
 Browser.tabs.onDetached.addListener(async (res) => {
   console.log("tab detached", res);
-  // await setTabs();
-
-  // await port.postMessage("onDetached");
 });
 
 Browser.tabs.onActivated.addListener(async (res) => {
@@ -74,16 +69,17 @@ Browser.tabs.onAttached.addListener(async (res) => {
 //   console.log("tab onHighlighted", res);
 // });
 
-Browser.tabs.onMoved.addListener(async (res) => {
-  console.log("tab onMoved", res);
-});
+// Browser.tabs.onMoved.addListener(async (res) => {
+//   console.log("tab onMoved", res);
+// });
 
-Browser.tabs.onReplaced.addListener(async (res) => {
-  console.log("tab onReplaced", res);
-});
+// Browser.tabs.onReplaced.addListener(async (res) => {
+//   console.log("tab onReplaced", res);
+// });
 
 Browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  await initTabs();
+  await updateTabs();
+  console.log("stoarge", storageTabs);
   console.log("tab onUpdated", tabId, changeInfo, tab);
   if (changeInfo?.status === "complete") {
     const index = storageTabs.findIndex((item) => item.id === tabId);
@@ -91,7 +87,7 @@ Browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     if (index !== -1) {
       storageTabs.splice(index, 1, tab);
       console.log("update", storageTabs);
-      setTabs(storageTabs);
+      await setTabs(storageTabs);
     }
   }
 });
@@ -107,14 +103,12 @@ Browser.runtime.onConnect.addListener(async (port) => {
    */
   // setTabs();
   port.onMessage.addListener(async (msg: Record<string, any>) => {
-    // console.log("localtabs", tabs);
-    // console.log("background received msg", msg);
     if (msg.type === TAB_ACTION.REMOVE) {
-      Browser.tabs.remove(msg.tabIds);
+      await Browser.tabs.remove(msg.tabIds);
     }
     if (msg.type === TAB_ACTION.CREATE) {
       console.log("create");
-      Browser.tabs.create({});
+      await Browser.tabs.create({ active: false });
     }
     // getAllTabs();
     // port.postMessage(tabs);
