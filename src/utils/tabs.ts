@@ -65,7 +65,7 @@ export function removeTab(tabs: MyTab[], predicate: any) {
     if (predicate(node)) {
       // 如果节点符合条件，直接加入新的节点集
       newChildren.push(node);
-      node.children = removeTab(node.children, predicate);
+      node.children = removeTab(node?.children ?? [], predicate);
     } else {
       // 如果当前节点不符合条件，递归过滤子节点，
       // 把符合条件的子节点提升上来，并入新节点集
@@ -87,4 +87,17 @@ export function getAllChildren(tabs: MyTab[], arr: number[] = []) {
       getAllChildren(item.children, arr);
   }
   return arr;
+}
+
+export function findTabById(tabs: MyTab[], id: number): MyTab | void {
+  if (!(tabs && tabs.length)) {
+    return;
+  }
+  for (const tab of tabs) {
+    if (tab.id === id) {
+      return tab;
+    } else if (tab?.children) {
+      return findTabById(tab.children, id);
+    }
+  }
 }

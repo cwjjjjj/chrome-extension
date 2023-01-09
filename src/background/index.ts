@@ -1,7 +1,7 @@
 import Browser from "webextension-polyfill";
 import pRetry from "p-retry";
 import { TAB_ACTION } from "../constant/tabAction";
-import { MyTab, removeTab } from "../utils/tabs";
+import { findTabById, getAllChildren, MyTab, removeTab } from "../utils/tabs";
 
 let TABS: any[] = [];
 let isFirst = true;
@@ -51,9 +51,17 @@ Browser.tabs.onCreated.addListener(async (res) => {
 
 Browser.tabs.onRemoved.addListener(async (res) => {
   console.log("tab removed", res);
+  let removeIds: number[] = [];
+  const removedTab = findTabById(TABS, res);
+  if (removedTab?.children) {
+    const childrenIds = getAllChildren(removedTab.children as MyTab[]);
+    removeIds = [...removeIds, ...childrenIds];
+  }
   const result = removeTab(TABS as MyTab[], (tab: MyTab) => tab.id !== res);
   TABS = result;
-  console.log("tab removed", result);
+  if (removeIds.length) {
+    await Browser.tabs.remove(removeIds);
+  }
   await setTabs(result);
 });
 

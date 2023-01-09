@@ -68,9 +68,9 @@ export default function App() {
           max-height: 90%;
           overflow: hidden auto;
 
-          .rs-tree-node-expand-icon-wrapper {
+          /* .rs-tree-node-expand-icon-wrapper {
             display: none;
-          }
+          } */
         }
       `}
       onMouseEnter={() => {
