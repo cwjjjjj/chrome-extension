@@ -7,9 +7,10 @@ import { MyTab } from "../../utils/tabs";
 export interface TabProps extends HTMLAttributes<HTMLDivElement> {
   data: MyTab;
   onRemove: () => void;
+  onActive: () => void;
 }
 
-export default function Tab({ data, onRemove, ...props }: TabProps) {
+export default function Tab({ data, onRemove, onActive, ...props }: TabProps) {
   if (!data) {
     return null;
   }
@@ -25,6 +26,7 @@ export default function Tab({ data, onRemove, ...props }: TabProps) {
           white-space: nowrap;
         }
       `}
+      onClick={onActive}
     >
       <IconButton
         icon={<CollaspedFillIcon />}

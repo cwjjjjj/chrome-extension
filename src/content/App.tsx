@@ -48,7 +48,7 @@ export default function App() {
   return (
     <div
       style={{
-        width: `${isExpanded ? "200px" : "5px"}`,
+        width: `${isExpanded ? "200px" : "1px"}`,
         backgroundColor: "pink",
         position: "fixed",
         top: "0px",
@@ -109,6 +109,13 @@ export default function App() {
                 port.postMessage({
                   type: TAB_ACTION.REMOVE,
                   tabIds: removeIds,
+                });
+              }}
+              onActive={() => {
+                console.log("active", item.id);
+                port.postMessage({
+                  type: TAB_ACTION.ACTIVE,
+                  tabId: item.id,
                 });
               }}
               data={item as Tabs.Tab}

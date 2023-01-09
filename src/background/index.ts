@@ -8,8 +8,16 @@ let isFirst = true;
 
 const port = Browser.runtime.connect();
 
+// const getCurrentTab = async () => {
+//   let queryOptions = { active: true };
+//   // `tab` will either be a `tabs.Tab` instance or `undefined`.
+//   let tab = await Browser.tabs.query(queryOptions);
+//   console.log("getCurrentTab", tab);
+//   return tab;
+// };
+
 const getAllTabs = async () => {
-  const tabs = await Browser.tabs.query({ currentWindow: true });
+  const tabs = await Browser.tabs.query({});
   return tabs;
 };
 
@@ -104,6 +112,11 @@ Browser.runtime.onConnect.addListener(async (port) => {
     if (msg.type === TAB_ACTION.CREATE) {
       console.log("create");
       await Browser.tabs.create({ active: false });
+    }
+    if (msg.type === TAB_ACTION.ACTIVE) {
+      console.log("active");
+      // await getCurrentTab();
+      await Browser.tabs.update(msg.tabId, { active: true });
     }
     // getAllTabs();
     // port.postMessage(tabs);
