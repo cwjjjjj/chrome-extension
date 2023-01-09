@@ -1,7 +1,7 @@
 import { Tabs } from "webextension-polyfill";
 
 export interface MyTab extends Tabs.Tab {
-  children: MyTab[];
+  children?: MyTab[];
 }
 
 // export const removeTab = (removeTabId: number, tabs: MyTab[]) => {

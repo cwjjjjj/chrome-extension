@@ -67,6 +67,10 @@ export default function App() {
           height: 100% !important;
           max-height: 90%;
           overflow: hidden auto;
+
+          .rs-tree-node-expand-icon-wrapper {
+            display: none;
+          }
         }
       `}
       onMouseEnter={() => {
@@ -101,7 +105,6 @@ export default function App() {
                   const childrenIds = getAllChildren(item.children as MyTab[]);
                   removeIds = [...removeIds, ...childrenIds];
                 }
-                console.log("removeIds", removeIds);
 
                 port.postMessage({
                   type: TAB_ACTION.REMOVE,

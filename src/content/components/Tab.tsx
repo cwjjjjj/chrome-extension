@@ -1,11 +1,11 @@
 import { css } from "@emotion/react";
 import { HTMLAttributes } from "react";
 import { Button, IconButton } from "rsuite";
-import { Tabs } from "webextension-polyfill";
 import CollaspedFillIcon from "@rsuite/icons/CollaspedFill";
+import { MyTab } from "../../utils/tabs";
 
 export interface TabProps extends HTMLAttributes<HTMLDivElement> {
-  data: Tabs.Tab;
+  data: MyTab;
   onRemove: () => void;
 }
 
@@ -17,7 +17,7 @@ export default function Tab({ data, onRemove, ...props }: TabProps) {
     <div
       css={css`
         display: grid;
-        grid-template-columns: 40px 1fr;
+        grid-template-columns: 20px 40px 1fr;
         align-items: center;
         gap: 5px;
 
