@@ -90,6 +90,7 @@ export function getAllChildren(tabs: MyTab[], arr: number[] = []) {
 }
 
 export function findTabById(tabs: MyTab[], id: number): MyTab | void {
+  console.log("findTabById", tabs, id);
   if (!(tabs && tabs.length)) {
     return;
   }
