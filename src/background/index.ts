@@ -1,7 +1,13 @@
 import Browser from "webextension-polyfill";
 import pRetry from "p-retry";
 import { TAB_ACTION } from "../constant/tabAction";
-import { findTabById, getAllChildren, MyTab, removeTab } from "../utils/tabs";
+import {
+  findTabById,
+  getAllChildren,
+  handleActiveTabById,
+  MyTab,
+  removeTab,
+} from "../utils/tabs";
 
 let TABS: any[] = [];
 let isFirst = true;
@@ -77,6 +83,8 @@ Browser.tabs.onDetached.addListener(async (res) => {
 
 Browser.tabs.onActivated.addListener(async (res) => {
   console.log("tab onActivated", res);
+  handleActiveTabById(TABS, res.tabId);
+  await setTabs(TABS);
 });
 
 Browser.tabs.onAttached.addListener(async (res) => {

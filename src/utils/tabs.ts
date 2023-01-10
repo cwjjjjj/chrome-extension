@@ -102,3 +102,19 @@ export function findTabById(tabs: MyTab[], id: number): MyTab | void {
     }
   }
 }
+
+export function handleActiveTabById(tabs: MyTab[], id: number) {
+  if (!(tabs && tabs.length)) {
+    return;
+  }
+  for (const tab of tabs) {
+    if (tab.id === id) {
+      tab.active = true;
+    } else {
+      tab.active = false;
+      if (tab?.children) {
+        handleActiveTabById(tab.children, id);
+      }
+    }
+  }
+}
