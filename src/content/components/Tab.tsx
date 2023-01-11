@@ -26,7 +26,6 @@ export default function Tab({ data, onRemove, onActive, ...props }: TabProps) {
           white-space: nowrap;
         }
       `}
-      onClick={onActive}
     >
       <IconButton
         icon={<CollaspedFillIcon />}
@@ -35,7 +34,9 @@ export default function Tab({ data, onRemove, onActive, ...props }: TabProps) {
           background-color: transparent;
         `}
       />
-      <p className="title">{data.title}</p>
+      <p className="title" onClick={onActive}>
+        {data.title}
+      </p>
     </div>
   );
 }
