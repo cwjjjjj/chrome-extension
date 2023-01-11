@@ -2,12 +2,15 @@ import PlusIcon from "@rsuite/icons/Plus";
 import { HTMLAttributes, useContext, useEffect, useRef, useState } from "react";
 import { IconButton, Input } from "rsuite";
 import Browser from "webextension-polyfill";
+import { TAB_ACTION } from "../../constant/tabAction";
 import { Context, PinnedTab } from "../App";
 
 export interface AddPinProps extends HTMLAttributes<HTMLDivElement> {
   pinnedTabs: any;
   handleAdd: any;
 }
+
+const port = Browser.runtime.connect();
 
 export default function AddPin({
   handleAdd,
@@ -21,7 +24,6 @@ export default function AddPin({
   // console.log("context", pinnedTabs, setPinnedTabs);
 
   const handleSave = (nextValue: string) => {
-    //  如果修改的是 key
     console.log("value", nextValue);
     setIsEditing(false);
     const res = [
@@ -35,7 +37,13 @@ export default function AddPin({
     Browser.storage.local.set({
       pinnedTabs: res,
     });
-    console.log("save res", res);
+
+    port.postMessage({
+      type: TAB_ACTION.CREATE,
+      url: nextValue,
+    });
+
+    console.log("save res open", res, nextValue);
   };
   console.log("pinnedTabs", pinnedTabs);
 
@@ -62,6 +70,7 @@ export default function AddPin({
           onKeyDown={handleKeyDown}
           ref={inputRef}
           placeholder="请输入需要固定的快捷入口"
+          defaultValue="https://"
         />
       ) : (
         <IconButton

@@ -20,6 +20,8 @@ export const Context = createContext<{
   setPinnedTabs: Dispatch<PinnedTab[]>;
 }>({} as any);
 
+const port = Browser.runtime.connect();
+
 export default function App() {
   const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
   const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>([]);
@@ -57,11 +59,8 @@ export default function App() {
     console.log("content res", res);
   };
 
-  const port = Browser.runtime.connect();
-
   useEffect(() => {
     // document.body.style.marginLeft = `${isExpanded ? "200px" : "1px"}`;
-
     port.onMessage.addListener(listener);
     return () => {
       port.disconnect();
@@ -77,7 +76,7 @@ export default function App() {
       <div
         style={{
           width: `${isExpanded ? "300px" : "1px"}`,
-          backgroundColor: "pink",
+          // backgroundColor: "pink",
           position: "fixed",
           top: "0px",
           left: "0px",
@@ -87,6 +86,8 @@ export default function App() {
           transition: "all .6s ",
           opacity: `${isExpanded ? 1 : 0}`,
           fontSize: "18px",
+          backdropFilter: "blur(10px)",
+          // backgroundImage: 'url("https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg")',
         }}
         css={css`
           color: red;
@@ -118,6 +119,7 @@ export default function App() {
             gap: 5px;
           `}
         >
+          {/* <img src="https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg" alt="" /> */}
           {pinnedTabs?.map((item, index) => {
             return (
               <div
@@ -126,7 +128,7 @@ export default function App() {
                 `}
                 key={`${item.url}_${index}`}
               >
-                <img src={item?.icon} alt="" />
+                <img src={item?.favIconUrl} alt="" />
                 {item.url}
               </div>
             );

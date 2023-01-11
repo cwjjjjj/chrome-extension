@@ -10,6 +10,7 @@ import {
 } from "../utils/tabs";
 
 let TABS: any[] = [];
+let PINNED_TABS: any[] = [];
 let isFirst = true;
 
 const port = Browser.runtime.connect();
@@ -56,8 +57,9 @@ const updateTabs = async () => {
 
 Browser.tabs.onCreated.addListener(async (res) => {
   const newTabs = [...TABS, res];
+  TABS = newTabs;
   await setTabs(newTabs);
-  console.log("tab created", Date.now(), res, TABS, TABS);
+  console.log("tab created", Date.now(), res, TABS);
 });
 
 Browser.tabs.onRemoved.addListener(async (res) => {
@@ -112,6 +114,14 @@ Browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   console.log("stoarge", TABS);
   console.log("tab onUpdated", tabId, changeInfo, tab);
   if (changeInfo?.status === "complete") {
+    PINNED_TABS.forEach(async (pinnedTab) => {
+      if (pinnedTab.url.includes(tab.url)) {
+        pinnedTab = tab;
+        console.log("PINNED_TABS", PINNED_TABS);
+        await setPinnedTabs(PINNED_TABS);
+      }
+    });
+
     const index = TABS.findIndex((item) => item.id === tabId);
     console.log("find", index, tab);
     if (index !== -1) {
@@ -119,6 +129,13 @@ Browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       console.log("update", TABS);
       await setTabs(TABS);
     }
+  }
+});
+
+Browser.storage.local.onChanged.addListener((res) => {
+  console.log("storage change", res);
+  if (res?.pinnedTabs) {
+    PINNED_TABS = res.pinnedTabs.newValue;
   }
 });
 
@@ -138,7 +155,7 @@ Browser.runtime.onConnect.addListener(async (port) => {
     }
     if (msg.type === TAB_ACTION.CREATE) {
       console.log("create");
-      await Browser.tabs.create({ active: false });
+      await Browser.tabs.create({ active: false, url: msg?.url });
     }
     if (msg.type === TAB_ACTION.ACTIVE) {
       console.log("active");
