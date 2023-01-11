@@ -1,5 +1,6 @@
 import { css } from "@emotion/react";
 import { HTMLAttributes } from "react";
+import { IconButton } from "rsuite";
 import { MyTab } from "../../utils/tabs";
 
 export interface PinIconProps extends HTMLAttributes<HTMLDivElement> {
@@ -23,7 +24,11 @@ export default function PinIcon({ data, ...props }: PinIconProps) {
       `}
       {...props}
     >
-      {data?.favIconUrl && <img src={data?.favIconUrl} alt="icon" />}
+      {data?.favIconUrl ? (
+        <img src={data?.favIconUrl} alt="icon" />
+      ) : (
+        <IconButton />
+      )}
     </div>
   );
 }

@@ -20,6 +20,9 @@ export interface AddPinProps extends HTMLAttributes<HTMLDivElement> {
 
 const port = Browser.runtime.connect();
 
+export const URLRegExp =
+  /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i;
+
 export default function AddPin({
   handleAdd,
   pinnedTabs,
@@ -32,7 +35,11 @@ export default function AddPin({
   // console.log("context", pinnedTabs, setPinnedTabs);
 
   const handleSave = (nextValue: string) => {
-    console.log("value", nextValue);
+    console.log("value", nextValue, URLRegExp.test(nextValue));
+    if (!URLRegExp.test(nextValue)) {
+      console.log("不是正确是 URL 路径");
+      return;
+    }
     setIsEditing(false);
     const res = [
       ...pinnedTabs,
