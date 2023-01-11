@@ -114,16 +114,11 @@ Browser.tabs.onAttached.addListener(async (res) => {
 
 Browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo?.status === "complete") {
-    console.log("complete", PINNED_TABS);
     PINNED_TABS.forEach(async (pinnedTab, index) => {
-      console.log(
-        "pinnedTab",
-        pinnedTab,
-        tab,
-        String(tab?.url).includes(String(pinnedTab.url))
-      );
-      if (String(tab?.url).includes(String(pinnedTab.url))) {
-        PINNED_TABS[index] = tab;
+      if (tab?.url?.includes(pinnedTab.url)) {
+        if (tab?.favIconUrl) {
+          PINNED_TABS[index].favIconUrl = tab?.favIconUrl;
+        }
         console.log("PINNED_TABS", PINNED_TABS);
         await setPinnedTabs(PINNED_TABS);
       }

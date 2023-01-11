@@ -11,7 +11,11 @@ import { getAllChildren, MyTab, removeTab } from "../utils/tabs";
 import AddPin from "./components/AddPin";
 import PinIcon from "./components/PinIcon";
 
-export type PinnedTab = MyTab;
+export interface PinnedTab {
+  url: string;
+  id: string;
+  favIconUrl?: string;
+}
 
 export const Context = createContext<{
   pinnedTabs: PinnedTab[];
@@ -132,8 +136,8 @@ export default function App() {
                   });
                 }}
                 onRemove={() => {
-                  console.log("Removed", item, index);
                   const res = pinnedTabs.filter((tab) => tab.id !== item.id);
+                  console.log("Removed", item, index, res);
                   setPinnedTabs(res);
                 }}
               />

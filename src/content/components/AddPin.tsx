@@ -14,8 +14,8 @@ import { MyTab } from "../../utils/tabs";
 import { Context, PinnedTab } from "../App";
 
 export interface AddPinProps extends HTMLAttributes<HTMLDivElement> {
-  pinnedTabs: MyTab[];
-  setPinnedTabs: Dispatch<MyTab[]>;
+  pinnedTabs: PinnedTab[];
+  setPinnedTabs: Dispatch<PinnedTab[]>;
 }
 
 const port = Browser.runtime.connect();
@@ -45,7 +45,8 @@ export default function AddPin({
       ...pinnedTabs,
       {
         url: nextValue,
-      } as MyTab,
+        id: String(Date.now()),
+      } as PinnedTab,
     ];
     setPinnedTabs(res);
 

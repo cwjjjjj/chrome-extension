@@ -4,9 +4,10 @@ import { IconButton } from "rsuite";
 import { MyTab } from "../../utils/tabs";
 import CloseIcon from "@rsuite/icons/Close";
 import PinnedIcon from "@rsuite/icons/Pin";
+import { PinnedTab } from "../App";
 
 export interface PinIconProps extends HTMLAttributes<HTMLDivElement> {
-  data: MyTab;
+  data: PinnedTab;
   onRemove: () => void;
 }
 
