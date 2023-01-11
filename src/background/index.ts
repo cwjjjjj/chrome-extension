@@ -31,6 +31,10 @@ export const setTabs = async (tabs: MyTab[]) => {
   return Browser.storage.local.set({ tabs });
 };
 
+export const setPinnedTabs = async (pinnedTabs: any[]) => {
+  return Browser.storage.local.set({ pinnedTabs });
+};
+
 const clearStorage = () => {
   return Browser.storage.local.clear();
 };
@@ -41,6 +45,7 @@ const updateTabs = async () => {
   if (isFirst) {
     TABS = await getAllTabs();
     await setTabs(TABS);
+    await setPinnedTabs([]);
     isFirst = false;
   } else {
     const { tabs } = await Browser.storage.local.get(["tabs"]);
