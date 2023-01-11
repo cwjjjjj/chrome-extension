@@ -9,11 +9,9 @@ import "rsuite/dist/rsuite.min.css";
 import Tab from "./components/Tab";
 import { getAllChildren, MyTab, removeTab } from "../utils/tabs";
 import AddPin from "./components/AddPin";
+import PinIcon from "./components/PinIcon";
 
-export type PinnedTab = {
-  url: string;
-  icon?: string;
-};
+export type PinnedTab = MyTab;
 
 export const Context = createContext<{
   pinnedTabs: PinnedTab[];
@@ -112,29 +110,33 @@ export default function App() {
         {/* header */}
         <div
           css={css`
-            background-color: orange;
             display: grid;
             justify-content: space-evenly;
             grid: repeat(2, 40px) / repeat(5, 40px);
             gap: 5px;
+            align-items: center;
+            justify-items: center;
           `}
         >
           {/* <img src="https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg" alt="" /> */}
           {pinnedTabs?.map((item, index) => {
             return (
-              <div
-                css={css`
-                  background-color: blue;
-                `}
+              <PinIcon
+                data={item}
                 key={`${item.url}_${index}`}
-              >
-                <img src={item?.favIconUrl} alt="" />
-                {item.url}
-              </div>
+                onClick={() => {
+                  port.postMessage({
+                    type: TAB_ACTION.CREATE,
+                    url: item.url,
+                  });
+                }}
+              />
             );
           })}
 
-          <AddPin pinnedTabs={pinnedTabs} handleAdd={setPinnedTabs} />
+          {pinnedTabs.length < 10 && (
+            <AddPin pinnedTabs={pinnedTabs} handleAdd={setPinnedTabs} />
+          )}
         </div>
 
         {/* body */}

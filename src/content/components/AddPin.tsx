@@ -1,13 +1,21 @@
 import PlusIcon from "@rsuite/icons/Plus";
-import { HTMLAttributes, useContext, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  HTMLAttributes,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { IconButton, Input } from "rsuite";
 import Browser from "webextension-polyfill";
 import { TAB_ACTION } from "../../constant/tabAction";
+import { MyTab } from "../../utils/tabs";
 import { Context, PinnedTab } from "../App";
 
 export interface AddPinProps extends HTMLAttributes<HTMLDivElement> {
-  pinnedTabs: any;
-  handleAdd: any;
+  pinnedTabs: MyTab[];
+  handleAdd: Dispatch<MyTab[]>;
 }
 
 const port = Browser.runtime.connect();
@@ -30,7 +38,7 @@ export default function AddPin({
       ...pinnedTabs,
       {
         url: nextValue,
-      },
+      } as MyTab,
     ];
     handleAdd(res);
 
