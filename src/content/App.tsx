@@ -116,6 +116,7 @@ export default function App() {
             gap: 5px;
             align-items: center;
             justify-items: center;
+            padding: 10px;
           `}
         >
           {/* <img src="https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg" alt="" /> */}
@@ -130,12 +131,17 @@ export default function App() {
                     url: item.url,
                   });
                 }}
+                onRemove={() => {
+                  console.log("Removed", item, index);
+                  const res = pinnedTabs.filter((tab) => tab.id !== item.id);
+                  setPinnedTabs(res);
+                }}
               />
             );
           })}
 
           {pinnedTabs.length < 10 && (
-            <AddPin pinnedTabs={pinnedTabs} handleAdd={setPinnedTabs} />
+            <AddPin pinnedTabs={pinnedTabs} setPinnedTabs={setPinnedTabs} />
           )}
         </div>
 

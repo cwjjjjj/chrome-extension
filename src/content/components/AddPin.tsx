@@ -15,7 +15,7 @@ import { Context, PinnedTab } from "../App";
 
 export interface AddPinProps extends HTMLAttributes<HTMLDivElement> {
   pinnedTabs: MyTab[];
-  handleAdd: Dispatch<MyTab[]>;
+  setPinnedTabs: Dispatch<MyTab[]>;
 }
 
 const port = Browser.runtime.connect();
@@ -24,7 +24,7 @@ export const URLRegExp =
   /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i;
 
 export default function AddPin({
-  handleAdd,
+  setPinnedTabs,
   pinnedTabs,
   ...props
 }: AddPinProps) {
@@ -47,7 +47,7 @@ export default function AddPin({
         url: nextValue,
       } as MyTab,
     ];
-    handleAdd(res);
+    setPinnedTabs(res);
 
     Browser.storage.local.set({
       pinnedTabs: res,
