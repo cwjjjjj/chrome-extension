@@ -45,7 +45,6 @@ export default function AddPin({
 
     console.log("save res open", res, nextValue);
   };
-  console.log("pinnedTabs", pinnedTabs);
 
   // 按下回车自动保存
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

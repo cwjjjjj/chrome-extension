@@ -50,7 +50,9 @@ const updateTabs = async () => {
     isFirst = false;
   } else {
     const { tabs } = await Browser.storage.local.get(["tabs"]);
+    const { pinnedTabs } = await Browser.storage.local.get(["pinnedTabs"]);
     TABS = tabs;
+    PINNED_TABS = pinnedTabs;
   }
   console.log("storage new tabs", TABS);
 };
@@ -111,19 +113,23 @@ Browser.tabs.onAttached.addListener(async (res) => {
 // });
 
 Browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  console.log("stoarge", TABS);
-  console.log("tab onUpdated", tabId, changeInfo, tab);
   if (changeInfo?.status === "complete") {
-    PINNED_TABS.forEach(async (pinnedTab) => {
-      if (pinnedTab.url.includes(tab.url)) {
-        pinnedTab = tab;
+    console.log("complete", PINNED_TABS);
+    PINNED_TABS.forEach(async (pinnedTab, index) => {
+      console.log(
+        "pinnedTab",
+        pinnedTab,
+        tab,
+        String(tab?.url).includes(String(pinnedTab.url))
+      );
+      if (String(tab?.url).includes(String(pinnedTab.url))) {
+        PINNED_TABS[index] = tab;
         console.log("PINNED_TABS", PINNED_TABS);
         await setPinnedTabs(PINNED_TABS);
       }
     });
 
     const index = TABS.findIndex((item) => item.id === tabId);
-    console.log("find", index, tab);
     if (index !== -1) {
       TABS.splice(index, 1, tab);
       console.log("update", TABS);
