@@ -35,7 +35,7 @@ export default function AddPin({
   // const { pinnedTabs, setPinnedTabs } = useContext(Context);
   // console.log("context", pinnedTabs, setPinnedTabs);
 
-  const handleSave = (nextValue: string) => {
+  const handleSave = async (nextValue: string) => {
     console.log("value", nextValue, URLRegExp.test(nextValue));
     if (!URLRegExp.test(nextValue)) {
       console.log("不是正确是 URL 路径");
@@ -49,13 +49,13 @@ export default function AddPin({
         id: String(Date.now()),
       } as PinnedTab,
     ];
-    setPinnedTabs(res);
+    // setPinnedTabs(res);
 
-    Browser.storage.local.set({
+    await Browser.storage.local.set({
       pinnedTabs: res,
     });
 
-    port.postMessage({
+    await port.postMessage({
       type: TAB_ACTION.CREATE,
       url: nextValue,
     });
@@ -78,12 +78,41 @@ export default function AddPin({
   }, [isEditing]);
   return (
     <div
-      {...props}
       css={css`
         /* 60 - 1 , 60 - 2  */
         height: 59px;
         width: 58px;
         color: grey;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border-radius: 12px;
+        display: grid;
+        justify-items: center;
+        align-items: center;
+        box-sizing: border-box;
+        background-color: rgba(255, 255, 255, 0.15);
+
+        &:hover::after {
+          position: absolute;
+          height: 60px;
+          width: 60px;
+          content: "";
+          border-radius: 12px;
+          background: linear-gradient(to bottom, #fff, transparent);
+          top: -2px;
+          left: -1px;
+          z-index: -1;
+        }
+
+        &:hover {
+          background-image: linear-gradient(
+            to bottom,
+            rgba(176, 174, 174, 0.3) 0%,
+            rgba(255, 255, 255, 0.15) 100%
+          );
+        }
 
         .favIconImg {
           height: 20px;
@@ -91,6 +120,10 @@ export default function AddPin({
           object-fit: contain;
         }
       `}
+      onClick={() => {
+        setIsEditing(true);
+      }}
+      {...props}
     >
       {isEditing ? (
         <Input
@@ -103,12 +136,7 @@ export default function AddPin({
           defaultValue="https://"
         />
       ) : (
-        <PlusIcon
-          className="favIconImg"
-          onClick={() => {
-            setIsEditing(true);
-          }}
-        />
+        <PlusIcon className="favIconImg" />
       )}
     </div>
   );

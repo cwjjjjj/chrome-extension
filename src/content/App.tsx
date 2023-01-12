@@ -49,22 +49,22 @@ const mockData = [
     id: "7",
     favIconUrl: "https://www.bilibili.com/favicon.ico",
   },
-  {
-    url: "http://www.bilibili.com",
-    id: "8",
-    favIconUrl: "https://www.bilibili.com/favicon.ico",
-  },
-  {
-    url: "http://www.bilibili.com",
-    id: "9",
-    favIconUrl: "https://www.bilibili.com/favicon.ico",
-  },
-  {
-    url: "http://www.bilibili.com",
-    id: "10",
-    favIconUrl: "https://www.bilibili.com/favicon.ico",
-    create: true,
-  },
+  // {
+  //   url: "http://www.bilibili.com",
+  //   id: "8",
+  //   favIconUrl: "https://www.bilibili.com/favicon.ico",
+  // },
+  // {
+  //   url: "http://www.bilibili.com",
+  //   id: "9",
+  //   favIconUrl: "https://www.bilibili.com/favicon.ico",
+  // },
+  // {
+  //   url: "http://www.bilibili.com",
+  //   id: "10",
+  //   favIconUrl: "https://www.bilibili.com/favicon.ico",
+  //   create: true,
+  // },
 ];
 
 export interface PinnedTab {
@@ -82,7 +82,7 @@ const port = Browser.runtime.connect();
 
 export default function App() {
   const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
-  const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>(mockData);
+  const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>([]);
   const [isExpanded, setIsExpanded] = useState(true);
   const isFirstRef = useRef(true);
   console.log("storageTabs", storageTabs);
@@ -125,211 +125,212 @@ export default function App() {
     };
   }, [isExpanded]);
   return (
-    <Context.Provider
-      value={{
-        pinnedTabs,
-        setPinnedTabs,
+    // <Context.Provider
+    //   value={{
+    //     pinnedTabs,
+    //     setPinnedTabs,
+    //   }}
+    // >
+    <div
+      style={{
+        width: `${isExpanded ? "300px" : "1px"}`,
+        position: "fixed",
+        top: "0px",
+        left: "0px",
+        zIndex: "99999",
+        height: "100vh",
+        overflow: "auto",
+        transition: "all .6s ",
+        opacity: `${isExpanded ? 1 : 0}`,
+        fontSize: "18px",
+        backdropFilter: "blur(80px)",
+        backgroundColor: "rgba(0,0,0,.25)",
+        transform: "translateZ(0)",
+        borderRadius: "0 8px 8px 0 ",
+        // backgroundImage: 'url("https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg")',
       }}
-    >
-      <div
-        style={{
-          width: `${isExpanded ? "300px" : "1px"}`,
-          position: "fixed",
-          top: "0px",
-          left: "0px",
-          zIndex: "99999",
-          height: "100vh",
-          overflow: "auto",
-          transition: "all .6s ",
-          opacity: `${isExpanded ? 1 : 0}`,
-          fontSize: "18px",
-          backdropFilter: "blur(80px)",
-          backgroundColor: "rgba(0,0,0,.25)",
-          transform: "translateZ(0)",
-          borderRadius: "0 8px 8px 0 ",
-          // backgroundImage: 'url("https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg")',
-        }}
-        css={css`
-          /* color: red; */
-          padding: 54px 10px;
+      css={css`
+        /* color: red; */
+        padding: 54px 10px;
 
-          .rs-tree {
-            height: 100% !important;
-            max-height: 90%;
-            overflow: hidden auto;
+        .rs-tree {
+          height: 100% !important;
+          max-height: 90%;
+          overflow: hidden auto;
 
-            /* .rs-tree-node-expand-icon-wrapper {
+          /* .rs-tree-node-expand-icon-wrapper {
             display: none;
           } */
-          }
+        }
+      `}
+      onMouseEnter={() => {
+        setIsExpanded(true);
+      }}
+      onMouseLeave={() => {
+        setIsExpanded(true);
+      }}
+    >
+      {/* header */}
+      <header
+        css={css`
+          position: relative;
         `}
-        onMouseEnter={() => {
-          setIsExpanded(true);
-        }}
-        onMouseLeave={() => {
-          setIsExpanded(true);
-        }}
       >
-        {/* header */}
-        <header>
-          <Search />
-          <div
-            css={css`
-              .DraggableTags {
-                display: grid;
-                justify-content: space-evenly;
-                grid: repeat(2, 60px) / repeat(4, 60px);
-                gap: 10px;
-                align-items: center;
-                justify-items: center;
-                padding-top: 10px;
-              }
-
-              .pinnedTab {
-                cursor: pointer;
-                position: relative;
-                border-radius: 12px;
-                display: grid;
-                justify-items: center;
-                align-items: center;
-                box-sizing: border-box;
-                background-color: rgba(255, 255, 255, 0.15);
-
-                &:hover::after {
-                  position: absolute;
-                  height: 60px;
-                  width: 60px;
-                  content: "";
-                  border-radius: 12px;
-                  background: linear-gradient(to bottom, #fff, transparent);
-                  top: -2px;
-                  left: -1px;
-                  z-index: -1;
-                }
-
-                &:hover {
-                  background-image: linear-gradient(
-                    to bottom,
-                    rgba(176, 174, 174, 0.3) 0%,
-                    rgba(255, 255, 255, 0.15) 100%
-                  );
-                }
-              }
-            `}
-          >
-            <DraggableArea
-              tags={mockData}
-              render={({ tag: item, index }) => {
-                if (item.create) {
-                  return (
-                    <AddPin
-                      pinnedTabs={pinnedTabs}
-                      setPinnedTabs={setPinnedTabs}
-                      className="pinnedTab"
-                    />
-                  );
-                } else {
-                  return (
-                    <PinIcon
-                      data={item}
-                      key={`${item.url}_${index}`}
-                      onClick={() => {
-                        port.postMessage({
-                          type: TAB_ACTION.CREATE,
-                          url: item.url,
-                        });
-                      }}
-                      onRemove={() => {
-                        const res = pinnedTabs.filter(
-                          (tab) => tab.id !== item.id
-                        );
-                        console.log("Removed", item, index, res);
-                        setPinnedTabs(res);
-                      }}
-                      className="pinnedTab"
-                    />
-                  );
-                }
-              }}
-              onChange={(tags) => console.log(tags)}
-            />
-          </div>
-        </header>
-
-        {/* body */}
-        <TabsTree
-          css={css`
-            background-color: red;
-          `}
-          data={storageTabs}
-          valueKey="id"
-          labelKey="title"
-          draggable
-          className="my-tree"
-          onDrop={({ createUpdateDataFunction }, event) => {
-            const treeTabs = createUpdateDataFunction(storageTabs);
-            Browser.storage.local.set({ tabs: treeTabs });
-          }}
-          renderTreeNode={(item) => {
-            return (
-              <Tab
-                onRemove={() => {
-                  let removeIds: number[] = [];
-                  const result = removeTab(
-                    storageTabs as MyTab[],
-                    (tab: MyTab) => tab.id !== item.id
-                  );
-                  Browser.storage.local.set({ tabs: result });
-                  removeIds.push(item.id);
-                  if (item?.children) {
-                    const childrenIds = getAllChildren(
-                      item.children as MyTab[]
-                    );
-                    removeIds = [...removeIds, ...childrenIds];
-                  }
-
-                  port.postMessage({
-                    type: TAB_ACTION.REMOVE,
-                    tabIds: removeIds,
-                  });
-                }}
-                onActive={() => {
-                  console.log("active", item.id);
-                  port.postMessage({
-                    type: TAB_ACTION.ACTIVE,
-                    tabId: item.id,
-                  });
-                }}
-                data={item as Tabs.Tab}
-              />
-            );
-          }}
-        />
-        {/* footer */}
+        <Search />
         <div
           css={css`
-            background-color: white;
+            .DraggableTags {
+              display: grid;
+              justify-content: space-evenly;
+              grid: repeat(2, 60px) / repeat(4, 60px);
+              gap: 10px;
+              align-items: center;
+              justify-items: center;
+              padding-top: 10px;
+            }
+
+            .pinnedTab {
+              cursor: pointer;
+              position: relative;
+              border-radius: 12px;
+              display: grid;
+              justify-items: center;
+              align-items: center;
+              box-sizing: border-box;
+              background-color: rgba(255, 255, 255, 0.15);
+
+              &:hover::after {
+                position: absolute;
+                height: 60px;
+                width: 60px;
+                content: "";
+                border-radius: 12px;
+                background: linear-gradient(to bottom, #fff, transparent);
+                top: -2px;
+                left: -1px;
+                z-index: -1;
+              }
+
+              &:hover {
+                background-image: linear-gradient(
+                  to bottom,
+                  rgba(176, 174, 174, 0.3) 0%,
+                  rgba(255, 255, 255, 0.15) 100%
+                );
+              }
+            }
           `}
-          style={{
-            height: "50px",
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+        >
+          <DraggableArea
+            tags={pinnedTabs}
+            render={({ tag: item, index }) => {
+              console.log("tag", `${item.id}_${item?.favIconUrl}`);
+              return (
+                <PinIcon
+                  data={item}
+                  key={`${item.id}_${item?.favIconUrl}`}
+                  onClick={() => {
+                    port.postMessage({
+                      type: TAB_ACTION.CREATE,
+                      url: item.url,
+                    });
+                  }}
+                  onRemove={() => {
+                    const res = pinnedTabs.filter((tab) => tab.id !== item.id);
+                    console.log("Removed", item, index, res);
+                    setPinnedTabs(res);
+                  }}
+                  className="pinnedTab"
+                />
+              );
+            }}
+            onChange={(tags) => console.log(tags)}
+          />
+        </div>
+        <AddPin
+          pinnedTabs={pinnedTabs}
+          setPinnedTabs={setPinnedTabs}
+          className="pinnedTab"
+          css={css`
+            position: absolute;
+            right: 6px;
+            bottom: 0px;
+          `}
+        />
+      </header>
+
+      {/* body */}
+      <TabsTree
+        css={css`
+          background-color: red;
+        `}
+        data={storageTabs}
+        valueKey="id"
+        labelKey="title"
+        draggable
+        className="my-tree"
+        onDrop={({ createUpdateDataFunction }, event) => {
+          const treeTabs = createUpdateDataFunction(storageTabs);
+          Browser.storage.local.set({ tabs: treeTabs });
+        }}
+        renderTreeNode={(item) => {
+          return (
+            <Tab
+              onRemove={() => {
+                let removeIds: number[] = [];
+                const result = removeTab(
+                  storageTabs as MyTab[],
+                  (tab: MyTab) => tab.id !== item.id
+                );
+                Browser.storage.local.set({ tabs: result });
+                removeIds.push(item.id);
+                if (item?.children) {
+                  const childrenIds = getAllChildren(item.children as MyTab[]);
+                  removeIds = [...removeIds, ...childrenIds];
+                }
+
+                port.postMessage({
+                  type: TAB_ACTION.REMOVE,
+                  tabIds: removeIds,
+                });
+              }}
+              onActive={() => {
+                console.log("active", item.id);
+                port.postMessage({
+                  type: TAB_ACTION.ACTIVE,
+                  tabId: item.id,
+                });
+              }}
+              data={item as Tabs.Tab}
+            />
+          );
+        }}
+      />
+      {/* footer */}
+      <div
+        css={css`
+          background-color: white;
+        `}
+        style={{
+          height: "50px",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Button
+          onClick={() => {
+            console.log("add");
+            port.postMessage({
+              type: TAB_ACTION.CREATE,
+            });
           }}
         >
-          <Button
-            onClick={() => {
-              console.log("add");
-              port.postMessage({
-                type: TAB_ACTION.CREATE,
-              });
-            }}
-          >
-            add
-          </Button>
-        </div>
+          add
+        </Button>
       </div>
-    </Context.Provider>
+    </div>
+    // </Context.Provider>
   );
 }
