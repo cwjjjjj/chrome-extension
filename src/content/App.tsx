@@ -10,6 +10,7 @@ import Tab from "./components/Tab";
 import { getAllChildren, MyTab, removeTab } from "../utils/tabs";
 import AddPin from "./components/AddPin";
 import PinIcon from "./components/PinIcon";
+import Search from "./components/Search";
 
 export interface PinnedTab {
   url: string;
@@ -78,7 +79,6 @@ export default function App() {
       <div
         style={{
           width: `${isExpanded ? "300px" : "1px"}`,
-          // backgroundColor: "pink",
           position: "fixed",
           top: "0px",
           left: "0px",
@@ -88,11 +88,14 @@ export default function App() {
           transition: "all .6s ",
           opacity: `${isExpanded ? 1 : 0}`,
           fontSize: "18px",
-          backdropFilter: "blur(10px)",
+          backdropFilter: "blur(160px) opacity(0.9)",
+          backgroundColor: "rgba(90,90,90,.1)",
+          transform: "translateZ(0)",
           // backgroundImage: 'url("https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg")',
         }}
         css={css`
-          color: red;
+          /* color: red; */
+          padding: 54px 10px;
 
           .rs-tree {
             height: 100% !important;
@@ -112,42 +115,45 @@ export default function App() {
         }}
       >
         {/* header */}
-        <div
-          css={css`
-            display: grid;
-            justify-content: space-evenly;
-            grid: repeat(2, 40px) / repeat(5, 40px);
-            gap: 5px;
-            align-items: center;
-            justify-items: center;
-            padding: 10px;
-          `}
-        >
-          {/* <img src="https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg" alt="" /> */}
-          {pinnedTabs?.map((item, index) => {
-            return (
-              <PinIcon
-                data={item}
-                key={`${item.url}_${index}`}
-                onClick={() => {
-                  port.postMessage({
-                    type: TAB_ACTION.CREATE,
-                    url: item.url,
-                  });
-                }}
-                onRemove={() => {
-                  const res = pinnedTabs.filter((tab) => tab.id !== item.id);
-                  console.log("Removed", item, index, res);
-                  setPinnedTabs(res);
-                }}
-              />
-            );
-          })}
+        <header>
+          <Search />
+          <div
+            css={css`
+              display: grid;
+              justify-content: space-evenly;
+              grid: repeat(2, 40px) / repeat(5, 40px);
+              gap: 5px;
+              align-items: center;
+              justify-items: center;
+              padding: 10px;
+            `}
+          >
+            {/* <img src="https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg" alt="" /> */}
+            {pinnedTabs?.map((item, index) => {
+              return (
+                <PinIcon
+                  data={item}
+                  key={`${item.url}_${index}`}
+                  onClick={() => {
+                    port.postMessage({
+                      type: TAB_ACTION.CREATE,
+                      url: item.url,
+                    });
+                  }}
+                  onRemove={() => {
+                    const res = pinnedTabs.filter((tab) => tab.id !== item.id);
+                    console.log("Removed", item, index, res);
+                    setPinnedTabs(res);
+                  }}
+                />
+              );
+            })}
 
-          {pinnedTabs.length < 10 && (
-            <AddPin pinnedTabs={pinnedTabs} setPinnedTabs={setPinnedTabs} />
-          )}
-        </div>
+            {pinnedTabs.length < 10 && (
+              <AddPin pinnedTabs={pinnedTabs} setPinnedTabs={setPinnedTabs} />
+            )}
+          </div>
+        </header>
 
         {/* body */}
         <TabsTree
