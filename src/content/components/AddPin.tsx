@@ -1,3 +1,4 @@
+import { css } from "@emotion/react";
 import PlusIcon from "@rsuite/icons/Plus";
 import {
   Dispatch,
@@ -76,7 +77,14 @@ export default function AddPin({
     }
   }, [isEditing]);
   return (
-    <div {...props}>
+    <div
+      {...props}
+      css={css`
+        .rs-btn {
+          background-color: unset;
+        }
+      `}
+    >
       {isEditing ? (
         <Input
           onBlur={(e) => {
@@ -90,9 +98,6 @@ export default function AddPin({
       ) : (
         <IconButton
           icon={<PlusIcon />}
-          color="blue"
-          appearance="primary"
-          circle
           onClick={() => {
             setIsEditing(true);
           }}

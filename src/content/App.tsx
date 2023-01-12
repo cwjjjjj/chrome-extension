@@ -91,6 +91,7 @@ export default function App() {
           backdropFilter: "blur(80px)",
           backgroundColor: "rgba(0,0,0,.25)",
           transform: "translateZ(0)",
+          borderRadius: "0 8px 8px 0 ",
           // backgroundImage: 'url("https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg")',
         }}
         css={css`
@@ -121,11 +122,23 @@ export default function App() {
             css={css`
               display: grid;
               justify-content: space-evenly;
-              grid: repeat(2, 40px) / repeat(5, 40px);
-              gap: 5px;
+              grid: repeat(2, 60px) / repeat(4, 60px);
+              gap: 10px;
               align-items: center;
               justify-items: center;
               padding: 10px;
+
+              .pinnedTab {
+                cursor: pointer;
+                position: relative;
+                width: 100%;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.15);
+                border-radius: 12px;
+                display: grid;
+                justify-items: center;
+                align-items: center;
+              }
             `}
           >
             {/* <img src="https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg" alt="" /> */}
@@ -145,12 +158,17 @@ export default function App() {
                     console.log("Removed", item, index, res);
                     setPinnedTabs(res);
                   }}
+                  className="pinnedTab"
                 />
               );
             })}
 
             {pinnedTabs.length < 10 && (
-              <AddPin pinnedTabs={pinnedTabs} setPinnedTabs={setPinnedTabs} />
+              <AddPin
+                pinnedTabs={pinnedTabs}
+                setPinnedTabs={setPinnedTabs}
+                className="pinnedTab"
+              />
             )}
           </div>
         </header>

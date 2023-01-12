@@ -23,16 +23,13 @@ export default function PinIcon({
   return (
     <div
       css={css`
-        /* background: red; */
-        cursor: pointer;
-        position: relative;
-
-        img {
-          height: 30px;
-          width: 30px;
+        .favIconImg {
+          height: 20px;
+          width: 20px;
+          object-fit: contain;
         }
 
-        .closeIcon {
+        /* .closeIcon {
           position: absolute;
           width: 15px;
           height: 15px;
@@ -40,20 +37,18 @@ export default function PinIcon({
           top: 0;
           transform: translate(50%, -50%);
           color: red;
-        }
+        } */
       `}
+      onClick={onClick}
       {...props}
     >
-      <div onClick={onClick}>
-        {data?.favIconUrl ? (
-          <img src={data?.favIconUrl} alt="icon" />
-        ) : (
-          <IconButton icon={<PinnedIcon />} />
-        )}
-      </div>
+      {data?.favIconUrl ? (
+        <img src={data?.favIconUrl} alt="icon" className="favIconImg" />
+      ) : (
+        <PinnedIcon className="favIconImg" />
+      )}
 
-      {/* <IconButton className="closeIcon" icon={<CloseIcon />} /> */}
-      <CloseIcon className="closeIcon" onClick={onRemove} />
+      {/* <CloseIcon className="closeIcon" onClick={onRemove} /> */}
     </div>
   );
 }

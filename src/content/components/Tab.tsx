@@ -3,6 +3,7 @@ import { HTMLAttributes } from "react";
 import { Button, IconButton } from "rsuite";
 import CollaspedFillIcon from "@rsuite/icons/CollaspedFill";
 import { MyTab } from "../../utils/tabs";
+import DefaultFavicon from "./SvgComponents/DefaultFavicon";
 
 export interface TabProps extends HTMLAttributes<HTMLDivElement> {
   data: MyTab;
@@ -25,18 +26,31 @@ export default function Tab({ data, onRemove, onActive, ...props }: TabProps) {
         .title {
           white-space: nowrap;
         }
+
+        .iconImg {
+          height: 20px;
+          width: 20px;
+          object-fit: contain;
+        }
       `}
+      onClick={onActive}
     >
       <IconButton
         icon={<CollaspedFillIcon />}
-        onClick={onRemove}
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemove();
+        }}
         css={css`
           background-color: transparent;
         `}
       />
-      <p className="title" onClick={onActive}>
-        {data.title}
-      </p>
+      {data?.favIconUrl ? (
+        <img src={data?.favIconUrl} className="iconImg" />
+      ) : (
+        <DefaultFavicon className="iconImg" />
+      )}
+      <p className="title">{data.title}</p>
     </div>
   );
 }
