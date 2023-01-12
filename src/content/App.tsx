@@ -88,8 +88,8 @@ export default function App() {
           transition: "all .6s ",
           opacity: `${isExpanded ? 1 : 0}`,
           fontSize: "18px",
-          backdropFilter: "blur(160px) opacity(0.9)",
-          backgroundColor: "rgba(90,90,90,.1)",
+          backdropFilter: "blur(80px)",
+          backgroundColor: "rgba(0,0,0,.25)",
           transform: "translateZ(0)",
           // backgroundImage: 'url("https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg")',
         }}

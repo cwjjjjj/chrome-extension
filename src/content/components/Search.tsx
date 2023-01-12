@@ -35,6 +35,13 @@ export default function Search({ ...props }: SearchProps) {
           background: rgba(255, 255, 255, 0.15);
           border-radius: 12px;
           height: 46px;
+
+          font-family: "PingFang SC";
+          font-style: normal;
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 22px;
+          color: #ffffff;
         }
         .rs-input-group.rs-input-group-inside
           .rs-input-group-btn
@@ -53,6 +60,7 @@ export default function Search({ ...props }: SearchProps) {
         .googleIcon {
           height: 46px !important;
           width: 46px;
+          pointer-events: none;
         }
       `}
     >
@@ -63,7 +71,7 @@ export default function Search({ ...props }: SearchProps) {
         <Input
           onKeyDown={handleKeyDown}
           ref={inputRef}
-          placeholder="请输入需要固定的快捷入口"
+          placeholder="请输入需要查询的内容"
           {...props}
         />
         <InputGroup.Button className="googleIcon">
