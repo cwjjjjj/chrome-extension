@@ -11,6 +11,61 @@ import { getAllChildren, MyTab, removeTab } from "../utils/tabs";
 import AddPin from "./components/AddPin";
 import PinIcon from "./components/PinIcon";
 import Search from "./components/Search";
+import { DraggableArea } from "react-draggable-tags";
+
+const mockData = [
+  {
+    url: "http://www.baidu.com",
+    id: "1",
+    favIconUrl: "https://www.baidu.com/favicon.ico",
+  },
+  {
+    url: "http://www.google.com",
+    id: "2",
+    favIconUrl: "https://www.google.com/favicon.ico",
+  },
+  {
+    url: "http://www.github.com",
+    id: "3",
+    favIconUrl: "https://www.github.com/favicon.ico",
+  },
+  {
+    url: "http://www.bilibili.com",
+    id: "4",
+    favIconUrl: "https://www.bilibili.com/favicon.ico",
+  },
+  {
+    url: "http://www.bilibili.com",
+    id: "5",
+    favIconUrl: "https://www.bilibili.com/favicon.ico",
+  },
+  {
+    url: "http://www.bilibili.com",
+    id: "6",
+    favIconUrl: "https://www.bilibili.com/favicon.ico",
+  },
+  {
+    url: "http://www.bilibili.com",
+    id: "7",
+    favIconUrl: "https://www.bilibili.com/favicon.ico",
+  },
+  {
+    url: "http://www.bilibili.com",
+    id: "8",
+    favIconUrl: "https://www.bilibili.com/favicon.ico",
+  },
+  {
+    url: "http://www.bilibili.com",
+    id: "9",
+    favIconUrl: "https://www.bilibili.com/favicon.ico",
+  },
+  {
+    url: "http://www.bilibili.com",
+    id: "10",
+    favIconUrl: "https://www.bilibili.com/favicon.ico",
+    create: true,
+  },
+];
 
 export interface PinnedTab {
   url: string;
@@ -27,7 +82,7 @@ const port = Browser.runtime.connect();
 
 export default function App() {
   const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
-  const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>([]);
+  const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>(mockData);
   const [isExpanded, setIsExpanded] = useState(true);
   const isFirstRef = useRef(true);
   console.log("storageTabs", storageTabs);
@@ -120,56 +175,84 @@ export default function App() {
           <Search />
           <div
             css={css`
-              display: grid;
-              justify-content: space-evenly;
-              grid: repeat(2, 60px) / repeat(4, 60px);
-              gap: 10px;
-              align-items: center;
-              justify-items: center;
-              padding-top: 10px;
+              .DraggableTags {
+                display: grid;
+                justify-content: space-evenly;
+                grid: repeat(2, 60px) / repeat(4, 60px);
+                gap: 10px;
+                align-items: center;
+                justify-items: center;
+                padding-top: 10px;
+              }
 
               .pinnedTab {
                 cursor: pointer;
                 position: relative;
-                width: 100%;
-                height: 100%;
-                background: rgba(255, 255, 255, 0.15);
                 border-radius: 12px;
                 display: grid;
                 justify-items: center;
                 align-items: center;
+                box-sizing: border-box;
+                background-color: rgba(255, 255, 255, 0.15);
+
+                &:hover::after {
+                  position: absolute;
+                  height: 60px;
+                  width: 60px;
+                  content: "";
+                  border-radius: 12px;
+                  background: linear-gradient(to bottom, #fff, transparent);
+                  top: -2px;
+                  left: -1px;
+                  z-index: -1;
+                }
+
+                &:hover {
+                  background-image: linear-gradient(
+                    to bottom,
+                    rgba(176, 174, 174, 0.3) 0%,
+                    rgba(255, 255, 255, 0.15) 100%
+                  );
+                }
               }
             `}
           >
-            {/* <img src="https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg" alt="" /> */}
-            {pinnedTabs?.map((item, index) => {
-              return (
-                <PinIcon
-                  data={item}
-                  key={`${item.url}_${index}`}
-                  onClick={() => {
-                    port.postMessage({
-                      type: TAB_ACTION.CREATE,
-                      url: item.url,
-                    });
-                  }}
-                  onRemove={() => {
-                    const res = pinnedTabs.filter((tab) => tab.id !== item.id);
-                    console.log("Removed", item, index, res);
-                    setPinnedTabs(res);
-                  }}
-                  className="pinnedTab"
-                />
-              );
-            })}
-
-            {pinnedTabs.length < 10 && (
-              <AddPin
-                pinnedTabs={pinnedTabs}
-                setPinnedTabs={setPinnedTabs}
-                className="pinnedTab"
-              />
-            )}
+            <DraggableArea
+              tags={mockData}
+              render={({ tag: item, index }) => {
+                if (item.create) {
+                  return (
+                    <AddPin
+                      pinnedTabs={pinnedTabs}
+                      setPinnedTabs={setPinnedTabs}
+                      className="pinnedTab"
+                    />
+                  );
+                } else {
+                  return (
+                    <PinIcon
+                      data={item}
+                      key={`${item.url}_${index}`}
+                      onClick={() => {
+                        port.postMessage({
+                          type: TAB_ACTION.CREATE,
+                          url: item.url,
+                        });
+                      }}
+                      onRemove={() => {
+                        const res = pinnedTabs.filter(
+                          (tab) => tab.id !== item.id
+                        );
+                        console.log("Removed", item, index, res);
+                        setPinnedTabs(res);
+                      }}
+                      className="pinnedTab"
+                    />
+                  );
+                }
+              }}
+              onChange={(tags) => console.log(tags)}
+            />
           </div>
         </header>
 

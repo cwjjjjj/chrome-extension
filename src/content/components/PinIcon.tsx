@@ -23,6 +23,10 @@ export default function PinIcon({
   return (
     <div
       css={css`
+        /* 60 - 1 , 60 - 2  */
+        height: 59px;
+        width: 58px;
+
         .favIconImg {
           height: 20px;
           width: 20px;

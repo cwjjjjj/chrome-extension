@@ -80,8 +80,15 @@ export default function AddPin({
     <div
       {...props}
       css={css`
-        .rs-btn {
-          background-color: unset;
+        /* 60 - 1 , 60 - 2  */
+        height: 59px;
+        width: 58px;
+        color: grey;
+
+        .favIconImg {
+          height: 20px;
+          width: 20px;
+          object-fit: contain;
         }
       `}
     >
@@ -96,8 +103,8 @@ export default function AddPin({
           defaultValue="https://"
         />
       ) : (
-        <IconButton
-          icon={<PlusIcon />}
+        <PlusIcon
+          className="favIconImg"
           onClick={() => {
             setIsEditing(true);
           }}

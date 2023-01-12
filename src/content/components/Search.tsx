@@ -35,13 +35,13 @@ export default function Search({ ...props }: SearchProps) {
           background: rgba(255, 255, 255, 0.15);
           border-radius: 12px;
           height: 46px;
-
           font-family: "PingFang SC";
           font-style: normal;
           font-weight: 500;
           font-size: 16px;
           line-height: 22px;
           color: #ffffff;
+          box-sizing: border-box;
         }
         /* .rs-input-group.rs-input-group-inside
           .rs-input-group-btn
@@ -60,6 +60,7 @@ export default function Search({ ...props }: SearchProps) {
           height: 46px !important;
           width: 46px;
           pointer-events: none;
+          box-sizing: border-box;
         }
       `}
     >

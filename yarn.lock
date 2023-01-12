@@ -983,6 +983,11 @@ htmlparser2@^8.0.1:
     domutils "^3.0.1"
     entities "^4.3.0"
 
+immutable@^3.8.2:
+  version "3.8.2"
+  resolved "https://npm.midway.run/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
+  integrity sha1-wkOZUUVbs5kT2vKBN28VMOEErfM=
+
 import-fresh@^3.2.1:
   version "3.3.0"
   resolved "https://npm.midway.run/import-fresh/-/import-fresh-3.3.0.tgz#37162c25fcb9ebaa2e6e53d5b4d88ce17d9e0c2b"
@@ -1242,6 +1247,13 @@ react-dom@^18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
+
+react-draggable-tags@^1.0.6:
+  version "1.0.6"
+  resolved "https://npm.midway.run/react-draggable-tags/-/react-draggable-tags-1.0.6.tgz#1681e604b2d3d334eb0b643960188f87d80d1b7a"
+  integrity sha512-8Sl6UnLRCotqkaPih5D9L2DoKX858fV/zIf/ZkvcCht3Y58hkOLWO5V1M4XgdcZ0NMKh2ttcI55MCZqKO17DCg==
+  dependencies:
+    immutable "^3.8.2"
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
