@@ -31,6 +31,7 @@ export default function PinIcon({
           height: 20px;
           width: 20px;
           object-fit: contain;
+          pointer-events: none;
         }
 
         /* .closeIcon {
