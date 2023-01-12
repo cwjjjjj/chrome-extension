@@ -126,7 +126,7 @@ export default function App() {
               gap: 10px;
               align-items: center;
               justify-items: center;
-              padding: 10px;
+              padding-top: 10px;
 
               .pinnedTab {
                 cursor: pointer;

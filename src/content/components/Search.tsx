@@ -43,11 +43,11 @@ export default function Search({ ...props }: SearchProps) {
           line-height: 22px;
           color: #ffffff;
         }
-        .rs-input-group.rs-input-group-inside
+        /* .rs-input-group.rs-input-group-inside
           .rs-input-group-btn
           ~ input.rs-input {
           padding-left: 46px;
-        }
+        } */
         .rs-input-group {
           border: none;
 
@@ -56,8 +56,7 @@ export default function Search({ ...props }: SearchProps) {
             border: none !important;
           }
         }
-        .searchIcon,
-        .googleIcon {
+        .favIcon {
           height: 46px !important;
           width: 46px;
           pointer-events: none;
@@ -65,7 +64,7 @@ export default function Search({ ...props }: SearchProps) {
       `}
     >
       <InputGroup inside>
-        <InputGroup.Button className="searchIcon">
+        <InputGroup.Button className="favIcon">
           <SearchIcon />
         </InputGroup.Button>
         <Input
@@ -74,7 +73,7 @@ export default function Search({ ...props }: SearchProps) {
           placeholder="请输入需要查询的内容"
           {...props}
         />
-        <InputGroup.Button className="googleIcon">
+        <InputGroup.Button className="favIcon">
           <GoogleIcon />
           <SearchEnginePicker />
         </InputGroup.Button>
