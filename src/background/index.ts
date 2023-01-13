@@ -5,23 +5,28 @@ import {
   findTabById,
   getAllChildren,
   handleActiveTabById,
+  handleUpdateTabById,
   MyTab,
   removeTab,
 } from "../utils/tabs";
 
 let TABS: any[] = [];
 let PINNED_TABS: any[] = [];
+let CURRENT_TAB;
 let isFirst = true;
 
 const port = Browser.runtime.connect();
 
-// const getCurrentTab = async () => {
-//   let queryOptions = { active: true };
-//   // `tab` will either be a `tabs.Tab` instance or `undefined`.
-//   let tab = await Browser.tabs.query(queryOptions);
-//   console.log("getCurrentTab", tab);
-//   return tab;
-// };
+export const setCurrentTab = async (currentTab: MyTab) => {
+  return Browser.storage.local.set({ currentTab });
+};
+
+const updateCurrentTab = async () => {
+  let [tab] = await Browser.tabs.query({ active: true });
+  CURRENT_TAB = tab;
+  await setCurrentTab(tab);
+  return tab;
+};
 
 const getAllTabs = async () => {
   const tabs = await Browser.tabs.query({});
@@ -57,11 +62,22 @@ const updateTabs = async () => {
   console.log("storage new tabs", TABS);
 };
 
-Browser.tabs.onCreated.addListener(async (res) => {
-  const newTabs = [...TABS, res];
-  TABS = newTabs;
-  await setTabs(newTabs);
-  console.log("tab created", Date.now(), res, TABS);
+Browser.tabs.onCreated.addListener(async (newTab) => {
+  if (newTab?.openerTabId) {
+    const parentTab = findTabById(TABS, newTab?.openerTabId as number);
+    if (parentTab) {
+      parentTab.children = parentTab?.children
+        ? [...parentTab.children, newTab]
+        : [newTab];
+    }
+    await setTabs(TABS);
+    console.log("parent tab", parentTab, TABS);
+  } else {
+    const newTabs = [...TABS, newTab];
+    TABS = newTabs;
+    await setTabs(newTabs);
+    console.log("tab created", Date.now(), newTab, TABS);
+  }
 });
 
 Browser.tabs.onRemoved.addListener(async (res) => {
@@ -85,9 +101,9 @@ Browser.tabs.onRemoved.addListener(async (res) => {
   await setTabs(result);
 });
 
-Browser.tabs.onDetached.addListener(async (res) => {
-  console.log("tab detached", res);
-});
+// Browser.tabs.onDetached.addListener(async (res) => {
+//   console.log("tab detached", res);
+// });
 
 Browser.tabs.onActivated.addListener(async (res) => {
   console.log("tab onActivated", res);
@@ -95,9 +111,9 @@ Browser.tabs.onActivated.addListener(async (res) => {
   await setTabs(TABS);
 });
 
-Browser.tabs.onAttached.addListener(async (res) => {
-  console.log("tab onAttached", res);
-});
+// Browser.tabs.onAttached.addListener(async (res) => {
+//   console.log("tab onAttached", res);
+// });
 
 // Browser.tabs.onHighlighted.addListener(async (res) => {
 //   console.log("tab onHighlighted", res);
@@ -123,12 +139,21 @@ Browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       }
     });
 
-    const index = TABS.findIndex((item) => item.id === tabId);
-    if (index !== -1) {
-      TABS.splice(index, 1, tab);
-      console.log("update", TABS);
-      await setTabs(TABS);
-    }
+    handleUpdateTabById(TABS, tab);
+    console.log("update", TABS);
+    await setTabs(TABS);
+
+    // let currentTab = findTabById(TABS, tabId);
+    // currentTab = tab;
+    // console.log("update", currentTab, TABS);
+    // await setTabs(TABS);
+
+    // const index = TABS.findIndex((item) => item.id === tabId);
+    // if (index !== -1) {
+    //   TABS.splice(index, 1, tab);
+    //   console.log("update", TABS);
+    //   await setTabs(TABS);
+    // }
   }
 });
 

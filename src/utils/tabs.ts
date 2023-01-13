@@ -95,9 +95,10 @@ export function findTabById(tabs: MyTab[], id: number): MyTab | void {
     return;
   }
   for (const tab of tabs) {
+    console.log("for + length", tab.id, id, tab.id === id);
     if (tab.id === id) {
       return tab;
-    } else if (tab?.children) {
+    } else if (tab?.children && tab.children.length) {
       return findTabById(tab.children, id);
     }
   }
@@ -114,6 +115,23 @@ export function handleActiveTabById(tabs: MyTab[], id: number) {
       tab.active = false;
       if (tab?.children) {
         handleActiveTabById(tab.children, id);
+      }
+    }
+  }
+}
+
+export function handleUpdateTabById(tabs: MyTab[], updateTab: MyTab) {
+  if (!(tabs && tabs.length)) {
+    return;
+  }
+  for (let tab of tabs) {
+    if (tab.id === updateTab.id) {
+      tab.favIconUrl = updateTab.favIconUrl;
+      tab.title = updateTab.title;
+    } else {
+      tab.active = false;
+      if (tab?.children) {
+        handleUpdateTabById(tab.children, updateTab);
       }
     }
   }
