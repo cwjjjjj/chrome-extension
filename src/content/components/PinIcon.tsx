@@ -17,7 +17,7 @@ export default function PinIcon({
   onRemove,
   ...props
 }: PinIconProps) {
-  console.log("data", data);
+  console.log("dat1a", data);
   if (!data) {
     return null;
   }
@@ -33,6 +33,7 @@ export default function PinIcon({
           width: 20px;
           object-fit: contain;
           pointer-events: none;
+          color: white;
         }
 
         /* .closeIcon {

@@ -68,7 +68,6 @@ Browser.tabs.onRemoved.addListener(async (res) => {
   console.log("tab removed", res);
 
   let removeIds: number[] = [];
-  // fix me 如果删除的是最外层的 tab 可以拿到全部的 TABS,但是如果是删除内层的 tab 这里拿到的 TABS 是已经被删除过的了，重装插件第 1 次就可以成功
   const removedTab = findTabById(TABS, res);
   console.log("removedTab", removedTab, TABS);
   if (removedTab?.children) {

@@ -1,4 +1,10 @@
-import React, { createContext, Dispatch, useEffect, useRef } from "react";
+import React, {
+  createContext,
+  Dispatch,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import Browser, { Tabs } from "webextension-polyfill";
 import { useState } from "react";
 import { TAB_ACTION } from "../constant/tabAction";
@@ -108,7 +114,6 @@ export default function App() {
           setStorageTabs(res?.tabs?.newValue);
         }
         if (res?.pinnedTabs) {
-          // fixme 数据更新了 但是页面不渲染
           setPinnedTabs((prev) => {
             console.log(
               "prev",
@@ -235,40 +240,40 @@ export default function App() {
         >
           <DraggableArea
             tags={pinnedTabs}
-            render={({ tag: item, index }) => {
-              console.log("tag", `${item.id}_${item?.favIconUrl}`);
-              return (
-                <PinIcon
-                  data={item}
-                  key={`${item.id}_${item?.favIconUrl}`}
-                  onClick={() => {
-                    port.postMessage({
-                      type: TAB_ACTION.CREATE,
-                      url: item.url,
-                    });
-                  }}
-                  onRemove={() => {
-                    const res = pinnedTabs.filter((tab) => tab.id !== item.id);
-                    console.log("Removed", item, index, res);
-                    setPinnedTabs(res);
-                  }}
-                  className="pinnedTab"
-                />
-              );
-            }}
+            key={JSON.stringify(pinnedTabs)}
+            render={({ tag: item, index }) => (
+              <PinIcon
+                data={item}
+                key={item.id}
+                onClick={() => {
+                  port.postMessage({
+                    type: TAB_ACTION.CREATE,
+                    url: item.url,
+                  });
+                }}
+                onRemove={() => {
+                  const res = pinnedTabs.filter((tab) => tab.id !== item.id);
+                  console.log("Removed", item, index, res);
+                  setPinnedTabs(res);
+                }}
+                className="pinnedTab"
+              />
+            )}
             onChange={(tags) => console.log(tags)}
           />
         </div>
-        <AddPin
-          pinnedTabs={pinnedTabs}
-          setPinnedTabs={setPinnedTabs}
-          className="pinnedTab"
-          css={css`
-            position: absolute;
-            right: 6px;
-            bottom: 0px;
-          `}
-        />
+        {pinnedTabs.length < 8 && (
+          <AddPin
+            pinnedTabs={pinnedTabs}
+            setPinnedTabs={setPinnedTabs}
+            className="pinnedTab"
+            css={css`
+              position: absolute;
+              right: 6px;
+              bottom: 0px;
+            `}
+          />
+        )}
       </header>
 
       {/* body */}
