@@ -12,6 +12,7 @@ import AddPin from "./components/AddPin";
 import PinIcon from "./components/PinIcon";
 import Search from "./components/Search";
 import { DraggableArea } from "react-draggable-tags";
+import { flushSync } from "react-dom";
 
 const mockData = [
   {
@@ -85,7 +86,7 @@ export default function App() {
   const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>([]);
   const [isExpanded, setIsExpanded] = useState(true);
   const isFirstRef = useRef(true);
-  console.log("storageTabs", storageTabs);
+  console.log("pinnedTabs", pinnedTabs);
 
   useEffect(() => {
     console.log("isFirstRef", isFirstRef.current);
@@ -107,7 +108,18 @@ export default function App() {
           setStorageTabs(res?.tabs?.newValue);
         }
         if (res?.pinnedTabs) {
-          setPinnedTabs(res?.pinnedTabs?.newValue ?? []);
+          // fixme 数据更新了 但是页面不渲染
+          setPinnedTabs((prev) => {
+            console.log(
+              "prev",
+              prev,
+              res?.pinnedTabs?.newValue,
+              prev === res?.pinnedTabs?.newValue,
+              prev,
+              Date.now()
+            );
+            return res?.pinnedTabs?.newValue;
+          });
         }
       });
     }

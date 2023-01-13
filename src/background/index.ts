@@ -120,7 +120,7 @@ Browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
           PINNED_TABS[index].favIconUrl = tab?.favIconUrl;
         }
         console.log("PINNED_TABS", PINNED_TABS);
-        await setPinnedTabs(PINNED_TABS);
+        setPinnedTabs(PINNED_TABS);
       }
     });
 
