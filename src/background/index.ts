@@ -8,6 +8,7 @@ import {
   handleUpdateTabById,
   MyTab,
   removeTab,
+  removeTabOnly,
 } from "../utils/tabs";
 
 let TABS: any[] = [];
@@ -81,24 +82,28 @@ Browser.tabs.onCreated.addListener(async (newTab) => {
 });
 
 Browser.tabs.onRemoved.addListener(async (res) => {
-  console.log("tab removed", res);
-
-  let removeIds: number[] = [];
-  const removedTab = findTabById(TABS, res);
-  console.log("removedTab", removedTab, TABS);
-  if (removedTab?.children) {
-    const childrenIds = getAllChildren(removedTab.children as MyTab[]);
-    removeIds = [...removeIds, ...childrenIds];
-  }
-  console.log("removeIds", removeIds);
-  if (removeIds.length) {
-    await Browser.tabs.remove(removeIds);
-  }
-
-  const result = removeTab(TABS as MyTab[], (tab: MyTab) => tab.id !== res);
+  console.log("tab removed only", res);
+  const result = removeTabOnly(TABS, (tab: MyTab) => tab.id !== res);
   TABS = result;
   console.log("TABS", TABS);
   await setTabs(result);
+
+  // let removeIds: number[] = [];
+  // const removedTab = findTabById(TABS, res);
+  // console.log("removedTab", removedTab, TABS);
+  // if (removedTab?.children) {
+  //   const childrenIds = getAllChildren(removedTab.children as MyTab[]);
+  //   removeIds = [...removeIds, ...childrenIds];
+  // }
+  // console.log("removeIds", removeIds);
+  // if (removeIds.length) {
+  //   await Browser.tabs.remove(removeIds);
+  // }
+
+  // const result = removeTab(TABS as MyTab[], (tab: MyTab) => tab.id !== res);
+  // TABS = result;
+  // console.log("TABS", TABS);
+  // await setTabs(result);
 });
 
 // Browser.tabs.onDetached.addListener(async (res) => {

@@ -75,6 +75,27 @@ export function removeTab(tabs: MyTab[], predicate: any) {
   return newChildren;
 }
 
+export function removeTabOnly(tabs: MyTab[], predicate: any): any {
+  // 如果已经没有节点了，结束递归
+  if (!(tabs && tabs.length)) {
+    return [];
+  }
+
+  const newChildren = [];
+  for (const node of tabs) {
+    if (predicate(node)) {
+      // 如果节点符合条件，直接加入新的节点集
+      newChildren.push(node);
+      node.children = removeTabOnly(node?.children ?? [], predicate);
+    } else {
+      // 如果当前节点不符合条件，递归过滤子节点，
+      // 把符合条件的子节点提升上来，并入新节点集
+      newChildren.push(...removeTabOnly(node?.children ?? [], predicate));
+    }
+  }
+  return newChildren;
+}
+
 // const result = removeTab(a, (node) => node.id !== "3");
 
 // console.log(JSON.stringify(result, null, 4));
