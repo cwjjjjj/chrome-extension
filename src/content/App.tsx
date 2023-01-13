@@ -19,6 +19,7 @@ import PinIcon from "./components/PinIcon";
 import Search from "./components/Search";
 import { DraggableArea } from "react-draggable-tags";
 import { flushSync } from "react-dom";
+import TagBanner from "./components/TagBanner";
 
 const mockData = [
   {
@@ -277,52 +278,60 @@ export default function App() {
       </header>
 
       {/* body */}
-      <TabsTree
+      <main
         css={css`
-          background-color: red;
+          /* display: grid;
+          gap: 15px; */
+          padding-top: 20px;
         `}
-        data={storageTabs}
-        valueKey="id"
-        labelKey="title"
-        draggable
-        className="my-tree"
-        onDrop={({ createUpdateDataFunction }, event) => {
-          const treeTabs = createUpdateDataFunction(storageTabs);
-          Browser.storage.local.set({ tabs: treeTabs });
-        }}
-        renderTreeNode={(item) => {
-          return (
-            <Tab
-              onRemove={() => {
-                let removeIds: number[] = [];
-                const result = removeTab(
-                  storageTabs as MyTab[],
-                  (tab: MyTab) => tab.id !== item.id
-                );
-                Browser.storage.local.set({ tabs: result });
-                removeIds.push(item.id);
-                if (item?.children) {
-                  const childrenIds = getAllChildren(item.children as MyTab[]);
-                  removeIds = [...removeIds, ...childrenIds];
-                }
+      >
+        <TagBanner title="标签页" />
+        <TabsTree
+          data={storageTabs}
+          valueKey="id"
+          labelKey="title"
+          draggable
+          className="my-tree"
+          onDrop={({ createUpdateDataFunction }, event) => {
+            const treeTabs = createUpdateDataFunction(storageTabs);
+            Browser.storage.local.set({ tabs: treeTabs });
+          }}
+          renderTreeNode={(item) => {
+            return (
+              <Tab
+                onRemove={() => {
+                  let removeIds: number[] = [];
+                  const result = removeTab(
+                    storageTabs as MyTab[],
+                    (tab: MyTab) => tab.id !== item.id
+                  );
+                  Browser.storage.local.set({ tabs: result });
+                  removeIds.push(item.id);
+                  if (item?.children) {
+                    const childrenIds = getAllChildren(
+                      item.children as MyTab[]
+                    );
+                    removeIds = [...removeIds, ...childrenIds];
+                  }
 
-                port.postMessage({
-                  type: TAB_ACTION.REMOVE,
-                  tabIds: removeIds,
-                });
-              }}
-              onActive={() => {
-                console.log("active", item.id);
-                port.postMessage({
-                  type: TAB_ACTION.ACTIVE,
-                  tabId: item.id,
-                });
-              }}
-              data={item as Tabs.Tab}
-            />
-          );
-        }}
-      />
+                  port.postMessage({
+                    type: TAB_ACTION.REMOVE,
+                    tabIds: removeIds,
+                  });
+                }}
+                onActive={() => {
+                  console.log("active", item.id);
+                  port.postMessage({
+                    type: TAB_ACTION.ACTIVE,
+                    tabId: item.id,
+                  });
+                }}
+                data={item as Tabs.Tab}
+              />
+            );
+          }}
+        />
+      </main>
       {/* footer */}
       <div
         css={css`
