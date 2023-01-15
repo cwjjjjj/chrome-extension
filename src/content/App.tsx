@@ -229,8 +229,20 @@ export default function App() {
           gap: 15px; */
           padding-top: 20px;
 
+          .icon-wrapper {
+            height: 30px;
+            width: 30px;
+            display: flex;
+            align-items: center;
+          }
+
           .arrow-icon-right {
             transform: rotate(-90deg);
+          }
+
+          .rs-tree-node {
+            display: flex;
+            align-items: center;
           }
         `}
       >
@@ -252,25 +264,23 @@ export default function App() {
               return <div></div>;
             }
             return (
-              <ArrowIcon
-                css={css`
-                  width: 30px;
-                  height: 30px;
-                  background-color: red;
-                `}
-                className={
-                  expandItemValues.includes(item.id) ? "" : "arrow-icon-right"
-                }
-                onClick={() => {
-                  if (expandItemValues.includes(item.id)) {
-                    const res = expandItemValues.filter((id) => item.id !== id);
-                    setExpandItemValues(res);
-                  } else {
-                    const res = [...expandItemValues, item.id];
-                    setExpandItemValues(res);
+              <div className="icon-wrapper">
+                <ArrowIcon
+                  className={
+                    expandItemValues.includes(item.id) ? "" : "arrow-icon-right"
                   }
-                }}
-              />
+                  onClick={() => {
+                    let res;
+                    if (expandItemValues.includes(item.id)) {
+                      res = expandItemValues.filter((id) => item.id !== id);
+                      setExpandItemValues(res);
+                    } else {
+                      res = [...expandItemValues, item.id];
+                      setExpandItemValues(res);
+                    }
+                  }}
+                />
+              </div>
             );
           }}
           renderTreeNode={(item) => {
