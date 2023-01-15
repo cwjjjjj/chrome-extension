@@ -13,6 +13,7 @@ import {
 
 let TABS: any[] = [];
 let PINNED_TABS: any[] = [];
+let EXPANDED_TABS: number[] = [];
 let CURRENT_TAB;
 let isFirst = true;
 
@@ -22,11 +23,8 @@ export const setCurrentTab = async (currentTab: MyTab) => {
   return Browser.storage.local.set({ currentTab });
 };
 
-const updateCurrentTab = async () => {
-  let [tab] = await Browser.tabs.query({ active: true });
-  CURRENT_TAB = tab;
-  await setCurrentTab(tab);
-  return tab;
+export const setExpandedTabs = async (expandedTabs: number[]) => {
+  return Browser.storage.local.set({ expandedTabs });
 };
 
 const getAllTabs = async () => {
@@ -53,12 +51,15 @@ const updateTabs = async () => {
     TABS = await getAllTabs();
     await setTabs(TABS);
     await setPinnedTabs([]);
+    await setExpandedTabs([]);
     isFirst = false;
   } else {
     const { tabs } = await Browser.storage.local.get(["tabs"]);
     const { pinnedTabs } = await Browser.storage.local.get(["pinnedTabs"]);
+    const { expandedTabs } = await Browser.storage.local.get(["expandedTabs"]);
     TABS = tabs;
     PINNED_TABS = pinnedTabs;
+    EXPANDED_TABS = expandedTabs;
   }
   console.log("storage new tabs", TABS);
 };
@@ -87,6 +88,11 @@ Browser.tabs.onRemoved.addListener(async (res) => {
   TABS = result;
   console.log("TABS", TABS);
   await setTabs(result);
+
+  if (EXPANDED_TABS.includes(res)) {
+    EXPANDED_TABS = EXPANDED_TABS.filter((id) => id !== res);
+    await setExpandedTabs(EXPANDED_TABS);
+  }
 
   // let removeIds: number[] = [];
   // const removedTab = findTabById(TABS, res);

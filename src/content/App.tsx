@@ -20,60 +20,7 @@ import Search from "./components/Search";
 import { DraggableArea } from "react-draggable-tags";
 import { flushSync } from "react-dom";
 import TagBanner from "./components/TagBanner";
-
-const mockData = [
-  {
-    url: "http://www.baidu.com",
-    id: "1",
-    favIconUrl: "https://www.baidu.com/favicon.ico",
-  },
-  {
-    url: "http://www.google.com",
-    id: "2",
-    favIconUrl: "https://www.google.com/favicon.ico",
-  },
-  {
-    url: "http://www.github.com",
-    id: "3",
-    favIconUrl: "https://www.github.com/favicon.ico",
-  },
-  {
-    url: "http://www.bilibili.com",
-    id: "4",
-    favIconUrl: "https://www.bilibili.com/favicon.ico",
-  },
-  {
-    url: "http://www.bilibili.com",
-    id: "5",
-    favIconUrl: "https://www.bilibili.com/favicon.ico",
-  },
-  {
-    url: "http://www.bilibili.com",
-    id: "6",
-    favIconUrl: "https://www.bilibili.com/favicon.ico",
-  },
-  {
-    url: "http://www.bilibili.com",
-    id: "7",
-    favIconUrl: "https://www.bilibili.com/favicon.ico",
-  },
-  // {
-  //   url: "http://www.bilibili.com",
-  //   id: "8",
-  //   favIconUrl: "https://www.bilibili.com/favicon.ico",
-  // },
-  // {
-  //   url: "http://www.bilibili.com",
-  //   id: "9",
-  //   favIconUrl: "https://www.bilibili.com/favicon.ico",
-  // },
-  // {
-  //   url: "http://www.bilibili.com",
-  //   id: "10",
-  //   favIconUrl: "https://www.bilibili.com/favicon.ico",
-  //   create: true,
-  // },
-];
+import ArrowIcon from "./components/SvgComponents/ArrowIcon";
 
 export interface PinnedTab {
   url: string;
@@ -92,8 +39,9 @@ export default function App() {
   const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
   const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>([]);
   const [isExpanded, setIsExpanded] = useState(true);
+  const [expandItemValues, setExpandItemValues] = useState<string[]>([]);
   const isFirstRef = useRef(true);
-  console.log("pinnedTabs", pinnedTabs);
+  console.log("expandItemValues", expandItemValues);
 
   useEffect(() => {
     console.log("isFirstRef", isFirstRef.current);
@@ -101,31 +49,28 @@ export default function App() {
     if (isFirstRef?.current) {
       Browser.storage.local.get(["tabs"]).then((res) => {
         setStorageTabs(res.tabs);
-        isFirstRef.current = false;
       });
       Browser.storage.local.get(["pinnedTabs"]).then((res) => {
         setPinnedTabs(res.pinnedTabs);
-        isFirstRef.current = false;
       });
+      Browser.storage.local.get(["expandedTabs"]).then((res) => {
+        console.log("res get", res);
+        setExpandItemValues(res.expandedTabs);
+      });
+      isFirstRef.current = false;
+
       // Browser.storage.local.set({ pinnedTabs: pinnedTabs ?? [] });
     } else {
       Browser.storage.onChanged.addListener((res) => {
-        console.log("storage change", res);
         if (res?.tabs) {
           setStorageTabs(res?.tabs?.newValue);
         }
         if (res?.pinnedTabs) {
-          setPinnedTabs((prev) => {
-            console.log(
-              "prev",
-              prev,
-              res?.pinnedTabs?.newValue,
-              prev === res?.pinnedTabs?.newValue,
-              prev,
-              Date.now()
-            );
-            return res?.pinnedTabs?.newValue;
-          });
+          setPinnedTabs(res?.pinnedTabs?.newValue);
+        }
+        if (res?.expandedTabs) {
+          console.log("expanded Tabs change", res?.expandedTabs?.newValue);
+          setStorageTabs(res?.expandedTabs?.newValue);
         }
       });
     }
@@ -283,6 +228,10 @@ export default function App() {
           /* display: grid;
           gap: 15px; */
           padding-top: 20px;
+
+          .arrow-icon-right {
+            transform: rotate(-90deg);
+          }
         `}
       >
         <TagBanner title="标签页" />
@@ -295,6 +244,34 @@ export default function App() {
           onDrop={({ createUpdateDataFunction }, event) => {
             const treeTabs = createUpdateDataFunction(storageTabs);
             Browser.storage.local.set({ tabs: treeTabs });
+          }}
+          expandItemValues={expandItemValues}
+          renderTreeIcon={(item) => {
+            console.log("item", item);
+            if (!item?.children?.length) {
+              return <div></div>;
+            }
+            return (
+              <ArrowIcon
+                css={css`
+                  width: 30px;
+                  height: 30px;
+                  background-color: red;
+                `}
+                className={
+                  expandItemValues.includes(item.id) ? "" : "arrow-icon-right"
+                }
+                onClick={() => {
+                  if (expandItemValues.includes(item.id)) {
+                    const res = expandItemValues.filter((id) => item.id !== id);
+                    setExpandItemValues(res);
+                  } else {
+                    const res = [...expandItemValues, item.id];
+                    setExpandItemValues(res);
+                  }
+                }}
+              />
+            );
           }}
           renderTreeNode={(item) => {
             return (
@@ -333,7 +310,7 @@ export default function App() {
         />
       </main>
       {/* footer */}
-      <div
+      {/* <div
         css={css`
           background-color: white;
         `}
@@ -355,7 +332,7 @@ export default function App() {
         >
           add
         </Button>
-      </div>
+      </div> */}
     </div>
     // </Context.Provider>
   );
