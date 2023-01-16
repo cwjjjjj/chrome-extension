@@ -64,19 +64,31 @@ export default function Tab({
       <p className="title">{data.title}</p>
 
       {data?.children && data?.children?.length > 0 && (
-        <IconButton
-          icon={<FileCloseIcon />}
+        <FileCloseIcon
           onClick={(e) => {
             e.stopPropagation();
             onRemoveFolder();
           }}
-          css={css`
-            background-color: transparent;
-          `}
         />
+        // <IconButton
+        //   icon={<FileCloseIcon />}
+        //   onClick={(e) => {
+        //     e.stopPropagation();
+        //     onRemoveFolder();
+        //   }}
+        //   css={css`
+        //     background-color: transparent;
+        //   `}
+        // />
       )}
 
-      <IconButton
+      <CloseIcon
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemoveOne();
+        }}
+      />
+      {/* <IconButton
         icon={<CloseIcon />}
         onClick={(e) => {
           e.stopPropagation();
@@ -85,7 +97,7 @@ export default function Tab({
         css={css`
           background-color: transparent;
         `}
-      />
+      /> */}
     </div>
   );
 }

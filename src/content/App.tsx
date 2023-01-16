@@ -253,11 +253,16 @@ export default function App() {
           .rs-tree-node {
             display: flex;
             align-items: center;
-            padding-left: 0 !important;
           }
 
           .rs-tree-node-label {
             padding-left: 0;
+          }
+
+          .rs-tree-node-active .rs-tree-node-label-content {
+            background-color: unset;
+            color: unset;
+            font-weight: unset;
           }
         `}
       >

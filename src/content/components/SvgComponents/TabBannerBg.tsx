@@ -12,7 +12,7 @@ const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
     <path
       d="M0.5 0.5H269.5V35.5H12C5.64873 35.5 0.5 30.3513 0.5 24V0.5Z"
       stroke="url(#paint0_linear_27499_14707)"
-      stroke-opacity="0.8"
+      strokeOpacity="0.8"
     />
     <defs>
       <linearGradient
@@ -23,7 +23,7 @@ const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
         y2="-5.02894"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="white" />
+        <stop stopColor="white" />
         <stop offset="0.745835" stopColor="white" stopOpacity="0" />
       </linearGradient>
     </defs>
