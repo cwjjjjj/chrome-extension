@@ -31,7 +31,7 @@ export default function App() {
   const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
   const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>([]);
   const [isExpanded, setIsExpanded] = useState(true);
-  const [expandItemValues, setExpandItemValues] = useState<string[]>([]);
+  const [expandItemValues, setExpandItemValues] = useState<number[]>([]);
   const isFirstRef = useRef(true);
   console.log(
     "pinnedTabs",
@@ -277,6 +277,11 @@ export default function App() {
             Browser.storage.local.set({ tabs: treeTabs });
           }}
           expandItemValues={expandItemValues}
+          // fixme 希望所有页签同步 expand 状态，但是这个会触发报错
+          // onExpand={(expandValues, item, concat) => {
+          //   console.log("expand", expandValues, item, concat);
+          //   Browser.storage.local.set({ expandedTabs: expandValues });
+          // }}
           renderTreeIcon={(item) => {
             if (!item?.children?.length) {
               return <div className="none"></div>;

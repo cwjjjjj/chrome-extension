@@ -46,7 +46,6 @@ const clearStorage = () => {
 // clearStorage();
 
 const updateTabs = async () => {
-  console.log("isFirst", isFirst);
   if (isFirst) {
     TABS = await getAllTabs();
     await setTabs(TABS);
@@ -61,7 +60,6 @@ const updateTabs = async () => {
     PINNED_TABS = pinnedTabs;
     EXPANDED_TABS = expandedTabs;
   }
-  console.log("storage new tabs", TABS);
 };
 
 Browser.tabs.onCreated.addListener(async (newTab) => {
@@ -73,20 +71,16 @@ Browser.tabs.onCreated.addListener(async (newTab) => {
         : [newTab];
     }
     await setTabs(TABS);
-    console.log("parent tab", parentTab, TABS);
   } else {
     const newTabs = [...TABS, newTab];
     TABS = newTabs;
     await setTabs(newTabs);
-    console.log("tab created", Date.now(), newTab, TABS);
   }
 });
 
 Browser.tabs.onRemoved.addListener(async (res) => {
-  console.log("tab removed only", res);
   const result = removeTabOnly(TABS, (tab: MyTab) => tab.id !== res);
   TABS = result;
-  console.log("TABS", TABS);
   await setTabs(result);
 
   if (EXPANDED_TABS.includes(res)) {
@@ -109,7 +103,7 @@ Browser.tabs.onRemoved.addListener(async (res) => {
   // const result = removeTab(TABS as MyTab[], (tab: MyTab) => tab.id !== res);
   // TABS = result;
   // console.log("TABS", TABS);
-  // await setTabs(result);
+  // await setTabss(result);
 });
 
 // Browser.tabs.onDetached.addListener(async (res) => {
