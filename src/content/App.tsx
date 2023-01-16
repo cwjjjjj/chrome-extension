@@ -235,6 +235,10 @@ export default function App() {
           gap: 15px; */
           padding-top: 20px;
 
+          .none {
+            display: none;
+          }
+
           .icon-wrapper {
             height: 30px;
             width: 30px;
@@ -249,6 +253,11 @@ export default function App() {
           .rs-tree-node {
             display: flex;
             align-items: center;
+            padding-left: 0 !important;
+          }
+
+          .rs-tree-node-label {
+            padding-left: 0;
           }
         `}
       >
@@ -266,7 +275,7 @@ export default function App() {
           expandItemValues={expandItemValues}
           renderTreeIcon={(item) => {
             if (!item?.children?.length) {
-              return <div></div>;
+              return <div className="none"></div>;
             }
             return (
               <div className="icon-wrapper">
