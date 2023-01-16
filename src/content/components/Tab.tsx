@@ -25,10 +25,10 @@ export default function Tab({
   return (
     <div
       css={css`
-        width: 280px;
+        width: 100%;
         padding: 0 10px;
         display: grid;
-        grid-template-columns: 30px 1fr 30px 30px;
+        grid-template-columns: 20px 160px 25px 25px;
         align-items: center;
         gap: 5px;
 
@@ -49,6 +49,13 @@ export default function Tab({
           width: 20px;
           object-fit: contain;
         }
+
+        .closeIcon {
+          border-radius: 7px;
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+          }
+        }
       `}
       onClick={onActive}
     >
@@ -64,38 +71,21 @@ export default function Tab({
 
       {data?.children && data?.children?.length > 0 && (
         <FileCloseIcon
+          className="closeIcon"
           onClick={(e) => {
             e.stopPropagation();
             onRemoveFolder();
           }}
         />
-        // <IconButton
-        //   icon={<FileCloseIcon />}
-        //   onClick={(e) => {
-        //     e.stopPropagation();
-        //     onRemoveFolder();
-        //   }}
-        //   css={css`
-        //     background-color: transparent;
-        //   `}
-        // />
       )}
+
       <CloseIcon
+        className="closeIcon"
         onClick={(e) => {
           e.stopPropagation();
           onRemoveOne();
         }}
       />
-      {/* <IconButton
-        icon={<CloseIcon />}
-        onClick={(e) => {
-          e.stopPropagation();
-          onRemoveOne();
-        }}
-        css={css`
-          background-color: transparent;
-        `}
-      /> */}
     </div>
   );
 }

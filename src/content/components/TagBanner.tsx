@@ -20,7 +20,7 @@ export default function TagBanner({ title, ...props }: TagBannerProps) {
         height: 36px;
         border-radius: 0px 0px 0px 12px;
         display: grid;
-        grid-template-columns: 20px 80px;
+        grid-template-columns: 30px 80px;
         padding: 0 15px;
         align-items: center;
 
@@ -28,11 +28,19 @@ export default function TagBanner({ title, ...props }: TagBannerProps) {
           position: absolute;
           inset: 0;
         }
+
+        .title {
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          color: #ffffff;
+          opacity: 0.8;
+        }
       `}
     >
       <TabBannerBg className="bg" />
       <TagIcon />
-      <span>{title}</span>
+      <span className="title">{title}</span>
     </div>
   );
 }

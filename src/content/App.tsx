@@ -111,8 +111,9 @@ export default function App() {
         padding: 54px 10px;
 
         .rs-tree {
-          height: 100% !important;
-          max-height: 90%;
+          /* padding-block 54px ,header-height 186px ,banner 36px ,inner-padding 20px */
+          height: calc(100vh - 108px - 186px - 36px - 20px) !important;
+          max-height: unset;
           overflow: hidden auto;
 
           /* .rs-tree-node-expand-icon-wrapper {
@@ -221,9 +222,13 @@ export default function App() {
       {/* body */}
       <main
         css={css`
-          /* display: grid;
-          gap: 15px; */
           padding-top: 20px;
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 22px;
+          color: #ffffff;
+          display: grid;
+          gap: 15px;
 
           .none {
             display: none;
