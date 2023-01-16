@@ -1,14 +1,7 @@
-import React, {
-  createContext,
-  Dispatch,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
+import { createContext, Dispatch, useEffect, useMemo, useRef } from "react";
 import Browser, { Tabs } from "webextension-polyfill";
 import { useState } from "react";
 import { ADD_ICON_POSITION, TAB_ACTION } from "../constant/tabAction";
-import { Button } from "rsuite";
 import TabsTree from "./components/TabsTree";
 import { css } from "@emotion/react";
 import "rsuite/dist/rsuite.min.css";
@@ -18,7 +11,6 @@ import AddPin from "./components/AddPin";
 import PinIcon from "./components/PinIcon";
 import Search from "./components/Search";
 import { DraggableArea } from "react-draggable-tags";
-import { flushSync } from "react-dom";
 import TagBanner from "./components/TagBanner";
 import ArrowIcon from "./components/SvgComponents/ArrowIcon";
 
@@ -63,8 +55,6 @@ export default function App() {
         setExpandItemValues(res.expandedTabs);
       });
       isFirstRef.current = false;
-
-      // Browser.storage.local.set({ pinnedTabs: pinnedTabs ?? [] });
     } else {
       Browser.storage.onChanged.addListener((res) => {
         if (res?.tabs) {
@@ -256,13 +246,17 @@ export default function App() {
           }
 
           .rs-tree-node-label {
-            padding-left: 0;
+            padding-left: 15px;
           }
 
           .rs-tree-node-active .rs-tree-node-label-content {
             background-color: unset;
             color: unset;
             font-weight: unset;
+          }
+
+          .rs-tree-node-label-content {
+            padding: 0;
           }
         `}
       >

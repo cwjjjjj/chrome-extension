@@ -1,6 +1,5 @@
 import { css } from "@emotion/react";
 import { HTMLAttributes } from "react";
-import { IconButton } from "rsuite";
 import { MyTab } from "../../utils/tabs";
 import CloseIcon from "./SvgComponents/CloseIcon";
 import DefaultFavicon from "./SvgComponents/DefaultFavicon";
@@ -26,10 +25,10 @@ export default function Tab({
   return (
     <div
       css={css`
-        width: 100%;
+        width: 280px;
         padding: 0 10px;
         display: grid;
-        grid-template-columns: 40px 1fr 40px 40px;
+        grid-template-columns: 30px 1fr 30px 30px;
         align-items: center;
         gap: 5px;
 
@@ -81,7 +80,6 @@ export default function Tab({
         //   `}
         // />
       )}
-
       <CloseIcon
         onClick={(e) => {
           e.stopPropagation();
