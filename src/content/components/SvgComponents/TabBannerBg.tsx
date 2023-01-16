@@ -24,7 +24,7 @@ const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
         gradientUnits="userSpaceOnUse"
       >
         <stop stop-color="white" />
-        <stop offset="0.745835" stop-color="white" stop-opacity="0" />
+        <stop offset="0.745835" stopColor="white" stopOpacity="0" />
       </linearGradient>
     </defs>
   </svg>

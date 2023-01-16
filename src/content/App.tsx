@@ -300,7 +300,7 @@ export default function App() {
           renderTreeNode={(item) => {
             return (
               <Tab
-                onRemove={() => {
+                onRemoveFolder={() => {
                   let removeIds: number[] = [];
                   const result = removeTab(
                     storageTabs as MyTab[],
@@ -318,6 +318,12 @@ export default function App() {
                   port.postMessage({
                     type: TAB_ACTION.REMOVE,
                     tabIds: removeIds,
+                  });
+                }}
+                onRemoveOne={() => {
+                  port.postMessage({
+                    type: TAB_ACTION.REMOVE,
+                    tabIds: [item.id],
                   });
                 }}
                 onActive={() => {

@@ -1,30 +1,48 @@
 import { css } from "@emotion/react";
 import { HTMLAttributes } from "react";
-import { Button, IconButton } from "rsuite";
-import CollaspedFillIcon from "@rsuite/icons/CollaspedFill";
+import { IconButton } from "rsuite";
 import { MyTab } from "../../utils/tabs";
+import CloseIcon from "./SvgComponents/CloseIcon";
 import DefaultFavicon from "./SvgComponents/DefaultFavicon";
+import FileCloseIcon from "./SvgComponents/FileCloseIcon";
 
 export interface TabProps extends HTMLAttributes<HTMLDivElement> {
   data: MyTab;
-  onRemove: () => void;
+  onRemoveFolder: () => void;
+  onRemoveOne: () => void;
   onActive: () => void;
 }
 
-export default function Tab({ data, onRemove, onActive, ...props }: TabProps) {
+export default function Tab({
+  data,
+  onRemoveFolder,
+  onRemoveOne,
+  onActive,
+  ...props
+}: TabProps) {
   if (!data) {
     return null;
   }
   return (
     <div
       css={css`
+        width: 100%;
+        padding: 0 10px;
         display: grid;
-        grid-template-columns: 20px 40px 1fr;
+        grid-template-columns: 40px 1fr 40px 40px;
         align-items: center;
         gap: 5px;
 
         .title {
           white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .iconWrapper {
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
 
         .iconImg {
@@ -35,22 +53,39 @@ export default function Tab({ data, onRemove, onActive, ...props }: TabProps) {
       `}
       onClick={onActive}
     >
+      <div className="iconWrapper">
+        {data?.favIconUrl ? (
+          <img src={data?.favIconUrl} className="iconImg" />
+        ) : (
+          <DefaultFavicon className="iconImg" />
+        )}
+      </div>
+
+      <p className="title">{data.title}</p>
+
+      {data?.children && data?.children?.length > 0 && (
+        <IconButton
+          icon={<FileCloseIcon />}
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemoveFolder();
+          }}
+          css={css`
+            background-color: transparent;
+          `}
+        />
+      )}
+
       <IconButton
-        icon={<CollaspedFillIcon />}
+        icon={<CloseIcon />}
         onClick={(e) => {
           e.stopPropagation();
-          onRemove();
+          onRemoveOne();
         }}
         css={css`
           background-color: transparent;
         `}
       />
-      {data?.favIconUrl ? (
-        <img src={data?.favIconUrl} className="iconImg" />
-      ) : (
-        <DefaultFavicon className="iconImg" />
-      )}
-      <p className="title">{data.title}</p>
     </div>
   );
 }
