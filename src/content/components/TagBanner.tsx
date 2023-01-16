@@ -21,7 +21,6 @@ export default function TagBanner({ title, ...props }: TagBannerProps) {
         grid-template-columns: 30px 1fr;
         padding: 0 15px;
         align-items: center;
-        background-color: red;
       `}
     >
       <TagIcon />

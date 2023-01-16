@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import Browser, { Tabs } from "webextension-polyfill";
 import { useState } from "react";
-import { TAB_ACTION } from "../constant/tabAction";
+import { ADD_ICON_POSITION, TAB_ACTION } from "../constant/tabAction";
 import { Button } from "rsuite";
 import TabsTree from "./components/TabsTree";
 import { css } from "@emotion/react";
@@ -41,7 +41,12 @@ export default function App() {
   const [isExpanded, setIsExpanded] = useState(true);
   const [expandItemValues, setExpandItemValues] = useState<string[]>([]);
   const isFirstRef = useRef(true);
-  console.log("expandItemValues", expandItemValues);
+  console.log(
+    "pinnedTabs",
+    pinnedTabs,
+    ADD_ICON_POSITION[pinnedTabs.length].right,
+    ADD_ICON_POSITION[pinnedTabs.length].bottom
+  );
 
   useEffect(() => {
     console.log("isFirstRef", isFirstRef.current);
@@ -113,7 +118,6 @@ export default function App() {
         // backgroundImage: 'url("https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg")',
       }}
       css={css`
-        /* color: red; */
         padding: 54px 10px;
 
         .rs-tree {
@@ -215,8 +219,10 @@ export default function App() {
             className="pinnedTab"
             css={css`
               position: absolute;
-              right: 6px;
-              bottom: 0px;
+              right: ${ADD_ICON_POSITION[pinnedTabs.length].right}px;
+              bottom: ${ADD_ICON_POSITION[pinnedTabs.length].bottom}px;
+              /* right: 6px;
+              bottom: 0px; */
             `}
           />
         )}
@@ -259,7 +265,6 @@ export default function App() {
           }}
           expandItemValues={expandItemValues}
           renderTreeIcon={(item) => {
-            console.log("item", item);
             if (!item?.children?.length) {
               return <div></div>;
             }
