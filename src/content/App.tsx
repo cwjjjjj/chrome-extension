@@ -30,19 +30,11 @@ const port = Browser.runtime.connect();
 export default function App() {
   const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
   const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>([]);
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [expandItemValues, setExpandItemValues] = useState<number[]>([]);
   const isFirstRef = useRef(true);
-  console.log(
-    "pinnedTabs",
-    pinnedTabs,
-    ADD_ICON_POSITION[pinnedTabs.length].right,
-    ADD_ICON_POSITION[pinnedTabs.length].bottom
-  );
 
   useEffect(() => {
-    console.log("isFirstRef", isFirstRef.current);
-
     if (isFirstRef?.current) {
       Browser.storage.local.get(["tabs"]).then((res) => {
         setStorageTabs(res.tabs);
@@ -64,24 +56,24 @@ export default function App() {
           setPinnedTabs(res?.pinnedTabs?.newValue);
         }
         if (res?.expandedTabs) {
-          console.log("expanded Tabs change", res?.expandedTabs?.newValue);
           setStorageTabs(res?.expandedTabs?.newValue);
         }
       });
     }
   }, [isFirstRef?.current]);
 
-  const listener = (res: any) => {
-    console.log("content res", res);
-  };
+  // const listener = (res: any) => {
+  //   console.log("content res", res);
+  // };
 
   useEffect(() => {
     // document.body.style.marginLeft = `${isExpanded ? "200px" : "1px"}`;
-    port.onMessage.addListener(listener);
+    // port.onMessage.addListener(listener);
     return () => {
       port.disconnect();
     };
-  }, [isExpanded]);
+  }, []);
+
   return (
     // <Context.Provider
     //   value={{
@@ -91,7 +83,7 @@ export default function App() {
     // >
     <div
       style={{
-        width: `${isExpanded ? "300px" : "1px"}`,
+        width: `${isExpanded ? "300px" : "5px"}`,
         position: "fixed",
         top: "0px",
         left: "0px",
@@ -125,7 +117,7 @@ export default function App() {
         setIsExpanded(true);
       }}
       onMouseLeave={() => {
-        setIsExpanded(true);
+        setIsExpanded(false);
       }}
     >
       {/* header */}
