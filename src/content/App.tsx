@@ -188,11 +188,15 @@ export default function App() {
                   const res = pinnedTabs.filter((tab) => tab.id !== item.id);
                   console.log("Removed", item, index, res);
                   setPinnedTabs(res);
+                  Browser.storage.local.set({ pinnedTabs: res });
                 }}
                 className="pinnedTab"
               />
             )}
-            onChange={(tags) => console.log(tags)}
+            onChange={(tags) => {
+              setPinnedTabs(tags);
+              Browser.storage.local.set({ pinnedTabs: tags });
+            }}
           />
         </div>
         {pinnedTabs.length < 8 && (

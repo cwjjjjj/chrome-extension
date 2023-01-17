@@ -1,6 +1,6 @@
 import Browser from "webextension-polyfill";
 import pRetry from "p-retry";
-import { TAB_ACTION } from "../constant/tabAction";
+import { DEFAULT_PINNED_TABS, TAB_ACTION } from "../constant/tabAction";
 import {
   findTabById,
   getAllChildren,
@@ -12,7 +12,7 @@ import {
 } from "../utils/tabs";
 
 let TABS: any[] = [];
-let PINNED_TABS: any[] = [];
+let PINNED_TABS: any[] = DEFAULT_PINNED_TABS;
 let EXPANDED_TABS: number[] = [];
 let CURRENT_TAB;
 let isFirst = true;
@@ -49,8 +49,8 @@ const updateTabs = async () => {
   if (isFirst) {
     TABS = await getAllTabs();
     await setTabs(TABS);
-    await setPinnedTabs([]);
-    await setExpandedTabs([]);
+    await setPinnedTabs(PINNED_TABS);
+    await setExpandedTabs(EXPANDED_TABS);
     isFirst = false;
   } else {
     const { tabs } = await Browser.storage.local.get(["tabs"]);

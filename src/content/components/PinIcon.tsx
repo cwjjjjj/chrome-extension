@@ -17,7 +17,6 @@ export default function PinIcon({
   onRemove,
   ...props
 }: PinIconProps) {
-  console.log("dat1a", data);
   if (!data) {
     return null;
   }
