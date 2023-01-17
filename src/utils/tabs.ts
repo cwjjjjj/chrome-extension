@@ -110,19 +110,23 @@ export function getAllChildren(tabs: MyTab[], arr: number[] = []) {
   return arr;
 }
 
-export function findTabById(tabs: MyTab[], id: number): MyTab | void {
+export function findTabById(tabs: MyTab[], id: number): MyTab | null {
   console.log("findTabById", tabs, id);
   if (!(tabs && tabs.length)) {
-    return;
+    return null;
   }
   for (const tab of tabs) {
     console.log("for + length", tab.id, id, tab.id === id);
     if (tab.id === id) {
       return tab;
     } else if (tab?.children && tab.children.length) {
-      return findTabById(tab.children, id);
+      const res = findTabById(tab.children, id);
+      if (res) {
+        return res;
+      }
     }
   }
+  return null;
 }
 
 export function handleActiveTabById(tabs: MyTab[], id: number) {

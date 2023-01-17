@@ -63,6 +63,7 @@ const updateTabs = async () => {
 };
 
 Browser.tabs.onCreated.addListener(async (newTab) => {
+  console.log("create tab", newTab);
   if (newTab?.openerTabId) {
     const parentTab = findTabById(TABS, newTab?.openerTabId as number);
     if (parentTab) {
