@@ -48,14 +48,25 @@ const clearStorage = () => {
 const updateTabs = async () => {
   if (isFirst) {
     TABS = await getAllTabs();
-    await setTabs(TABS);
-    await setPinnedTabs(PINNED_TABS);
-    await setExpandedTabs(EXPANDED_TABS);
+    await Promise.all([
+      setTabs(TABS),
+      setPinnedTabs(PINNED_TABS),
+      setExpandedTabs(EXPANDED_TABS),
+    ]);
+    // await setTabs(TABS);
+    // await setPinnedTabs(PINNED_TABS);
+    // await setExpandedTabs(EXPANDED_TABS);
     isFirst = false;
   } else {
-    const { tabs } = await Browser.storage.local.get(["tabs"]);
-    const { pinnedTabs } = await Browser.storage.local.get(["pinnedTabs"]);
-    const { expandedTabs } = await Browser.storage.local.get(["expandedTabs"]);
+    // const { tabs } = await Browser.storage.local.get(["tabs"]);
+    // const { pinnedTabs } = await Browser.storage.local.get(["pinnedTabs"]);
+    // const { expandedTabs } = await Browser.storage.local.get(["expandedTabs"]);
+    const [{ tabs }, { pinnedTabs }, { expandedTabs }] = await Promise.all([
+      Browser.storage.local.get(["tabs"]),
+      Browser.storage.local.get(["pinnedTabs"]),
+      Browser.storage.local.get(["expandedTabs"]),
+    ]);
+    console.log("promise all", tabs, pinnedTabs, expandedTabs);
     TABS = tabs;
     PINNED_TABS = pinnedTabs;
     EXPANDED_TABS = expandedTabs;
@@ -135,7 +146,7 @@ Browser.tabs.onActivated.addListener(async (res) => {
 
 Browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo?.status === "complete") {
-    PINNED_TABS.forEach(async (pinnedTab, index) => {
+    PINNED_TABS?.forEach(async (pinnedTab, index) => {
       if (tab?.url?.includes(pinnedTab.url)) {
         if (tab?.favIconUrl) {
           PINNED_TABS[index].favIconUrl = tab?.favIconUrl;
