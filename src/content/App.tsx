@@ -6,7 +6,12 @@ import TabsTree from "./components/TabsTree";
 import { css } from "@emotion/react";
 import "rsuite/dist/rsuite.min.css";
 import Tab from "./components/Tab";
-import { getAllChildren, MyTab, removeTab } from "../utils/tabs";
+import {
+  calculateLevel,
+  getAllChildren,
+  MyTab,
+  removeTab,
+} from "../utils/tabs";
 import AddPin from "./components/AddPin";
 import PinIcon from "./components/PinIcon";
 import Search from "./components/Search";
@@ -33,6 +38,7 @@ export default function App() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [expandItemValues, setExpandItemValues] = useState<number[]>([]);
   const isFirstRef = useRef(true);
+  console.log("calculateLevel", calculateLevel(storageTabs, 1));
 
   useEffect(() => {
     if (isFirstRef?.current) {
@@ -302,11 +308,11 @@ export default function App() {
               <Tab
                 onRemoveFolder={() => {
                   let removeIds: number[] = [];
-                  const result = removeTab(
-                    storageTabs as MyTab[],
-                    (tab: MyTab) => tab.id !== item.id
-                  );
-                  Browser.storage.local.set({ tabs: result });
+                  // const result = removeTab(
+                  //   storageTabs as MyTab[],
+                  //   (tab: MyTab) => tab.id !== item.id
+                  // );
+                  // Browser.storage.local.set({ tabs: result });
                   removeIds.push(item.id);
                   if (item?.children) {
                     const childrenIds = getAllChildren(

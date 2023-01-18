@@ -2,6 +2,7 @@ import Browser from "webextension-polyfill";
 import pRetry from "p-retry";
 import { DEFAULT_PINNED_TABS, TAB_ACTION } from "../constant/tabAction";
 import {
+  calculateLevel,
   findTabById,
   getAllChildren,
   handleActiveTabById,
@@ -33,7 +34,9 @@ const getAllTabs = async () => {
 };
 
 export const setTabs = async (tabs: MyTab[]) => {
-  return Browser.storage.local.set({ tabs });
+  const tabsWithLevels = calculateLevel(tabs, 1);
+  console.log("tabsWithLevels", tabsWithLevels);
+  return Browser.storage.local.set({ tabs: tabsWithLevels });
 };
 
 export const setPinnedTabs = async (pinnedTabs: any[]) => {
@@ -69,13 +72,18 @@ const updateTabs = async () => {
 Browser.tabs.onCreated.addListener(async (newTab) => {
   if (newTab?.openerTabId) {
     const parentTab = findTabById(TABS, newTab?.openerTabId as number);
-    if (parentTab) {
+    if (parentTab && parentTab?.level && parentTab.level <= 5) {
       parentTab.children = parentTab?.children
         ? [...parentTab.children, newTab]
         : [newTab];
+    } else {
+      const newTabs = [...TABS, newTab];
+      TABS = newTabs;
+      await setTabs(newTabs);
     }
     await setTabs(TABS);
-  } else {
+  }
+  if (!newTab?.openerTabId) {
     const newTabs = [...TABS, newTab];
     TABS = newTabs;
     await setTabs(newTabs);

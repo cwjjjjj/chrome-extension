@@ -2,6 +2,7 @@ import { Tabs } from "webextension-polyfill";
 
 export interface MyTab extends Tabs.Tab {
   children?: MyTab[];
+  level?: number;
 }
 
 // export const removeTab = (removeTabId: number, tabs: MyTab[]) => {
@@ -160,4 +161,14 @@ export function handleUpdateTabById(tabs: MyTab[], updateTab: MyTab) {
       }
     }
   }
+}
+
+export function calculateLevel(tabs: MyTab[], initLevel: number) {
+  tabs.forEach((tab) => {
+    tab.level = initLevel;
+    if (tab.children) {
+      calculateLevel(tab.children, initLevel + 1);
+    }
+  });
+  return tabs;
 }
