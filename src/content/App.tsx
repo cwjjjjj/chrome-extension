@@ -231,7 +231,6 @@ export default function App() {
                 }}
                 onRemove={() => {
                   const res = pinnedTabs.filter((tab) => tab.id !== item.id);
-                  console.log("Removed", item, index, res);
                   setPinnedTabs(res);
                   Browser.storage.local.set({ pinnedTabs: res });
                 }}
