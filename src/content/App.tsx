@@ -91,26 +91,21 @@ export default function App() {
         height: "100vh",
         overflow: "auto",
         transition: "all .6s ",
-        opacity: `${isExpanded ? 1 : 0}`,
+        opacity: `${isExpanded ? 1 : 0.5}`,
         fontSize: "18px",
         backdropFilter: "blur(80px)",
         backgroundColor: "rgba(0,0,0,.25)",
         transform: "translateZ(0)",
         borderRadius: "0 8px 8px 0 ",
-        // backgroundImage: 'url("https://i.loli.net/2019/11/23/cnKl1Ykd5rZCVwm.jpg")',
+        paddingBlock: "54px",
+        paddingInline: `${isExpanded ? "10px" : "0px"}`,
       }}
       css={css`
-        padding: 54px 10px;
-
         .rs-tree {
           /* padding-block 54px ,header-height 186px ,banner 36px ,inner-padding 20px */
           height: calc(100vh - 108px - 186px - 36px - 20px) !important;
           max-height: unset;
           overflow: hidden auto;
-
-          /* .rs-tree-node-expand-icon-wrapper {
-            display: none;
-          } */
         }
       `}
       onMouseEnter={() => {
