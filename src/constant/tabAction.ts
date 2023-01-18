@@ -63,3 +63,6 @@ export const SEARCH_ENGINE = {
   BAIDU: "https://www.baidu.com/s?wd=",
   BING: "https://www.bing.com/search?q=",
 };
+
+export const URLRegExp =
+  /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i;

@@ -1,23 +1,24 @@
 import { createContext, Dispatch, useEffect, useMemo, useRef } from "react";
 import Browser, { Tabs } from "webextension-polyfill";
 import { useState } from "react";
-import { ADD_ICON_POSITION, TAB_ACTION } from "../constant/tabAction";
+import {
+  ADD_ICON_POSITION,
+  TAB_ACTION,
+  URLRegExp,
+} from "../constant/tabAction";
 import TabsTree from "./components/TabsTree";
 import { css } from "@emotion/react";
 import "rsuite/dist/rsuite.min.css";
 import Tab from "./components/Tab";
-import {
-  calculateLevel,
-  getAllChildren,
-  MyTab,
-  removeTab,
-} from "../utils/tabs";
+import { getAllChildren, MyTab } from "../utils/tabs";
 import AddPin from "./components/AddPin";
 import PinIcon from "./components/PinIcon";
 import Search from "./components/Search";
 import { DraggableArea } from "react-draggable-tags";
 import TagBanner from "./components/TagBanner";
 import ArrowIcon from "./components/SvgComponents/ArrowIcon";
+import { Input, InputGroup } from "rsuite";
+import LinkIcon from "./components/SvgComponents/LinkIcon";
 
 export interface PinnedTab {
   url: string;
@@ -35,10 +36,47 @@ const port = Browser.runtime.connect();
 export default function App() {
   const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
   const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>([]);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [expandItemValues, setExpandItemValues] = useState<number[]>([]);
+  const [isEditing, setIsEditing] = useState(false);
   const isFirstRef = useRef(true);
-  console.log("calculateLevel", calculateLevel(storageTabs, 1));
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleSave = async (nextValue: string) => {
+    console.log("value", nextValue, URLRegExp.test(nextValue));
+    if (!URLRegExp.test(nextValue)) {
+      console.log("不是正确是 URL 路径");
+      return;
+    }
+    setIsEditing(false);
+    const res = [
+      ...pinnedTabs,
+      {
+        url: nextValue,
+        id: String(Date.now()),
+      } as PinnedTab,
+    ];
+    // setPinnedTabs(res);
+
+    await Browser.storage.local.set({
+      pinnedTabs: res,
+    });
+
+    await port.postMessage({
+      type: TAB_ACTION.CREATE,
+      url: nextValue,
+    });
+
+    console.log("save res open", res, nextValue);
+  };
+
+  // 按下回车自动保存
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      // @ts-ignore
+      handleSave(e.target.value);
+    }
+  };
 
   useEffect(() => {
     if (isFirstRef?.current) {
@@ -67,6 +105,12 @@ export default function App() {
       });
     }
   }, [isFirstRef?.current]);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
 
   // const listener = (res: any) => {
   //   console.log("content res", res);
@@ -118,7 +162,7 @@ export default function App() {
         setIsExpanded(true);
       }}
       onMouseLeave={() => {
-        setIsExpanded(false);
+        setIsExpanded(true);
       }}
     >
       {/* header */}
@@ -204,6 +248,7 @@ export default function App() {
           <AddPin
             pinnedTabs={pinnedTabs}
             setPinnedTabs={setPinnedTabs}
+            setIsEditing={setIsEditing}
             className="pinnedTab"
             css={css`
               position: absolute;
@@ -215,6 +260,69 @@ export default function App() {
           />
         )}
       </header>
+      {isEditing && (
+        <div
+          css={css`
+            margin-top: 20px;
+
+            .rs-input {
+              box-sizing: border-box;
+              background: linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0.15) 0%,
+                rgba(255, 255, 255, 0.3) 100%
+              );
+              backdrop-filter: blur(17.5px);
+              border-radius: 12px;
+              height: 46px;
+              font-weight: 500;
+              font-size: 16px;
+              line-height: 22px;
+              color: #ffffff;
+            }
+
+            .rs-input-group {
+              border: none;
+
+              &-focus {
+                outline: none !important;
+                border: none !important;
+              }
+            }
+
+            .linkIcon {
+              height: 46px !important;
+              width: 46px;
+              pointer-events: none;
+              box-sizing: border-box;
+            }
+          `}
+        >
+          <InputGroup inside>
+            <InputGroup.Button className="linkIcon">
+              <LinkIcon />
+            </InputGroup.Button>
+            <Input
+              onBlur={(e) => {
+                handleSave(e.target.value);
+              }}
+              onKeyDown={handleKeyDown}
+              ref={inputRef}
+              placeholder="请输入需要固定的快捷入口"
+              defaultValue="https://"
+              css={css`
+                background: linear-gradient(
+                  180deg,
+                  rgba(255, 255, 255, 0.15) 0%,
+                  rgba(255, 255, 255, 0.3) 100%
+                );
+                backdrop-filter: blur(17.5px);
+                border-radius: 12px;
+              `}
+            />
+          </InputGroup>
+        </div>
+      )}
 
       {/* body */}
       <main
@@ -308,11 +416,7 @@ export default function App() {
               <Tab
                 onRemoveFolder={() => {
                   let removeIds: number[] = [];
-                  // const result = removeTab(
-                  //   storageTabs as MyTab[],
-                  //   (tab: MyTab) => tab.id !== item.id
-                  // );
-                  // Browser.storage.local.set({ tabs: result });
+
                   removeIds.push(item.id);
                   if (item?.children) {
                     const childrenIds = getAllChildren(
@@ -345,30 +449,6 @@ export default function App() {
           }}
         />
       </main>
-      {/* footer */}
-      {/* <div
-        css={css`
-          background-color: white;
-        `}
-        style={{
-          height: "50px",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Button
-          onClick={() => {
-            console.log("add");
-            port.postMessage({
-              type: TAB_ACTION.CREATE,
-            });
-          }}
-        >
-          add
-        </Button>
-      </div> */}
     </div>
     // </Context.Provider>
   );

@@ -13,7 +13,7 @@ import {
 } from "../utils/tabs";
 
 let TABS: any[] = [];
-let PINNED_TABS: any[] = DEFAULT_PINNED_TABS;
+let PINNED_TABS: any[] = [];
 let EXPANDED_TABS: number[] = [];
 let CURRENT_TAB;
 let isFirst = true;
