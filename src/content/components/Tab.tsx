@@ -22,13 +22,15 @@ export default function Tab({
   if (!data) {
     return null;
   }
+  const paddingLeft = data.level! * 15;
+
   return (
     <div
       css={css`
         width: 100%;
         padding: 0 10px;
         display: grid;
-        grid-template-columns: 20px 160px 25px 25px;
+        grid-template-columns: 20px ${190 - paddingLeft}px 25px 25px;
         align-items: center;
         gap: 5px;
 
