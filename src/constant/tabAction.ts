@@ -41,11 +41,11 @@ export const DEFAULT_PINNED_TABS = [
     id: "5",
     favIconUrl: "https://www.youtube.com/favicon.ico",
   },
-  {
-    url: "http://www.taobao.com",
-    id: "6",
-    favIconUrl: "https://www.taobao.com/favicon.ico",
-  },
+  // {
+  //   url: "http://www.taobao.com",
+  //   id: "6",
+  //   favIconUrl: "https://www.taobao.com/favicon.ico",
+  // },
   {
     url: "http://www.jd.com",
     id: "7",

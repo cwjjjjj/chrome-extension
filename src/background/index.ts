@@ -53,20 +53,13 @@ const updateTabs = async () => {
       setPinnedTabs(PINNED_TABS),
       setExpandedTabs(EXPANDED_TABS),
     ]);
-    // await setTabs(TABS);
-    // await setPinnedTabs(PINNED_TABS);
-    // await setExpandedTabs(EXPANDED_TABS);
     isFirst = false;
   } else {
-    // const { tabs } = await Browser.storage.local.get(["tabs"]);
-    // const { pinnedTabs } = await Browser.storage.local.get(["pinnedTabs"]);
-    // const { expandedTabs } = await Browser.storage.local.get(["expandedTabs"]);
     const [{ tabs }, { pinnedTabs }, { expandedTabs }] = await Promise.all([
       Browser.storage.local.get(["tabs"]),
       Browser.storage.local.get(["pinnedTabs"]),
       Browser.storage.local.get(["expandedTabs"]),
     ]);
-    console.log("promise all", tabs, pinnedTabs, expandedTabs);
     TABS = tabs;
     PINNED_TABS = pinnedTabs;
     EXPANDED_TABS = expandedTabs;
@@ -74,7 +67,6 @@ const updateTabs = async () => {
 };
 
 Browser.tabs.onCreated.addListener(async (newTab) => {
-  console.log("create tab", newTab);
   if (newTab?.openerTabId) {
     const parentTab = findTabById(TABS, newTab?.openerTabId as number);
     if (parentTab) {
@@ -99,28 +91,7 @@ Browser.tabs.onRemoved.addListener(async (res) => {
     EXPANDED_TABS = EXPANDED_TABS.filter((id) => id !== res);
     await setExpandedTabs(EXPANDED_TABS);
   }
-
-  // let removeIds: number[] = [];
-  // const removedTab = findTabById(TABS, res);
-  // console.log("removedTab", removedTab, TABS);
-  // if (removedTab?.children) {
-  //   const childrenIds = getAllChildren(removedTab.children as MyTab[]);
-  //   removeIds = [...removeIds, ...childrenIds];
-  // }
-  // console.log("removeIds", removeIds);
-  // if (removeIds.length) {
-  //   await Browser.tabs.remove(removeIds);
-  // }
-
-  // const result = removeTab(TABS as MyTab[], (tab: MyTab) => tab.id !== res);
-  // TABS = result;
-  // console.log("TABS", TABS);
-  // await setTabss(result);
 });
-
-// Browser.tabs.onDetached.addListener(async (res) => {
-//   console.log("tab detached", res);
-// });
 
 Browser.tabs.onActivated.addListener(async (res) => {
   console.log("tab onActivated", res);
@@ -128,62 +99,27 @@ Browser.tabs.onActivated.addListener(async (res) => {
   await setTabs(TABS);
 });
 
-// Browser.tabs.onAttached.addListener(async (res) => {
-//   console.log("tab onAttached", res);
-// });
-
-// Browser.tabs.onHighlighted.addListener(async (res) => {
-//   console.log("tab onHighlighted", res);
-// });
-
-// Browser.tabs.onMoved.addListener(async (res) => {
-//   console.log("tab onMoved", res);
-// });
-
-// Browser.tabs.onReplaced.addListener(async (res) => {
-//   console.log("tab onReplaced", res);
-// });
-
 Browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  if (changeInfo?.status === "complete") {
-    PINNED_TABS?.forEach(async (pinnedTab, index) => {
+  if (changeInfo?.status === "complete" || changeInfo?.favIconUrl) {
+    PINNED_TABS.forEach(async (pinnedTab, index) => {
       if (tab?.url?.includes(pinnedTab.url)) {
         if (tab?.favIconUrl) {
           PINNED_TABS[index].favIconUrl = tab?.favIconUrl;
         }
-        console.log("PINNED_TABS", PINNED_TABS);
         setPinnedTabs(PINNED_TABS);
       }
     });
 
     handleUpdateTabById(TABS, tab);
-    console.log("update", TABS);
     await setTabs(TABS);
-
-    // let currentTab = findTabById(TABS, tabId);
-    // currentTab = tab;
-    // console.log("update", currentTab, TABS);
-    // await setTabs(TABS);
-
-    // const index = TABS.findIndex((item) => item.id === tabId);
-    // if (index !== -1) {
-    //   TABS.splice(index, 1, tab);
-    //   console.log("update", TABS);
-    //   await setTabs(TABS);
-    // }
   }
 });
 
 Browser.storage.local.onChanged.addListener((res) => {
-  console.log("storage change", res);
   if (res?.pinnedTabs) {
     PINNED_TABS = res.pinnedTabs.newValue;
   }
 });
-
-// Browser.tabs.onZoomChange.addListener(async (res) => {
-//   console.log("tab onZoomChange", res);
-// });
 
 Browser.runtime.onConnect.addListener(async (port) => {
   /**
@@ -201,10 +137,7 @@ Browser.runtime.onConnect.addListener(async (port) => {
     }
     if (msg.type === TAB_ACTION.ACTIVE) {
       console.log("active");
-      // await getCurrentTab();
       await Browser.tabs.update(msg.tabId, { active: true });
     }
-    // getAllTabs();
-    // port.postMessage(tabs);
   });
 });
