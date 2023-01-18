@@ -36,8 +36,9 @@ const port = Browser.runtime.connect();
 export default function App() {
   const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
   const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>([]);
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [expandItemValues, setExpandItemValues] = useState<number[]>([]);
+  const [showError, setShowError] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const isFirstRef = useRef(true);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -46,6 +47,7 @@ export default function App() {
     console.log("value", nextValue, URLRegExp.test(nextValue));
     if (!URLRegExp.test(nextValue)) {
       console.log("不是正确是 URL 路径");
+      setShowError(true);
       return;
     }
     setIsEditing(false);
@@ -162,7 +164,7 @@ export default function App() {
         setIsExpanded(true);
       }}
       onMouseLeave={() => {
-        setIsExpanded(true);
+        setIsExpanded(false);
       }}
     >
       {/* header */}
@@ -253,8 +255,6 @@ export default function App() {
               position: absolute;
               right: ${ADD_ICON_POSITION[pinnedTabs.length].right}px;
               bottom: ${ADD_ICON_POSITION[pinnedTabs.length].bottom}px;
-              /* right: 6px;
-              bottom: 0px; */
             `}
           />
         )}
@@ -320,6 +320,17 @@ export default function App() {
               `}
             />
           </InputGroup>
+          {showError && (
+            <div
+              css={css`
+                font-size: 12px;
+                color: red;
+                margin: 5px;
+              `}
+            >
+              输入的不是正确地址~
+            </div>
+          )}
         </div>
       )}
 
