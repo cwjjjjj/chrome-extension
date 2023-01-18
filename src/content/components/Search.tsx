@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 import { useRef } from "react";
 import { Input, InputGroup, InputProps } from "rsuite";
 import Browser from "webextension-polyfill";
-import { TAB_ACTION } from "../../constant/tabAction";
+import { SEARCH_ENGINE, TAB_ACTION } from "../../constant/tabAction";
 import SearchEnginePicker from "./SearchEnginePicker";
 import GoogleIcon from "./SvgComponents/GoogleIcon";
 import SearchIcon from "./SvgComponents/SearchIcon";
@@ -16,7 +16,7 @@ export default function Search({ ...props }: SearchProps) {
   const handleSearch = (value: string, searchEngine?: string) => {
     port.postMessage({
       type: TAB_ACTION.CREATE,
-      url: `https://www.google.com/search?q=${value}`,
+      url: `${SEARCH_ENGINE.GOOGLE}${value}`,
     });
   };
 

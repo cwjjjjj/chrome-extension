@@ -57,3 +57,9 @@ export const DEFAULT_PINNED_TABS = [
     favIconUrl: "https://www.twitter.com/favicon.ico",
   },
 ];
+
+export const SEARCH_ENGINE = {
+  GOOGLE: "https://www.google.com/search?q=",
+  BAIDU: "https://www.baidu.com/s?wd=",
+  BING: "https://www.bing.com/search?q=",
+};
