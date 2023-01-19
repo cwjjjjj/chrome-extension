@@ -17,44 +17,34 @@ export const ADD_ICON_POSITION = [
 
 export const DEFAULT_PINNED_TABS = [
   {
-    url: "http://www.baidu.com",
+    url: "https://web.okjike.com/",
     id: "1",
-    favIconUrl: "https://www.baidu.com/favicon.ico",
+    favIconUrl: "https://web.okjike.com/favicon.ico",
   },
   {
-    url: "http://www.google.com",
+    url: "https://mail.google.com/mail",
     id: "2",
-    favIconUrl: "https://www.google.com/favicon.ico",
+    favIconUrl: "https://www.google.com/a/cpanel/iftech.io/images/favicon.ico",
   },
   {
-    url: "http://www.github.com",
+    url: "https://www.douban.com/",
     id: "3",
-    favIconUrl: "https://www.github.com/favicon.ico",
+    favIconUrl: "https://www.douban.com/favicon.ico",
   },
   {
-    url: "http://www.bilibili.com",
+    url: "https://www.zhihu.com/",
     id: "4",
+    favIconUrl: "https://www.zhihu.com/favicon.ico",
+  },
+  {
+    url: "https://www.bilibili.com",
+    id: "5",
     favIconUrl: "https://www.bilibili.com/favicon.ico",
   },
   {
-    url: "http://www.youtube.com",
-    id: "5",
-    favIconUrl: "https://www.youtube.com/favicon.ico",
-  },
-  // {
-  //   url: "http://www.taobao.com",
-  //   id: "6",
-  //   favIconUrl: "https://www.taobao.com/favicon.ico",
-  // },
-  {
-    url: "http://www.jd.com",
-    id: "7",
-    favIconUrl: "https://www.jd.com/favicon.ico",
-  },
-  {
-    url: "https://twitter.com/home",
-    id: "8",
-    favIconUrl: "https://www.twitter.com/favicon.ico",
+    url: "https://www.github.com",
+    id: "6",
+    favIconUrl: "https://www.github.com/favicon.ico",
   },
 ];
 
