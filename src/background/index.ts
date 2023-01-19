@@ -13,7 +13,7 @@ import {
 } from "../utils/tabs";
 
 let TABS: any[] = [];
-let PINNED_TABS: any[] = DEFAULT_PINNED_TABS;
+let PINNED_TABS: any[] = [];
 let EXPANDED_TABS: number[] = [];
 let CURRENT_TAB;
 let isFirst = true;
@@ -43,12 +43,15 @@ export const setPinnedTabs = async (pinnedTabs: any[]) => {
   return Browser.storage.local.set({ pinnedTabs });
 };
 
-const clearStorage = () => {
-  return Browser.storage.local.clear();
-};
-// clearStorage();
+Browser.runtime.onInstalled.addListener((detail) => {
+  PINNED_TABS = DEFAULT_PINNED_TABS;
+  setPinnedTabs(PINNED_TABS);
+});
 
 const updateTabs = async () => {
+  const { pinnedTabs } = await Browser.storage.local.get(["pinnedTabs"]),
+    PINNED_TABS = pinnedTabs;
+
   if (isFirst) {
     TABS = await getAllTabs();
     await Promise.all([
@@ -58,13 +61,11 @@ const updateTabs = async () => {
     ]);
     isFirst = false;
   } else {
-    const [{ tabs }, { pinnedTabs }, { expandedTabs }] = await Promise.all([
+    const [{ tabs }, { expandedTabs }] = await Promise.all([
       Browser.storage.local.get(["tabs"]),
-      Browser.storage.local.get(["pinnedTabs"]),
       Browser.storage.local.get(["expandedTabs"]),
     ]);
     TABS = tabs;
-    PINNED_TABS = pinnedTabs;
     EXPANDED_TABS = expandedTabs;
   }
 };
