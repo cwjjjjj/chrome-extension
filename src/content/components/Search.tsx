@@ -76,7 +76,7 @@ export default function Search({ ...props }: SearchProps) {
         />
         <InputGroup.Button className="favIcon">
           <GoogleIcon />
-          <SearchEnginePicker />
+          {/* <SearchEnginePicker /> */}
         </InputGroup.Button>
       </InputGroup>
     </div>

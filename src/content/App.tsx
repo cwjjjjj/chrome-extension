@@ -44,7 +44,6 @@ export default function App() {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleSave = async (nextValue: string) => {
-    console.log("value", nextValue, URLRegExp.test(nextValue));
     if (!URLRegExp.test(nextValue)) {
       console.log("不是正确是 URL 路径");
       setShowError(true);
@@ -68,8 +67,6 @@ export default function App() {
       type: TAB_ACTION.CREATE,
       url: nextValue,
     });
-
-    console.log("save res open", res, nextValue);
   };
 
   // 按下回车自动保存
@@ -142,7 +139,7 @@ export default function App() {
         zIndex: "99999",
         height: "100vh",
         overflow: "auto",
-        transition: "all .6s ",
+        transition: `${isExpanded ? "all .6s" : "all .6s .3s"}`,
         opacity: `${isExpanded ? 1 : 0.5}`,
         fontSize: "18px",
         backdropFilter: "blur(80px)",
