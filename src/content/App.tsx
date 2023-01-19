@@ -36,7 +36,7 @@ const port = Browser.runtime.connect();
 export default function App() {
   const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
   const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>([]);
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [expandItemValues, setExpandItemValues] = useState<number[]>([]);
   const [showError, setShowError] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -193,7 +193,7 @@ export default function App() {
         setIsExpanded(true);
       }}
       onMouseLeave={() => {
-        setIsExpanded(true);
+        setIsExpanded(false);
       }}
     >
       {/* header */}
@@ -445,7 +445,9 @@ export default function App() {
           }}
           expandItemValues={expandItemValues}
           onExpand={(expandValues, item, concat) => {
-            Browser.storage.local.set({ expandedTabs: expandValues });
+            const childrenIds = getAllChildren(item?.children as MyTab[]);
+            const res = [...new Set([...expandValues, ...childrenIds])];
+            Browser.storage.local.set({ expandedTabs: res });
           }}
           renderTreeIcon={(item) => {
             if (!item?.children?.length) {
@@ -457,16 +459,6 @@ export default function App() {
                   className={
                     expandItemValues.includes(item.id) ? "" : "arrow-icon-right"
                   }
-                  onClick={() => {
-                    let res;
-                    if (expandItemValues.includes(item.id)) {
-                      res = expandItemValues.filter((id) => item.id !== id);
-                      setExpandItemValues(res);
-                    } else {
-                      res = [...expandItemValues, item.id];
-                      setExpandItemValues(res);
-                    }
-                  }}
                 />
               </div>
             );
