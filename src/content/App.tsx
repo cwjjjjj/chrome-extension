@@ -135,7 +135,7 @@ export default function App() {
     // >
     <div
       style={{
-        width: `${isExpanded ? "300px" : "5px"}`,
+        width: `${isExpanded ? "320px" : "15px"}`,
         position: "fixed",
         top: "0px",
         left: "0px",
@@ -151,13 +151,46 @@ export default function App() {
         borderRadius: "0 8px 8px 0 ",
         paddingBlock: "54px",
         paddingInline: `${isExpanded ? "10px" : "0px"}`,
+        boxSizing: "border-box",
       }}
       css={css`
         .rs-tree {
-          /* padding-block 54px ,header-height 186px ,banner 36px ,inner-padding 20px */
-          height: calc(100vh - 108px - 186px - 36px - 20px) !important;
+          /* padding-block 54px ,header-height 186px ,banner 36px ,inner-padding 20px ,link-input 100px */
+          height: calc(100vh - 108px - 186px - 36px - 20px - 100px) !important;
           max-height: unset;
           overflow: hidden auto;
+        }
+
+        input::placeholder {
+          color: white;
+        }
+
+        * {
+          box-sizing: border-box;
+        }
+
+        *::-webkit-scrollbar {
+          height: 1px !important;
+          width: 5px;
+          border-radius: 10px;
+        }
+        *::-webkit-scrollbar-track {
+          display: none;
+        }
+        *::-webkit-scrollbar-track-piece {
+          display: none;
+        }
+        *::-webkit-scrollbar-thumb {
+          background-color: rgba(0, 0, 0, 0.15);
+          height: 5px !important;
+          width: 5px;
+          border-radius: 10px;
+        }
+        *::-webkit-scrollbar-button {
+          display: none;
+        }
+        *::-webkit-scrollbar-corner {
+          display: none;
         }
       `}
       onMouseEnter={() => {
