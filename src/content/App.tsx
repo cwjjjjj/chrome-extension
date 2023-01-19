@@ -36,7 +36,7 @@ const port = Browser.runtime.connect();
 export default function App() {
   const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
   const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>([]);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [expandItemValues, setExpandItemValues] = useState<number[]>([]);
   const [showError, setShowError] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -147,7 +147,6 @@ export default function App() {
         transform: "translateZ(0)",
         borderRadius: "0 8px 8px 0 ",
         paddingBlock: "54px",
-        paddingInline: `${isExpanded ? "10px" : "0px"}`,
         boxSizing: "border-box",
       }}
       css={css`
@@ -194,13 +193,14 @@ export default function App() {
         setIsExpanded(true);
       }}
       onMouseLeave={() => {
-        setIsExpanded(false);
+        setIsExpanded(true);
       }}
     >
       {/* header */}
       <header
         css={css`
           position: relative;
+          padding: 0 10px;
         `}
       >
         <Search />
@@ -293,6 +293,7 @@ export default function App() {
         <div
           css={css`
             margin-top: 20px;
+            padding: 0 10px;
 
             .rs-input {
               box-sizing: border-box;
@@ -393,6 +394,11 @@ export default function App() {
           .rs-tree-node {
             display: flex;
             align-items: center;
+            height: 42px;
+
+            :hover {
+              background: rgba(255, 255, 255, 0.15);
+            }
           }
 
           .rs-tree-node-label {
@@ -407,6 +413,22 @@ export default function App() {
 
           .rs-tree-node-label-content {
             padding: 0;
+          }
+
+          .rs-tree-node-label-content.rs-tree-node-label-content-focus,
+          .rs-tree-node-label-content:focus,
+          .rs-tree-node-label-content:hover {
+            background-color: transparent;
+            color: white;
+          }
+
+          .rs-tree-node:not(.rs-tree-node-disabled):focus
+            > .rs-tree-node-label
+            > .rs-tree-node-label-content,
+          .rs-tree-node:not(.rs-tree-node-disabled)
+            > .rs-tree-node-label:focus
+            > .rs-tree-node-label-content {
+            background-color: transparent;
           }
         `}
       >

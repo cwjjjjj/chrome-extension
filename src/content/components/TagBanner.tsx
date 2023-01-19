@@ -26,7 +26,7 @@ export default function TagBanner({ title, ...props }: TagBannerProps) {
 
         .bg {
           position: absolute;
-          inset: 0;
+          inset: 0 10px;
         }
 
         .title {
