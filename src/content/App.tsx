@@ -102,7 +102,7 @@ export default function App() {
           setPinnedTabs(res?.pinnedTabs?.newValue);
         }
         if (res?.expandedTabs) {
-          setStorageTabs(res?.expandedTabs?.newValue);
+          setExpandItemValues(res?.expandedTabs?.newValue);
         }
       });
     }
@@ -392,11 +392,9 @@ export default function App() {
             Browser.storage.local.set({ tabs: treeTabs });
           }}
           expandItemValues={expandItemValues}
-          // fixme 希望所有页签同步 expand 状态，但是这个会触发报错
-          // onExpand={(expandValues, item, concat) => {
-          //   console.log("expand", expandValues, item, concat);
-          //   Browser.storage.local.set({ expandedTabs: expandValues });
-          // }}
+          onExpand={(expandValues, item, concat) => {
+            Browser.storage.local.set({ expandedTabs: expandValues });
+          }}
           renderTreeIcon={(item) => {
             if (!item?.children?.length) {
               return <div className="none"></div>;
