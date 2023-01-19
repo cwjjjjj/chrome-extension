@@ -72,7 +72,12 @@ const updateTabs = async () => {
 Browser.tabs.onCreated.addListener(async (newTab) => {
   if (newTab?.openerTabId) {
     const parentTab = findTabById(TABS, newTab?.openerTabId as number);
-    if (parentTab && parentTab?.level && parentTab.level <= 5) {
+    if (
+      parentTab &&
+      parentTab?.level &&
+      parentTab.level <= 5 &&
+      newTab.pendingUrl !== "chrome://newtab/"
+    ) {
       parentTab.children = parentTab?.children
         ? [...parentTab.children, newTab]
         : [newTab];
