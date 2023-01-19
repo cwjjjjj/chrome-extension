@@ -30,9 +30,22 @@ export default function Tab({
         width: 100%;
         padding: 0 10px;
         display: grid;
-        grid-template-columns: 20px ${190 - paddingLeft}px 25px 25px;
+        grid-template-columns: 20px ${240 - paddingLeft}px;
+
         align-items: center;
         gap: 5px;
+
+        &:hover {
+          grid-template-columns: 20px ${190 - paddingLeft}px 25px 25px;
+
+          .closeIcon {
+            border-radius: 7px;
+            display: block;
+            &:hover {
+              background-color: rgba(255, 255, 255, 0.15);
+            }
+          }
+        }
 
         .title {
           white-space: nowrap;
@@ -53,10 +66,7 @@ export default function Tab({
         }
 
         .closeIcon {
-          border-radius: 7px;
-          &:hover {
-            background-color: rgba(255, 255, 255, 0.15);
-          }
+          display: none;
         }
       `}
       onClick={onActive}
