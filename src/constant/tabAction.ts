@@ -5,14 +5,14 @@ export enum TAB_ACTION {
 }
 
 export const ADD_ICON_POSITION = [
-  { right: 236, bottom: 70 },
-  { right: 159, bottom: 70 },
+  { right: 246, bottom: 70 },
+  { right: 169, bottom: 70 },
   { right: 83, bottom: 70 },
-  { right: 6, bottom: 70 },
-  { right: 236, bottom: 0 },
-  { right: 159, bottom: 0 },
-  { right: 83, bottom: 0 },
-  { right: 6, bottom: 0 },
+  { right: 16, bottom: 70 },
+  { right: 246, bottom: 0 },
+  { right: 169, bottom: 0 },
+  { right: 93, bottom: 0 },
+  { right: 16, bottom: 0 },
 ];
 
 export const DEFAULT_PINNED_TABS = [
