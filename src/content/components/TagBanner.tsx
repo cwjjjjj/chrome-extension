@@ -20,9 +20,10 @@ export default function TagBanner({ title, ...props }: TagBannerProps) {
         height: 36px;
         border-radius: 0px 0px 0px 12px;
         display: grid;
-        grid-template-columns: 30px 80px;
+        grid-template-columns: 20px 60px;
         padding: 0 15px;
         align-items: center;
+        padding-left: 20px;
 
         .bg {
           position: absolute;
