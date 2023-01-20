@@ -3,12 +3,12 @@ function App() {
     <div
       className="App"
       style={{
-        height: "100px",
-        width: "100px",
-        background: "red",
+        fontSize: "20px",
+        fontWeight: "500",
+        whiteSpace: "nowrap",
       }}
     >
-      popup
+      Navi Tab
     </div>
   );
 }
