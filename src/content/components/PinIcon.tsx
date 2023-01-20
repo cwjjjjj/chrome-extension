@@ -22,9 +22,9 @@ export default function PinIcon({
   return (
     <div
       css={css`
-        /* 60 - 1 , 60 - 2  */
-        height: 59px;
-        width: 58px;
+        /* 46 - 1 , 46 - 2  */
+        height: 45px;
+        width: 44px;
         position: relative;
 
         .favIconImg {
@@ -37,11 +37,10 @@ export default function PinIcon({
 
         .closeIcon {
           position: absolute;
-          width: 15px;
-          height: 15px;
-          right: 10px;
-          top: 10px;
-          transform: translate(50%, -50%);
+          width: 10px;
+          height: 10px;
+          right: 3px;
+          top: 3px;
           border-radius: 50%;
 
           &:hover {

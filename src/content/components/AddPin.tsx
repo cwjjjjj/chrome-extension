@@ -18,9 +18,9 @@ export default function AddPin({
   return (
     <div
       css={css`
-        /* 60 - 1 , 60 - 2  */
-        height: 59px;
-        width: 58px;
+        /* 46 - 1 , 46 - 2  */
+        height: 45px;
+        width: 44px;
         color: grey;
         display: flex;
         justify-content: center;
@@ -35,8 +35,8 @@ export default function AddPin({
 
         &:hover::after {
           position: absolute;
-          height: 60px;
-          width: 60px;
+          height: 46px;
+          width: 46px;
           content: "";
           border-radius: 12px;
           background-image: linear-gradient(to bottom, #fff, transparent);

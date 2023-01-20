@@ -31,7 +31,6 @@ export default function Tab({
         padding: 0 10px;
         display: grid;
         grid-template-columns: 20px ${240 - paddingLeft}px;
-
         align-items: center;
         gap: 5px;
 
@@ -40,7 +39,10 @@ export default function Tab({
 
           .closeIcon {
             border-radius: 7px;
-            display: block;
+            width: 14px;
+            height: 14px;
+            display: inline-block;
+
             &:hover {
               background-color: rgba(255, 255, 255, 0.15);
             }
@@ -66,6 +68,8 @@ export default function Tab({
         }
 
         .closeIcon {
+          width: 14px;
+          height: 14px;
           display: none;
         }
       `}

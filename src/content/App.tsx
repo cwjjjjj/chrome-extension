@@ -211,7 +211,7 @@ export default function App() {
             .DraggableTags {
               display: grid;
               justify-content: space-evenly;
-              grid: repeat(2, 60px) / repeat(4, 60px);
+              grid: repeat(2, 46px) / repeat(5, 46px);
               gap: 10px;
               align-items: center;
               justify-items: center;
@@ -278,7 +278,7 @@ export default function App() {
             }}
           />
         </div>
-        {pinnedTabs.length < 8 && (
+        {pinnedTabs.length < 10 && (
           <AddPin
             pinnedTabs={pinnedTabs}
             setPinnedTabs={setPinnedTabs}

@@ -5,13 +5,15 @@ export enum TAB_ACTION {
 }
 
 export const ADD_ICON_POSITION = [
-  { right: 246, bottom: 70 },
-  { right: 169, bottom: 70 },
-  { right: 83, bottom: 70 },
-  { right: 16, bottom: 70 },
-  { right: 246, bottom: 0 },
-  { right: 169, bottom: 0 },
-  { right: 93, bottom: 0 },
+  { right: 260, bottom: 56 },
+  { right: 199, bottom: 56 },
+  { right: 138, bottom: 56 },
+  { right: 77, bottom: 56 },
+  { right: 16, bottom: 56 },
+  { right: 260, bottom: 0 },
+  { right: 199, bottom: 0 },
+  { right: 138, bottom: 0 },
+  { right: 77, bottom: 0 },
   { right: 16, bottom: 0 },
 ];
 
