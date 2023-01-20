@@ -15,6 +15,7 @@ const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
+    <path d="M8.5 6.5V1H15.5L17 3V17.5L15 19H4.5L3 17V6.5H8.5Z" fill="white" />
   </svg>
 );
 

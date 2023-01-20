@@ -36,7 +36,7 @@ const port = Browser.runtime.connect();
 export default function App() {
   const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
   const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>([]);
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [expandItemValues, setExpandItemValues] = useState<number[]>([]);
   const [showError, setShowError] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -146,15 +146,15 @@ export default function App() {
         backgroundColor: "rgba(0,0,0,.25)",
         transform: "translateZ(0)",
         borderRadius: "0 8px 8px 0 ",
-        paddingBlock: "54px",
+        paddingBlock: "20px",
         boxSizing: "border-box",
       }}
       css={css`
         .rs-tree {
-          /* padding-block 54px ,header-height 186px ,banner 36px ,link-input 80px */
+          /* padding-block 20px ,header-height 186px ,banner 36px ,link-input 80px */
           height: ${isEditing
-            ? "calc(100vh - 108px - 186px - 36px - 80px) !important"
-            : "calc(100vh - 108px - 186px - 36px) !important"};
+            ? "calc(100vh - 40px - 186px - 36px - 70px) !important"
+            : "calc(100vh - 40px - 186px - 36px) !important"};
           max-height: unset;
           overflow: hidden auto;
         }
@@ -195,7 +195,7 @@ export default function App() {
         setIsExpanded(true);
       }}
       onMouseLeave={() => {
-        setIsExpanded(true);
+        setIsExpanded(false);
       }}
     >
       {/* header */}
@@ -228,7 +228,7 @@ export default function App() {
               box-sizing: border-box;
               background-color: rgba(255, 255, 255, 0.15);
 
-              &:hover::after {
+              /* &:hover::after {
                 position: absolute;
                 height: 60px;
                 width: 60px;
@@ -238,13 +238,14 @@ export default function App() {
                 top: -2px;
                 left: -1px;
                 z-index: -1;
-              }
+              } */
 
               &:hover {
-                background-image: linear-gradient(
+                background: linear-gradient(
                   to bottom,
-                  rgba(176, 174, 174, 0.3) 0%,
-                  rgba(255, 255, 255, 0.15) 100%
+                  rgba(255, 255, 255, 0.15) 0%,
+                  rgba(255, 255, 255, 0.6) 100%,
+                  rgba(255, 255, 255, 0.5) 100%
                 );
               }
             }

@@ -81,7 +81,7 @@ export default function Tab({
 
       <p className="title">{data.title}</p>
 
-      {data?.children && data?.children?.length > 0 && (
+      {data?.children && data?.children?.length > 0 ? (
         <FileCloseIcon
           className="closeIcon"
           onClick={(e) => {
@@ -89,6 +89,8 @@ export default function Tab({
             onRemoveFolder();
           }}
         />
+      ) : (
+        <div />
       )}
 
       <CloseIcon

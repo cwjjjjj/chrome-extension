@@ -39,7 +39,7 @@ export default function AddPin({
           width: 60px;
           content: "";
           border-radius: 12px;
-          background: linear-gradient(to bottom, #fff, transparent);
+          background-image: linear-gradient(to bottom, #fff, transparent);
           top: -2px;
           left: -1px;
           z-index: -1;
@@ -47,9 +47,10 @@ export default function AddPin({
 
         &:hover {
           background-image: linear-gradient(
-            to bottom,
-            rgba(176, 174, 174, 0.3) 0%,
-            rgba(255, 255, 255, 0.15) 100%
+            180deg,
+            rgba(255, 255, 255, 0.15) 0%,
+            rgba(255, 255, 255, 0.6) 100%,
+            rgba(255, 255, 255, 0.5) 100%
           );
         }
 

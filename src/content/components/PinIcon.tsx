@@ -1,9 +1,8 @@
 import { css } from "@emotion/react";
 import { HTMLAttributes, useState } from "react";
-import { IconButton } from "rsuite";
 import PinnedIcon from "@rsuite/icons/Pin";
 import { PinnedTab } from "../App";
-import CloseIcon from "./SvgComponents/CloseIcon";
+import OpacityCloseIcon from "./SvgComponents/OpacityCloseIcon";
 
 export interface PinIconProps extends HTMLAttributes<HTMLDivElement> {
   data: PinnedTab;
@@ -43,8 +42,10 @@ export default function PinIcon({
           right: 10px;
           top: 10px;
           transform: translate(50%, -50%);
+          border-radius: 50%;
+
           &:hover {
-            background-color: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.15);
           }
         }
       `}
@@ -64,7 +65,7 @@ export default function PinIcon({
       )}
 
       {isShowCloseButton && (
-        <CloseIcon
+        <OpacityCloseIcon
           className="closeIcon"
           onClick={(e) => {
             e.stopPropagation();
