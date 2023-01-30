@@ -39,8 +39,8 @@ export default function Tab({
 
           .closeIcon {
             border-radius: 7px;
-            width: 14px;
-            height: 14px;
+            width: 20px;
+            height: 20px;
             display: inline-block;
 
             &:hover {
@@ -68,8 +68,8 @@ export default function Tab({
         }
 
         .closeIcon {
-          width: 14px;
-          height: 14px;
+          width: 20px;
+          height: 20px;
           display: none;
         }
       `}
@@ -96,8 +96,8 @@ export default function Tab({
       ) : (
         <div
           style={{
-            height: "14px",
-            width: "14px",
+            height: "20px",
+            width: "20px",
             display: "none",
           }}
         />
