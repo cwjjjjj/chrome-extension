@@ -35,7 +35,6 @@ const getAllTabs = async () => {
 
 export const setTabs = async (tabs: MyTab[]) => {
   const tabsWithLevels = calculateLevel(tabs, 1);
-  console.log("tabsWithLevels", tabsWithLevels);
   return Browser.storage.local.set({ tabs: tabsWithLevels });
 };
 
@@ -108,7 +107,6 @@ Browser.tabs.onRemoved.addListener(async (res) => {
 });
 
 Browser.tabs.onActivated.addListener(async (res) => {
-  console.log("tab onActivated", res);
   handleActiveTabById(TABS, res.tabId);
   await setTabs(TABS);
 });
@@ -146,11 +144,9 @@ Browser.runtime.onConnect.addListener(async (port) => {
       await Browser.tabs.remove(msg.tabIds);
     }
     if (msg.type === TAB_ACTION.CREATE) {
-      console.log("create");
       await Browser.tabs.create({ active: false, url: msg?.url });
     }
     if (msg.type === TAB_ACTION.ACTIVE) {
-      console.log("active");
       await Browser.tabs.update(msg.tabId, { active: true });
     }
   });

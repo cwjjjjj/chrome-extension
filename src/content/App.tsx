@@ -86,7 +86,6 @@ export default function App() {
         setPinnedTabs(res.pinnedTabs);
       });
       Browser.storage.local.get(["expandedTabs"]).then((res) => {
-        console.log("res get", res);
         setExpandItemValues(res.expandedTabs);
       });
       isFirstRef.current = false;
@@ -112,7 +111,6 @@ export default function App() {
   }, [isEditing]);
 
   // const listener = (res: any) => {
-  //   console.log("content res", res);
   // };
 
   useEffect(() => {
@@ -492,7 +490,6 @@ export default function App() {
                   });
                 }}
                 onActive={() => {
-                  console.log("active", item.id);
                   port.postMessage({
                     type: TAB_ACTION.ACTIVE,
                     tabId: item.id,
