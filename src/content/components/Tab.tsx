@@ -94,7 +94,7 @@ export default function Tab({
           }}
         />
       ) : (
-        <div />
+        <div className="closeIcon" />
       )}
 
       <CloseIcon
