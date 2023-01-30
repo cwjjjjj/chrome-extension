@@ -36,7 +36,7 @@ const port = Browser.runtime.connect();
 export default function App() {
   const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
   const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>([]);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [expandItemValues, setExpandItemValues] = useState<number[]>([]);
   const [showError, setShowError] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -139,7 +139,6 @@ export default function App() {
         overflow: "hidden",
         transition: `${isExpanded ? "all .6s" : "all .6s .3s"}`,
         opacity: `${isExpanded ? 1 : 0.5}`,
-        fontSize: "18px",
         backdropFilter: "blur(80px)",
         backgroundColor: "rgba(0,0,0,.25)",
         transform: "translateZ(0)",
@@ -148,6 +147,13 @@ export default function App() {
         boxSizing: "border-box",
       }}
       css={css`
+        font-family: "PingFang SC";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 22px;
+        color: #ffffff;
+
         .rs-tree {
           /* padding-block 20px ,header-height 186px ,banner 36px ,link-input 80px */
           height: ${isEditing
@@ -193,7 +199,7 @@ export default function App() {
         setIsExpanded(true);
       }}
       onMouseLeave={() => {
-        setIsExpanded(false);
+        setIsExpanded(true);
       }}
     >
       {/* header */}
