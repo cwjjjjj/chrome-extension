@@ -94,7 +94,13 @@ export default function Tab({
           }}
         />
       ) : (
-        <div className="closeIcon" />
+        <div
+          style={{
+            height: "14px",
+            width: "14px",
+            display: "none",
+          }}
+        />
       )}
 
       <CloseIcon
