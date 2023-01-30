@@ -36,7 +36,7 @@ const port = Browser.runtime.connect();
 export default function App() {
   const [storageTabs, setStorageTabs] = useState<Tabs.Tab[]>([]);
   const [pinnedTabs, setPinnedTabs] = useState<PinnedTab[]>([]);
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [expandItemValues, setExpandItemValues] = useState<number[]>([]);
   const [showError, setShowError] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -199,7 +199,7 @@ export default function App() {
         setIsExpanded(true);
       }}
       onMouseLeave={() => {
-        setIsExpanded(true);
+        setIsExpanded(false);
       }}
     >
       {/* header */}
@@ -207,6 +207,8 @@ export default function App() {
         css={css`
           position: relative;
           padding: 0 10px;
+          transition: opacity 0.3s 0.3s;
+          opacity: ${isExpanded ? "1" : "0"};
         `}
       >
         <Search />
@@ -382,6 +384,8 @@ export default function App() {
           color: #ffffff;
           display: grid;
           gap: 15px;
+          transition: opacity 0.3s 0.3s;
+          opacity: ${isExpanded ? "1" : "0"};
 
           .none {
             display: none;
