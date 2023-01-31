@@ -43,11 +43,7 @@ export default function Search({ ...props }: SearchProps) {
           color: #ffffff;
           box-sizing: border-box;
         }
-        /* .rs-input-group.rs-input-group-inside
-          .rs-input-group-btn
-          ~ input.rs-input {
-          padding-left: 46px;
-        } */
+
         .rs-input-group {
           border: none;
 

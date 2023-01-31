@@ -1,24 +1,19 @@
 import Browser from "webextension-polyfill";
-import pRetry from "p-retry";
 import { DEFAULT_PINNED_TABS, TAB_ACTION } from "../constant/tabAction";
+import { PinnedTab } from "../content/App";
 import {
   calculateLevel,
   findTabById,
-  getAllChildren,
   handleActiveTabById,
   handleUpdateTabById,
   MyTab,
-  removeTab,
   removeTabOnly,
 } from "../utils/tabs";
 
-let TABS: any[] = [];
-let PINNED_TABS: any[] = [];
+let TABS: MyTab[] = [];
+let PINNED_TABS: PinnedTab[] = [];
 let EXPANDED_TABS: number[] = [];
-let CURRENT_TAB;
 let isFirst = true;
-
-const port = Browser.runtime.connect();
 
 export const setCurrentTab = async (currentTab: MyTab) => {
   return Browser.storage.local.set({ currentTab });

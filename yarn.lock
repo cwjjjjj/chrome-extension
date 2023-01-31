@@ -575,11 +575,6 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/retry@0.12.1":
-  version "0.12.1"
-  resolved "https://npm.midway.run/@types%2fretry/-/retry-0.12.1.tgz#d8f1c0d0dc23afad6dc16a9e993a0865774b4065"
-  integrity sha1-2PHA0Nwjr61twWqemToIZXdLQGU=
-
 "@types/scheduler@*":
   version "0.16.2"
   resolved "https://npm.midway.run/@types%2fscheduler/-/scheduler-0.16.2.tgz"
@@ -1152,14 +1147,6 @@ object-assign@^4.1.1:
   resolved "https://npm.midway.run/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
   integrity sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=
 
-p-retry@^5.1.2:
-  version "5.1.2"
-  resolved "https://npm.midway.run/p-retry/-/p-retry-5.1.2.tgz#c16eaee4f2016f9161d12da40d3b8b0f2e3c1b76"
-  integrity sha512-couX95waDu98NfNZV+i/iLt+fdVxmI7CbrrdC2uDWfPdUAApyxT4wmDlyOtR5KtTDmkDO0zDScDjDou9YHhd9g==
-  dependencies:
-    "@types/retry" "0.12.1"
-    retry "^0.13.1"
-
 parent-module@^1.0.0:
   version "1.0.1"
   resolved "https://npm.midway.run/parent-module/-/parent-module-1.0.1.tgz#691d2709e78c79fae3a156622452d00762caaaa2"
@@ -1308,11 +1295,6 @@ resolve@^1.19.0, resolve@^1.22.1:
     is-core-module "^2.9.0"
     path-parse "^1.0.7"
     supports-preserve-symlinks-flag "^1.0.0"
-
-retry@^0.13.1:
-  version "0.13.1"
-  resolved "https://npm.midway.run/retry/-/retry-0.13.1.tgz#185b1587acf67919d63b357349e03537b2484658"
-  integrity sha1-GFsVh6z2eRnWOzVzSeA1N7JIRlg=
 
 reusify@^1.0.4:
   version "1.0.4"

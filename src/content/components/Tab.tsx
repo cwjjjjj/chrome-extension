@@ -74,6 +74,7 @@ export default function Tab({
         }
       `}
       onClick={onActive}
+      {...props}
     >
       <div className="iconWrapper">
         {data?.favIconUrl ? (

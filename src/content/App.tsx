@@ -110,24 +110,13 @@ export default function App() {
     }
   }, [isEditing]);
 
-  // const listener = (res: any) => {
-  // };
-
   useEffect(() => {
-    // document.body.style.marginLeft = `${isExpanded ? "200px" : "1px"}`;
-    // port.onMessage.addListener(listener);
     return () => {
       port.disconnect();
     };
   }, []);
 
   return (
-    // <Context.Provider
-    //   value={{
-    //     pinnedTabs,
-    //     setPinnedTabs,
-    //   }}
-    // >
     <div
       style={{
         width: `${isExpanded ? "320px" : "15px"}`,
@@ -233,18 +222,6 @@ export default function App() {
               align-items: center;
               box-sizing: border-box;
               background-color: rgba(255, 255, 255, 0.15);
-
-              /* &:hover::after {
-                position: absolute;
-                height: 60px;
-                width: 60px;
-                content: "";
-                border-radius: 12px;
-                background: linear-gradient(to bottom, #fff, transparent);
-                top: -2px;
-                left: -1px;
-                z-index: -1;
-              } */
 
               &:hover {
                 background: linear-gradient(
@@ -512,6 +489,5 @@ export default function App() {
         />
       </main>
     </div>
-    // </Context.Provider>
   );
 }
