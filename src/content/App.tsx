@@ -391,7 +391,7 @@ export default function App() {
       )}
 
       {/* body */}
-      <main
+      <div
         css={css`
           padding-top: 20px;
           font-weight: 500;
@@ -526,7 +526,7 @@ export default function App() {
             );
           }}
         />
-      </main>
+      </div>
     </div>
   );
 }
