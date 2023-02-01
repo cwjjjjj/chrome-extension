@@ -51,9 +51,9 @@ export const DEFAULT_PINNED_TABS = [
 ];
 
 export const SEARCH_ENGINE = {
-  GOOGLE: "https://www.google.com/search?q=",
-  BAIDU: "https://www.baidu.com/s?wd=",
-  BING: "https://www.bing.com/search?q=",
+  Google: "https://www.google.com/search?q=",
+  Baidu: "https://www.baidu.com/s?wd=",
+  Bing: "https://www.bing.com/search?q=",
 };
 
 export const URLRegExp =

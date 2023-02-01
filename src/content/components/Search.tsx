@@ -109,7 +109,7 @@ const Search = forwardRef((props: SearchProps, ref) => {
           height: 32px;
           width: 100%;
           display: grid;
-          grid-template-columns: 1fr 70px;
+          grid-template-columns: 1fr 100px;
           justify-content: center;
           align-items: center;
           padding: 0 10px;
@@ -120,10 +120,23 @@ const Search = forwardRef((props: SearchProps, ref) => {
           }
         }
 
-        .input-value {
+        .search-value {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+        }
+
+        .search-engine-name {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-family: "PingFang SC";
+          font-style: normal;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+          color: #fff;
+          opacity: 0.8;
         }
       `}
     >
@@ -158,9 +171,15 @@ const Search = forwardRef((props: SearchProps, ref) => {
                 onMouseEnter={() => {
                   setCurrentHoverItemIndex(index);
                 }}
+                onClick={() => {
+                  handleSearch(
+                    inputValue,
+                    SearchEngineList[currentHoverItemIndex].url
+                  );
+                }}
               >
-                <span className="input-value">{inputValue}</span>
-                <span>{searchEngine}</span>
+                <span className="search-value">{inputValue}</span>
+                <span className="search-engine-name">{searchEngine}搜索</span>
               </div>
             );
           })}
