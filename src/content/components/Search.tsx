@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import { useRef, useState } from "react";
+import { useRef, useState, forwardRef } from "react";
 import { Input, InputGroup, InputProps } from "rsuite";
 import Browser from "webextension-polyfill";
 import { SEARCH_ENGINE, TAB_ACTION } from "../../constant/tabAction";
@@ -19,10 +19,9 @@ const SearchEngineList = Object.entries(SEARCH_ENGINE).map(
 );
 const SearchEngineListLength = SearchEngineList.length;
 
-export default function Search({ ...props }: SearchProps) {
+const Search = forwardRef((props: SearchProps, ref) => {
   const [inputValue, setInputValue] = useState<string>();
   const [currentHoverItemIndex, setCurrentHoverItemIndex] = useState(0);
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const port = Browser.runtime.connect();
 
   const handleSearch = (value: string, searchEngineUrl?: string) => {
@@ -138,7 +137,7 @@ export default function Search({ ...props }: SearchProps) {
           onChange={(e) => {
             setInputValue(e);
           }}
-          ref={inputRef}
+          ref={ref}
           placeholder="请输入需要查询的内容"
           {...props}
         />
@@ -169,4 +168,6 @@ export default function Search({ ...props }: SearchProps) {
       )}
     </div>
   );
-}
+});
+
+export default Search;

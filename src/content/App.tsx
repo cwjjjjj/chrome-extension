@@ -43,6 +43,16 @@ export default function App() {
   const [isSideBarExpanded, setIsSideBarExpanded] = useState(false);
   const isFirstRef = useRef(true);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const searchRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      console.log("e", e);
+      if ((e.ctrlKey && e.key === "b") || (e.metaKey && e.key === "b")) {
+        searchRef.current?.focus();
+      }
+    });
+  }, []);
 
   const handleSave = async (nextValue: string) => {
     if (!URLRegExp.test(nextValue)) {
@@ -229,7 +239,7 @@ export default function App() {
           opacity: ${isExpanded ? "1" : "0"};
         `}
       >
-        <Search />
+        <Search ref={searchRef} />
         <div
           css={css`
             .DraggableTags {
