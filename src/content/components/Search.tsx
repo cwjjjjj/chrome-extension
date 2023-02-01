@@ -72,7 +72,7 @@ const Search = forwardRef((props: SearchProps, ref) => {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          max-width: 234px;
+          /* max-width: 234px; */
 
           :focus {
             outline: unset;
@@ -154,10 +154,10 @@ const Search = forwardRef((props: SearchProps, ref) => {
           placeholder="请输入需要查询的内容"
           {...props}
         />
-        <InputGroup.Button className="favIcon">
+        {/* <InputGroup.Button className="favIcon">
           <GoogleIcon />
           <SearchEnginePicker />
-        </InputGroup.Button>
+        </InputGroup.Button> */}
       </InputGroup>
       {inputValue && (
         <div className="picker">
