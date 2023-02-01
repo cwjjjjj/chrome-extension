@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Input, InputGroup, InputProps } from "rsuite";
 import Browser from "webextension-polyfill";
 import { SEARCH_ENGINE, TAB_ACTION } from "../../constant/tabAction";
@@ -9,7 +9,17 @@ import SearchIcon from "./SvgComponents/SearchIcon";
 
 export interface SearchProps extends InputProps {}
 
+const SearchEngineList = Object.entries(SEARCH_ENGINE).map(
+  ([searchEngine, url]) => {
+    return {
+      searchEngine,
+      url,
+    };
+  }
+);
+
 export default function Search({ ...props }: SearchProps) {
+  const [inputValue, setInputValue] = useState<string>();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const port = Browser.runtime.connect();
 
@@ -23,17 +33,20 @@ export default function Search({ ...props }: SearchProps) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       // @ts-ignore
-      handleSearch(e.target.value);
-      // @ts-ignore
-      e.target.value = "";
+      handleSearch(inputValue);
+      setInputValue("");
     }
   };
+
   return (
     <div
       css={css`
+        position: relative;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+
         .rs-input {
-          background: rgba(255, 255, 255, 0.15);
-          border-radius: 12px;
+          background: rgba(255, 255, 255, 0);
           height: 46px;
           font-family: "PingFang SC";
           font-style: normal;
@@ -42,6 +55,10 @@ export default function Search({ ...props }: SearchProps) {
           line-height: 22px;
           color: #ffffff;
           box-sizing: border-box;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 234px;
         }
 
         .rs-input-group {
@@ -58,6 +75,37 @@ export default function Search({ ...props }: SearchProps) {
           pointer-events: none;
           box-sizing: border-box;
         }
+
+        .picker {
+          width: 100%;
+          position: absolute;
+          top: 36px;
+          background-color: rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(17.5px);
+          border-radius: 0 0 12px 12px;
+          padding: 10px;
+          z-index: 9999999999;
+        }
+
+        .picker-item {
+          height: 32px;
+          width: 100%;
+          display: grid;
+          grid-template-columns: 1fr 70px;
+          justify-content: center;
+          align-items: center;
+
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+          }
+        }
+
+        .input-value {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       `}
     >
       <InputGroup inside>
@@ -66,15 +114,31 @@ export default function Search({ ...props }: SearchProps) {
         </InputGroup.Button>
         <Input
           onKeyDown={handleKeyDown}
+          value={inputValue}
+          onChange={(e) => {
+            setInputValue(e);
+          }}
           ref={inputRef}
           placeholder="请输入需要查询的内容"
           {...props}
         />
         <InputGroup.Button className="favIcon">
           <GoogleIcon />
-          {/* <SearchEnginePicker /> */}
+          <SearchEnginePicker />
         </InputGroup.Button>
       </InputGroup>
+      {inputValue && (
+        <div className="picker">
+          {SearchEngineList.map(({ searchEngine, url }) => {
+            return (
+              <div key={searchEngine} className="picker-item">
+                <span className="input-value">{inputValue}</span>
+                <span>{searchEngine}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
