@@ -9,7 +9,7 @@ const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <rect width="10" height="10" rx="5" fill="white" fill-opacity="0.15" />
+    <rect width="10" height="10" rx="5" fill="white" fillOpacity="0.15" />
     <path
       d="M7 3L3 7"
       stroke="white"

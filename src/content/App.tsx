@@ -40,6 +40,7 @@ export default function App() {
   const [expandItemValues, setExpandItemValues] = useState<number[]>([]);
   const [showError, setShowError] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSideBarExpanded, setIsSideBarExpanded] = useState(false);
   const isFirstRef = useRef(true);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -88,6 +89,9 @@ export default function App() {
       Browser.storage.local.get(["expandedTabs"]).then((res) => {
         setExpandItemValues(res.expandedTabs);
       });
+      Browser.storage.local.get(["isSideBarExpanded"]).then((res) => {
+        setIsSideBarExpanded(res.isSideBarExpanded);
+      });
       isFirstRef.current = false;
     } else {
       Browser.storage.onChanged.addListener((res) => {
@@ -99,6 +103,9 @@ export default function App() {
         }
         if (res?.expandedTabs) {
           setExpandItemValues(res?.expandedTabs?.newValue);
+        }
+        if (res?.isSideBarExpanded) {
+          setIsSideBarExpanded(res?.isSideBarExpanded?.newValue);
         }
       });
     }
@@ -115,6 +122,16 @@ export default function App() {
       port.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    if (isSideBarExpanded) {
+      setIsExpanded(true);
+      document.body.style.marginLeft = "320px";
+    } else {
+      setIsExpanded(false);
+      document.body.style.marginLeft = "0";
+    }
+  }, [isSideBarExpanded]);
 
   return (
     <div
@@ -188,9 +205,21 @@ export default function App() {
         setIsExpanded(true);
       }}
       onMouseLeave={() => {
-        setIsExpanded(false);
+        if (isSideBarExpanded) {
+          setIsExpanded(true);
+        } else {
+          setIsExpanded(false);
+        }
       }}
     >
+      <button
+        onClick={() => {
+          let newState = !isSideBarExpanded;
+          Browser.storage.local.set({ isSideBarExpanded: newState });
+        }}
+      >
+        pinned
+      </button>
       {/* header */}
       <header
         css={css`
