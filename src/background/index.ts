@@ -139,7 +139,10 @@ Browser.runtime.onConnect.addListener(async (port) => {
       await Browser.tabs.remove(msg.tabIds);
     }
     if (msg.type === TAB_ACTION.CREATE) {
-      await Browser.tabs.create({ active: false, url: msg?.url });
+      await Browser.tabs.create({
+        url: msg?.url,
+        active: msg?.active ? true : false,
+      });
     }
     if (msg.type === TAB_ACTION.ACTIVE) {
       await Browser.tabs.update(msg.tabId, { active: true });

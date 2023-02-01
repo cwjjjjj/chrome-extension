@@ -17,24 +17,39 @@ const SearchEngineList = Object.entries(SEARCH_ENGINE).map(
     };
   }
 );
+const SearchEngineListLength = SearchEngineList.length;
 
 export default function Search({ ...props }: SearchProps) {
   const [inputValue, setInputValue] = useState<string>();
+  const [currentHoverItemIndex, setCurrentHoverItemIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const port = Browser.runtime.connect();
 
-  const handleSearch = (value: string, searchEngine?: string) => {
+  const handleSearch = (value: string, searchEngineUrl?: string) => {
     port.postMessage({
       type: TAB_ACTION.CREATE,
-      url: `${SEARCH_ENGINE.GOOGLE}${value}`,
+      url: `${searchEngineUrl}${value}`,
+      active: true,
     });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       // @ts-ignore
-      handleSearch(inputValue);
+      handleSearch(inputValue, SearchEngineList[currentHoverItemIndex].url);
       setInputValue("");
+    }
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setCurrentHoverItemIndex((prev) =>
+        prev - 1 < 0 ? SearchEngineListLength - 1 : prev - 1
+      );
+    }
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setCurrentHoverItemIndex((prev) =>
+        prev + 1 > SearchEngineListLength - 1 ? 0 : prev + 1
+      );
     }
   };
 
@@ -59,6 +74,10 @@ export default function Search({ ...props }: SearchProps) {
           overflow: hidden;
           text-overflow: ellipsis;
           max-width: 234px;
+
+          :focus {
+            outline: unset;
+          }
         }
 
         .rs-input-group {
@@ -83,7 +102,7 @@ export default function Search({ ...props }: SearchProps) {
           background-color: rgba(255, 255, 255, 0.15);
           backdrop-filter: blur(17.5px);
           border-radius: 0 0 12px 12px;
-          padding: 10px;
+          padding: 10px 0;
           z-index: 9999999999;
         }
 
@@ -94,8 +113,9 @@ export default function Search({ ...props }: SearchProps) {
           grid-template-columns: 1fr 70px;
           justify-content: center;
           align-items: center;
+          padding: 0 10px;
 
-          &:hover {
+          &-active {
             background-color: rgba(0, 0, 0, 0.3);
             cursor: pointer;
           }
@@ -129,9 +149,17 @@ export default function Search({ ...props }: SearchProps) {
       </InputGroup>
       {inputValue && (
         <div className="picker">
-          {SearchEngineList.map(({ searchEngine, url }) => {
+          {SearchEngineList.map(({ searchEngine, url }, index) => {
             return (
-              <div key={searchEngine} className="picker-item">
+              <div
+                key={searchEngine}
+                className={`picker-item ${
+                  index === currentHoverItemIndex ? "picker-item-active" : ""
+                }`}
+                onMouseEnter={() => {
+                  setCurrentHoverItemIndex(index);
+                }}
+              >
                 <span className="input-value">{inputValue}</span>
                 <span>{searchEngine}</span>
               </div>
