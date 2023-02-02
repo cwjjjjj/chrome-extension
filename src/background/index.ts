@@ -81,7 +81,12 @@ Browser.tabs.onCreated.addListener(async (newTab) => {
       TABS = newTabs;
       await setTabs(newTabs);
     }
-    await setTabs(TABS);
+    setTabs(TABS);
+    Browser.storage.local.get(["expandedTabs"]).then((res) => {
+      Browser.storage.local.set({
+        expandedTabs: [...res.expandedTabs, newTab?.openerTabId],
+      });
+    });
   }
   if (!newTab?.openerTabId) {
     const newTabs = [...TABS, newTab];
