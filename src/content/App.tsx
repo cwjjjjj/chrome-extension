@@ -3,6 +3,7 @@ import Browser, { Tabs } from "webextension-polyfill";
 import { useState } from "react";
 import {
   ADD_ICON_POSITION,
+  SearchEngine,
   TAB_ACTION,
   URLRegExp,
 } from "../constant/tabAction";
@@ -40,8 +41,22 @@ export default function App() {
   const [expandItemValues, setExpandItemValues] = useState<number[]>([]);
   const [showError, setShowError] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSideBarExpanded, setIsSideBarExpanded] = useState(false);
+  const [currentSearchEngine, setCurrentSearchEngine] = useState<SearchEngine>(
+    {}
+  );
   const isFirstRef = useRef(true);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const searchRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      console.log("e", e);
+      if ((e.ctrlKey && e.key === "b") || (e.metaKey && e.key === "b")) {
+        searchRef.current?.focus();
+      }
+    });
+  }, []);
 
   const handleSave = async (nextValue: string) => {
     if (!URLRegExp.test(nextValue)) {
@@ -88,6 +103,12 @@ export default function App() {
       Browser.storage.local.get(["expandedTabs"]).then((res) => {
         setExpandItemValues(res.expandedTabs);
       });
+      Browser.storage.local.get(["isSideBarExpanded"]).then((res) => {
+        setIsSideBarExpanded(res.isSideBarExpanded);
+      });
+      Browser.storage.local.get(["currentSearchEngine"]).then((res) => {
+        setCurrentSearchEngine(res.currentSearchEngine);
+      });
       isFirstRef.current = false;
     } else {
       Browser.storage.onChanged.addListener((res) => {
@@ -99,6 +120,12 @@ export default function App() {
         }
         if (res?.expandedTabs) {
           setExpandItemValues(res?.expandedTabs?.newValue);
+        }
+        if (res?.isSideBarExpanded) {
+          setIsSideBarExpanded(res?.isSideBarExpanded?.newValue);
+        }
+        if (res?.currentSearchEngine) {
+          setCurrentSearchEngine(res?.currentSearchEngine?.newValue);
         }
       });
     }
@@ -115,6 +142,16 @@ export default function App() {
       port.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    if (isSideBarExpanded) {
+      setIsExpanded(true);
+      document.body.style.marginLeft = "320px";
+    } else {
+      setIsExpanded(false);
+      document.body.style.marginLeft = "0";
+    }
+  }, [isSideBarExpanded]);
 
   return (
     <div
@@ -188,9 +225,21 @@ export default function App() {
         setIsExpanded(true);
       }}
       onMouseLeave={() => {
-        setIsExpanded(false);
+        if (isSideBarExpanded) {
+          setIsExpanded(true);
+        } else {
+          setIsExpanded(false);
+        }
       }}
     >
+      <button
+        onClick={() => {
+          let newState = !isSideBarExpanded;
+          Browser.storage.local.set({ isSideBarExpanded: newState });
+        }}
+      >
+        pinned
+      </button>
       {/* header */}
       <header
         css={css`
@@ -200,7 +249,11 @@ export default function App() {
           opacity: ${isExpanded ? "1" : "0"};
         `}
       >
-        <Search />
+        <Search
+          ref={searchRef}
+          currentSearchEngine={currentSearchEngine}
+          // setCurrentSearchEngine={setCurrentSearchEngine}
+        />
         <div
           css={css`
             .DraggableTags {
@@ -352,7 +405,7 @@ export default function App() {
       )}
 
       {/* body */}
-      <main
+      <div
         css={css`
           padding-top: 20px;
           font-weight: 500;
@@ -487,7 +540,7 @@ export default function App() {
             );
           }}
         />
-      </main>
+      </div>
     </div>
   );
 }

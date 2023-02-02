@@ -81,7 +81,12 @@ Browser.tabs.onCreated.addListener(async (newTab) => {
       TABS = newTabs;
       await setTabs(newTabs);
     }
-    await setTabs(TABS);
+    setTabs(TABS);
+    Browser.storage.local.get(["expandedTabs"]).then((res) => {
+      Browser.storage.local.set({
+        expandedTabs: [...res.expandedTabs, newTab?.openerTabId],
+      });
+    });
   }
   if (!newTab?.openerTabId) {
     const newTabs = [...TABS, newTab];
@@ -139,7 +144,10 @@ Browser.runtime.onConnect.addListener(async (port) => {
       await Browser.tabs.remove(msg.tabIds);
     }
     if (msg.type === TAB_ACTION.CREATE) {
-      await Browser.tabs.create({ active: false, url: msg?.url });
+      await Browser.tabs.create({
+        url: msg?.url,
+        active: msg?.active ? true : false,
+      });
     }
     if (msg.type === TAB_ACTION.ACTIVE) {
       await Browser.tabs.update(msg.tabId, { active: true });
