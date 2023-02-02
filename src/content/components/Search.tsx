@@ -61,17 +61,17 @@ const Search = forwardRef(
     const port = Browser.runtime.connect();
 
     const handleSearch = (value?: string, searchEngineUrl?: string) => {
+      setDefaultSearchEngine();
+      setInputValue("");
+      setIsShowPicker(false);
       if (!inputValue) {
         return;
       }
-      setDefaultSearchEngine();
       port.postMessage({
         type: TAB_ACTION.CREATE,
         url: `${searchEngineUrl}${value}`,
         active: true,
       });
-      setInputValue("");
-      setIsShowPicker(false);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -236,7 +236,6 @@ const Search = forwardRef(
                     setCurrentHoverItemIndex(index);
                   }}
                   onClick={() => {
-                    setIsShowPicker(false);
                     handleSearch(
                       inputValue,
                       SearchEngineList[currentHoverItemIndex].url
