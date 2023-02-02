@@ -1,5 +1,12 @@
 import { css } from "@emotion/react";
-import { useRef, useState, forwardRef, Dispatch } from "react";
+import {
+  useRef,
+  useState,
+  forwardRef,
+  Dispatch,
+  useMemo,
+  useCallback,
+} from "react";
 import { Input, InputGroup, InputProps } from "rsuite";
 import Browser from "webextension-polyfill";
 import {
@@ -9,7 +16,9 @@ import {
 } from "../../constant/tabAction";
 import SearchEnginePicker from "./SearchEnginePicker";
 import GoogleIcon from "./SvgComponents/GoogleIcon";
+import BingIcon from "./SvgComponents/BingIcon";
 import SearchIcon from "./SvgComponents/SearchIcon";
+import BaiduIcon from "./SvgComponents/BaiduIcon";
 
 export interface SearchProps extends InputProps {
   currentSearchEngine: SearchEngine;
@@ -31,6 +40,17 @@ const Search = forwardRef(
     const [inputValue, setInputValue] = useState<string>();
     const [isShowPicker, setIsShowPicker] = useState(false);
     const [currentHoverItemIndex, setCurrentHoverItemIndex] = useState(0);
+    const currentSearchIcon = useCallback(
+      (searchEngine: string) =>
+        searchEngine === "Google" ? (
+          <GoogleIcon />
+        ) : searchEngine === "Baidu" ? (
+          <BaiduIcon />
+        ) : searchEngine === "Bing" ? (
+          <BingIcon />
+        ) : null,
+      []
+    );
     const port = Browser.runtime.connect();
 
     const handleSearch = (value?: string, searchEngineUrl?: string) => {
@@ -42,13 +62,13 @@ const Search = forwardRef(
         url: `${searchEngineUrl}${value}`,
         active: true,
       });
+      setInputValue("");
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
         // @ts-ignore
         handleSearch(inputValue, SearchEngineList[currentHoverItemIndex].url);
-        setInputValue("");
       }
       if (e.key === "ArrowUp") {
         e.preventDefault();
@@ -178,14 +198,10 @@ const Search = forwardRef(
               e.stopPropagation();
               e.preventDefault();
               console.log("cilck");
-              setIsShowPicker(true);
-            }}
-            onBlur={() => {
-              setIsShowPicker(false);
+              setIsShowPicker((prev) => !prev);
             }}
           >
-            <GoogleIcon />
-            {currentSearchEngine.searchEngine}
+            {currentSearchIcon(currentSearchEngine.searchEngine)}
             <SearchEnginePicker />
           </InputGroup.Button>
         </InputGroup>
@@ -214,7 +230,7 @@ const Search = forwardRef(
                   }}
                 >
                   {/* <span className="search-value">{inputValue}</span> */}
-                  <GoogleIcon />
+                  {currentSearchIcon(searchEngine)}
                   <span className="search-engine-name">{searchEngine}</span>
                 </div>
               );
