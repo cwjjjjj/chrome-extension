@@ -9,7 +9,6 @@ import {
 } from "../constant/tabAction";
 import TabsTree from "./components/TabsTree";
 import { css } from "@emotion/react";
-import "rsuite/dist/rsuite.min.css";
 import Tab from "./components/Tab";
 import { getAllChildren, MyTab } from "../utils/tabs";
 import AddPin from "./components/AddPin";
