@@ -50,6 +50,8 @@ export const DEFAULT_PINNED_TABS = [
   },
 ];
 
+export type SearchEngine = Record<string, string>;
+
 export const SEARCH_ENGINE = {
   Google: "https://www.google.com/search?q=",
   Baidu: "https://www.baidu.com/s?wd=",

@@ -3,6 +3,7 @@ import Browser, { Tabs } from "webextension-polyfill";
 import { useState } from "react";
 import {
   ADD_ICON_POSITION,
+  SearchEngine,
   TAB_ACTION,
   URLRegExp,
 } from "../constant/tabAction";
@@ -41,6 +42,9 @@ export default function App() {
   const [showError, setShowError] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSideBarExpanded, setIsSideBarExpanded] = useState(false);
+  const [currentSearchEngine, setCurrentSearchEngine] = useState<SearchEngine>(
+    {}
+  );
   const isFirstRef = useRef(true);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const searchRef = useRef<HTMLInputElement | null>(null);
@@ -102,6 +106,9 @@ export default function App() {
       Browser.storage.local.get(["isSideBarExpanded"]).then((res) => {
         setIsSideBarExpanded(res.isSideBarExpanded);
       });
+      Browser.storage.local.get(["currentSearchEngine"]).then((res) => {
+        setCurrentSearchEngine(res.currentSearchEngine);
+      });
       isFirstRef.current = false;
     } else {
       Browser.storage.onChanged.addListener((res) => {
@@ -116,6 +123,9 @@ export default function App() {
         }
         if (res?.isSideBarExpanded) {
           setIsSideBarExpanded(res?.isSideBarExpanded?.newValue);
+        }
+        if (res?.currentSearchEngine) {
+          setCurrentSearchEngine(res?.currentSearchEngine?.newValue);
         }
       });
     }
@@ -239,7 +249,11 @@ export default function App() {
           opacity: ${isExpanded ? "1" : "0"};
         `}
       >
-        <Search ref={searchRef} />
+        <Search
+          ref={searchRef}
+          currentSearchEngine={currentSearchEngine}
+          // setCurrentSearchEngine={setCurrentSearchEngine}
+        />
         <div
           css={css`
             .DraggableTags {
