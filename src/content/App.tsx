@@ -51,7 +51,6 @@ export default function App() {
 
   useEffect(() => {
     document.addEventListener("keydown", (e) => {
-      console.log("e", e);
       if ((e.ctrlKey && e.key === "b") || (e.metaKey && e.key === "b")) {
         searchRef.current?.focus();
       }

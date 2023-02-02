@@ -51,24 +51,36 @@ const Search = forwardRef(
         ) : null,
       []
     );
+
+    const setDefaultSearchEngine = () => {
+      Browser.storage.local.set({
+        currentSearchEngine: SearchEngineList[currentHoverItemIndex],
+      });
+    };
+
     const port = Browser.runtime.connect();
 
     const handleSearch = (value?: string, searchEngineUrl?: string) => {
       if (!inputValue) {
         return;
       }
+      setDefaultSearchEngine();
       port.postMessage({
         type: TAB_ACTION.CREATE,
         url: `${searchEngineUrl}${value}`,
         active: true,
       });
       setInputValue("");
+      setIsShowPicker(false);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
         // @ts-ignore
         handleSearch(inputValue, SearchEngineList[currentHoverItemIndex].url);
+      }
+      if (e.key === "Escape") {
+        setIsShowPicker(false);
       }
       if (e.key === "ArrowUp") {
         e.preventDefault();
@@ -78,6 +90,9 @@ const Search = forwardRef(
       }
       if (e.key === "ArrowDown") {
         e.preventDefault();
+        if (!isShowPicker) {
+          setIsShowPicker(true);
+        }
         setCurrentHoverItemIndex((prev) =>
           prev + 1 > SearchEngineListLength - 1 ? 0 : prev + 1
         );
@@ -201,7 +216,6 @@ const Search = forwardRef(
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
-              console.log("cilck");
               setIsShowPicker((prev) => !prev);
             }}
           >
@@ -222,10 +236,6 @@ const Search = forwardRef(
                     setCurrentHoverItemIndex(index);
                   }}
                   onClick={() => {
-                    Browser.storage.local.set({
-                      currentSearchEngine:
-                        SearchEngineList[currentHoverItemIndex],
-                    });
                     setIsShowPicker(false);
                     handleSearch(
                       inputValue,
