@@ -20,6 +20,7 @@ import TagBanner from "./components/TagBanner";
 import ArrowIcon from "./components/SvgComponents/ArrowIcon";
 import { Input, InputGroup } from "rsuite";
 import LinkIcon from "./components/SvgComponents/LinkIcon";
+import PinSvgIcon from "./components/SvgComponents/PinSvgIcon";
 
 export interface PinnedTab {
   url: string;
@@ -168,7 +169,7 @@ export default function App() {
         backgroundColor: "rgba(0,0,0,.25)",
         transform: "translateZ(0)",
         borderRadius: "0 8px 8px 0 ",
-        paddingBlock: "20px",
+        paddingTop: "20px",
         boxSizing: "border-box",
       }}
       css={css`
@@ -182,8 +183,8 @@ export default function App() {
         .rs-tree {
           /* padding-block 20px ,header-height 186px ,banner 36px ,link-input 80px */
           height: ${isEditing
-            ? "calc(100vh - 40px - 186px - 36px - 70px) !important"
-            : "calc(100vh - 40px - 186px - 36px) !important"};
+            ? "calc(100vh - 40px - 186px - 36px - 70px - 42px) !important"
+            : "calc(100vh - 40px - 186px - 36px - 42px) !important"};
           max-height: unset;
           overflow: hidden auto;
         }
@@ -231,14 +232,6 @@ export default function App() {
         }
       }}
     >
-      <button
-        onClick={() => {
-          let newState = !isSideBarExpanded;
-          Browser.storage.local.set({ isSideBarExpanded: newState });
-        }}
-      >
-        pinned
-      </button>
       {/* header */}
       <header
         css={css`
@@ -540,6 +533,30 @@ export default function App() {
           }}
         />
       </div>
+      <footer
+        css={css`
+          height: 42px;
+          width: 100%;
+          background: rgba(255, 255, 255, 0.4);
+          display: grid;
+          align-items: center;
+          justify-content: center;
+          position: absolute;
+          bottom: 0;
+          opacity: ${isExpanded ? "1" : "0"};
+          transition: opacity 0.6s;
+
+          :hover {
+            cursor: pointer;
+          }
+        `}
+        onClick={() => {
+          let newState = !isSideBarExpanded;
+          Browser.storage.local.set({ isSideBarExpanded: newState });
+        }}
+      >
+        <PinSvgIcon fill={isSideBarExpanded ? "white" : "none"} />
+      </footer>
     </div>
   );
 }
