@@ -113,6 +113,10 @@ const Search = forwardRef(
 
           .rs-input-group {
             border: none;
+            :focus-within,
+            :not(.rs-input-group-disabled).rs-input-group-focus {
+              outline: unset !important;
+            }
 
             &-focus {
               outline: none !important;
@@ -133,7 +137,7 @@ const Search = forwardRef(
           .picker {
             width: 141px;
             position: absolute;
-            top: 46px;
+            top: 51px;
             right: 0;
             background-color: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(17.5px);
