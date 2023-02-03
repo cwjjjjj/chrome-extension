@@ -220,7 +220,7 @@ const Search = forwardRef(
               setIsShowPicker((prev) => !prev);
             }}
           >
-            {currentSearchIcon(currentSearchEngine.searchEngine)}
+            {currentSearchIcon(currentSearchEngine?.searchEngine)}
             <SearchEnginePicker />
           </InputGroup.Button>
         </InputGroup>

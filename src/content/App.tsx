@@ -20,6 +20,7 @@ import ArrowIcon from "./components/SvgComponents/ArrowIcon";
 import { Input, InputGroup } from "rsuite";
 import LinkIcon from "./components/SvgComponents/LinkIcon";
 import PinSvgIcon from "./components/SvgComponents/PinSvgIcon";
+import { NoiseBg } from "../assets/NoiseBg";
 
 export interface PinnedTab {
   url: string;
@@ -42,9 +43,9 @@ export default function App() {
   const [showError, setShowError] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSideBarExpanded, setIsSideBarExpanded] = useState(false);
-  const [currentSearchEngine, setCurrentSearchEngine] = useState<SearchEngine>(
-    {}
-  );
+  const [currentSearchEngine, setCurrentSearchEngine] = useState<SearchEngine>({
+    searchEngine: "Google",
+  });
   const isFirstRef = useRef(true);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const searchRef = useRef<HTMLInputElement | null>(null);
@@ -165,9 +166,13 @@ export default function App() {
         transition: `${isExpanded ? "all .6s" : "all .6s .3s"}`,
         opacity: `${isExpanded ? 1 : 0.5}`,
         backdropFilter: "blur(80px)",
-        backgroundColor: "rgba(0,0,0,.25)",
+        backgroundColor: `${
+          isSideBarExpanded ? "#A6CCB5" : "rgba(0, 0, 0, 0.25) "
+        }`,
+        backgroundImage: `${isSideBarExpanded ? NoiseBg : ""}`,
+        backgroundBlendMode: "soft-light",
+        backgroundSize: "contain",
         transform: "translateZ(0)",
-        borderRadius: "0 8px 8px 0 ",
         paddingTop: "20px",
         boxSizing: "border-box",
       }}
