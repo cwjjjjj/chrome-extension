@@ -53,6 +53,7 @@ export default function Tab({
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          margin-bottom: 0;
         }
 
         .iconWrapper {
