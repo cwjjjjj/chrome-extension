@@ -4,12 +4,19 @@ import { crx } from "@crxjs/vite-plugin";
 import manifest from "./manifest.json";
 
 export default defineConfig({
-  plugins: [react(), crx({ manifest })],
+  plugins: [
+    react({
+      jsxImportSource: "@emotion/react",
+      babel: {
+        plugins: ["@emotion/babel-plugin"],
+      },
+    }),
+    crx({ manifest }),
+  ],
   esbuild: {
     jsxFactory: "jsx",
     jsxInject: `
       import React from 'react'  
-      import { jsx } from '@emotion/react'
     `,
   },
 });

@@ -1,95 +1,137 @@
 import Browser from "webextension-polyfill";
-import pRetry from "p-retry";
-import { TAB_ACTION } from "../constant/tabAction";
-import { MyTab, removeTab } from "../utils/tabs";
+import { DEFAULT_PINNED_TABS, TAB_ACTION } from "../constant/tabAction";
+import { PinnedTab } from "../content/App";
+import {
+  calculateLevel,
+  findTabById,
+  handleActiveTabById,
+  handleUpdateTabById,
+  MyTab,
+  removeTabOnly,
+} from "../utils/tabs";
 
-let TABS: any[] = [];
+let TABS: MyTab[] = [];
+let PINNED_TABS: PinnedTab[] = [];
+let EXPANDED_TABS: number[] = [];
 let isFirst = true;
 
-const port = Browser.runtime.connect();
+export const setCurrentTab = async (currentTab: MyTab) => {
+  return Browser.storage.local.set({ currentTab });
+};
+
+export const setExpandedTabs = async (expandedTabs: number[]) => {
+  return Browser.storage.local.set({ expandedTabs });
+};
 
 const getAllTabs = async () => {
-  const tabs = await Browser.tabs.query({ currentWindow: true });
+  const tabs = await Browser.tabs.query({});
   return tabs;
 };
 
 export const setTabs = async (tabs: MyTab[]) => {
-  return Browser.storage.local.set({ tabs });
+  const tabsWithLevels = calculateLevel(tabs, 1);
+  return Browser.storage.local.set({ tabs: tabsWithLevels });
 };
 
-const clearStorage = () => {
-  return Browser.storage.local.clear();
+export const setPinnedTabs = async (pinnedTabs: any[]) => {
+  return Browser.storage.local.set({ pinnedTabs });
 };
-clearStorage();
+
+Browser.runtime.onInstalled.addListener((detail) => {
+  PINNED_TABS = DEFAULT_PINNED_TABS;
+  setPinnedTabs(PINNED_TABS);
+});
 
 const updateTabs = async () => {
-  console.log("isFirst", isFirst);
+  const { pinnedTabs } = await Browser.storage.local.get(["pinnedTabs"]),
+    PINNED_TABS = pinnedTabs;
+
   if (isFirst) {
     TABS = await getAllTabs();
-    await setTabs(TABS);
+    await Promise.all([
+      setTabs(TABS),
+      setPinnedTabs(PINNED_TABS),
+      setExpandedTabs(EXPANDED_TABS),
+    ]);
     isFirst = false;
   } else {
-    const { tabs } = await Browser.storage.local.get(["tabs"]);
+    const [{ tabs }, { expandedTabs }] = await Promise.all([
+      Browser.storage.local.get(["tabs"]),
+      Browser.storage.local.get(["expandedTabs"]),
+    ]);
     TABS = tabs;
+    EXPANDED_TABS = expandedTabs;
   }
-  console.log("storage new tabs", TABS);
 };
 
-Browser.tabs.onCreated.addListener(async (res) => {
-  const newTabs = [...TABS, res];
-  await setTabs(newTabs);
-  console.log("tab created", Date.now(), res, TABS, TABS);
+Browser.tabs.onCreated.addListener(async (newTab) => {
+  if (newTab?.openerTabId) {
+    const parentTab = findTabById(TABS, newTab?.openerTabId as number);
+    if (
+      parentTab &&
+      parentTab?.level &&
+      parentTab.level <= 5 &&
+      newTab.pendingUrl !== "chrome://newtab/"
+    ) {
+      parentTab.children = parentTab?.children
+        ? [...parentTab.children, newTab]
+        : [newTab];
+    } else {
+      const newTabs = [...TABS, newTab];
+      TABS = newTabs;
+      await setTabs(newTabs);
+    }
+    setTabs(TABS);
+    Browser.storage.local.get(["expandedTabs"]).then((res) => {
+      Browser.storage.local.set({
+        expandedTabs: [...res.expandedTabs, newTab?.openerTabId],
+      });
+    });
+  }
+  if (!newTab?.openerTabId) {
+    const newTabs = [...TABS, newTab];
+    TABS = newTabs;
+    await setTabs(newTabs);
+  }
 });
 
 Browser.tabs.onRemoved.addListener(async (res) => {
-  console.log("tab removed", res);
-  const result = removeTab(TABS as MyTab[], (tab: MyTab) => tab.id !== res);
+  const result = removeTabOnly(TABS, (tab: MyTab) => tab.id !== res);
   TABS = result;
-  console.log("tab removed", result);
   await setTabs(result);
-});
 
-Browser.tabs.onDetached.addListener(async (res) => {
-  console.log("tab detached", res);
-});
-
-Browser.tabs.onActivated.addListener(async (res) => {
-  console.log("tab onActivated", res);
-});
-
-Browser.tabs.onAttached.addListener(async (res) => {
-  console.log("tab onAttached", res);
-});
-
-// Browser.tabs.onHighlighted.addListener(async (res) => {
-//   console.log("tab onHighlighted", res);
-// });
-
-// Browser.tabs.onMoved.addListener(async (res) => {
-//   console.log("tab onMoved", res);
-// });
-
-// Browser.tabs.onReplaced.addListener(async (res) => {
-//   console.log("tab onReplaced", res);
-// });
-
-Browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  console.log("stoarge", TABS);
-  console.log("tab onUpdated", tabId, changeInfo, tab);
-  if (changeInfo?.status === "complete") {
-    const index = TABS.findIndex((item) => item.id === tabId);
-    console.log("find", index, tab);
-    if (index !== -1) {
-      TABS.splice(index, 1, tab);
-      console.log("update", TABS);
-      await setTabs(TABS);
-    }
+  if (EXPANDED_TABS.includes(res)) {
+    EXPANDED_TABS = EXPANDED_TABS.filter((id) => id !== res);
+    await setExpandedTabs(EXPANDED_TABS);
   }
 });
 
-// Browser.tabs.onZoomChange.addListener(async (res) => {
-//   console.log("tab onZoomChange", res);
-// });
+Browser.tabs.onActivated.addListener(async (res) => {
+  handleActiveTabById(TABS, res.tabId);
+  await setTabs(TABS);
+});
+
+Browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  if (changeInfo?.status === "complete" || changeInfo?.favIconUrl) {
+    PINNED_TABS.forEach(async (pinnedTab, index) => {
+      if (tab?.url?.includes(pinnedTab.url)) {
+        if (tab?.favIconUrl) {
+          PINNED_TABS[index].favIconUrl = tab?.favIconUrl;
+        }
+        setPinnedTabs(PINNED_TABS);
+      }
+    });
+
+    handleUpdateTabById(TABS, tab);
+    await setTabs(TABS);
+  }
+});
+
+Browser.storage.local.onChanged.addListener((res) => {
+  if (res?.pinnedTabs) {
+    PINNED_TABS = res.pinnedTabs.newValue;
+  }
+});
 
 Browser.runtime.onConnect.addListener(async (port) => {
   /**
@@ -102,10 +144,13 @@ Browser.runtime.onConnect.addListener(async (port) => {
       await Browser.tabs.remove(msg.tabIds);
     }
     if (msg.type === TAB_ACTION.CREATE) {
-      console.log("create");
-      await Browser.tabs.create({ active: false });
+      await Browser.tabs.create({
+        url: msg?.url,
+        active: msg?.active ? true : false,
+      });
     }
-    // getAllTabs();
-    // port.postMessage(tabs);
+    if (msg.type === TAB_ACTION.ACTIVE) {
+      await Browser.tabs.update(msg.tabId, { active: true });
+    }
   });
 });
