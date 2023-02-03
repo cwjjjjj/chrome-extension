@@ -992,12 +992,12 @@
   --rs-calendar-date-selected-text: #0f131a;
   --rs-popover-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
-*,
+/* *,
 :after,
 :before {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-}
+} */
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

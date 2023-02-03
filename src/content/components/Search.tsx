@@ -107,6 +107,12 @@ const Search = forwardRef(
           background: rgba(255, 255, 255, 0.15);
           border-radius: 12px;
 
+          .rs-input-group.rs-input-group-inside .rs-input-group-btn:focus,
+          .rs-input-group.rs-input-group-inside .rs-input-group-btn:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+          }
+
           .rs-input {
             background: rgba(255, 255, 255, 0);
             height: 46px;

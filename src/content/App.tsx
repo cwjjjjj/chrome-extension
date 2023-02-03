@@ -42,7 +42,7 @@ export default function App() {
   const [expandItemValues, setExpandItemValues] = useState<number[]>([]);
   const [showError, setShowError] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [isSideBarExpanded, setIsSideBarExpanded] = useState(false);
+  const [isSideBarExpanded, setIsSideBarExpanded] = useState(true);
   const [currentSearchEngine, setCurrentSearchEngine] = useState<SearchEngine>({
     searchEngine: "Google",
   });
@@ -165,7 +165,7 @@ export default function App() {
         overflow: "hidden",
         transition: `${isExpanded ? "all .6s" : "all .6s .3s"}`,
         opacity: `${isExpanded ? 1 : 0.5}`,
-        backdropFilter: "blur(80px)",
+        backdropFilter: `${isSideBarExpanded ? "none" : "blur(80px)"}`,
         backgroundColor: `${
           isSideBarExpanded ? "#A6CCB5" : "rgba(0, 0, 0, 0.25) "
         }`,
@@ -237,7 +237,7 @@ export default function App() {
       }}
     >
       {/* header */}
-      <header
+      <div
         css={css`
           position: relative;
           padding: 0 10px;
@@ -323,7 +323,7 @@ export default function App() {
             `}
           />
         )}
-      </header>
+      </div>
       {isEditing && (
         <div
           css={css`
@@ -537,7 +537,7 @@ export default function App() {
           }}
         />
       </div>
-      <footer
+      <div
         css={css`
           height: 42px;
           width: 100%;
@@ -560,7 +560,7 @@ export default function App() {
         }}
       >
         <PinSvgIcon fill={isSideBarExpanded ? "white" : "none"} />
-      </footer>
+      </div>
     </div>
   );
 }

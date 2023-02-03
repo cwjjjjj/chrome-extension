@@ -36,7 +36,7 @@ export default function Tab({
         font-family: "PingFang SC";
         font-style: normal;
         font-weight: 500;
-        font-size: 16px;
+        font-size: 14px;
         line-height: 22px;
         color: #ffffff;
 
