@@ -195,6 +195,7 @@ export default function App() {
 
         input::placeholder {
           color: white;
+          font-size: 14px;
         }
 
         * {
@@ -374,7 +375,7 @@ export default function App() {
               onKeyDown={handleKeyDown}
               ref={inputRef}
               placeholder="请输入需要固定的快捷入口"
-              defaultValue="https://"
+              defaultValue="https://www."
               css={css`
                 background: linear-gradient(
                   180deg,
@@ -539,7 +540,7 @@ export default function App() {
       </div>
       <div
         css={css`
-          height: 42px;
+          height: 30px;
           width: 100%;
           background: rgba(255, 255, 255, 0.4);
           display: grid;
