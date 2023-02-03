@@ -33,6 +33,12 @@ export default function Tab({
         grid-template-columns: 20px ${240 - paddingLeft}px;
         align-items: center;
         gap: 5px;
+        font-family: "PingFang SC";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 22px;
+        color: #ffffff;
 
         &:hover {
           grid-template-columns: 20px ${190 - paddingLeft}px 25px 25px;
@@ -53,13 +59,13 @@ export default function Tab({
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          margin-bottom: 0;
+          margin: 0;
         }
 
         .iconWrapper {
           display: flex;
           justify-content: center;
-          align-items: center;
+          align-items: block;
         }
 
         .iconImg {
