@@ -6,7 +6,7 @@
     "48": "logo.png",
     "128": "logo.png"
   },
-  "name": "NaviTab-树状标签页层级管理",
+  "name": "NaviTab-侧边栏树状Tab管理",
   "version": "1.1.0",
   "action": { "default_popup": "index.html" },
   "content_scripts": [

@@ -11,7 +11,7 @@ const [major, minor, patch, label = "0"] = version
 
 export default defineManifest(async (env) => ({
   manifest_version: 3,
-  name: env.mode === "staging" ? "[INTERNAL] Navi Tab" : "Navi Tab",
+  name: env.mode === "staging" ? "[INTERNAL]Navi Tab" : "NaviTab",
   // up to four numbers separated by dots
   version: `${major}.${minor}.${patch}.${label}`,
   // semver is OK in "version_name"
