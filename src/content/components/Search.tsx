@@ -40,17 +40,18 @@ const Search = forwardRef(
     const [inputValue, setInputValue] = useState<string>();
     const [isShowPicker, setIsShowPicker] = useState(false);
     const [currentHoverItemIndex, setCurrentHoverItemIndex] = useState(0);
-    const currentSearchIcon = useCallback(
-      (searchEngine: string) =>
-        searchEngine === "Google" ? (
-          <GoogleIcon />
-        ) : searchEngine === "Baidu" ? (
-          <BaiduIcon />
-        ) : searchEngine === "Bing" ? (
-          <BingIcon />
-        ) : null,
-      []
-    );
+    const currentSearchIcon = useCallback((searchEngine: string) => {
+      if (!searchEngine) {
+        return <GoogleIcon />;
+      }
+      return searchEngine === "Google" ? (
+        <GoogleIcon />
+      ) : searchEngine === "Baidu" ? (
+        <BaiduIcon />
+      ) : searchEngine === "Bing" ? (
+        <BingIcon />
+      ) : null;
+    }, []);
 
     const setDefaultSearchEngine = () => {
       Browser.storage.local.set({
