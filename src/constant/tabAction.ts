@@ -56,6 +56,7 @@ export const SEARCH_ENGINE = {
   Google: "https://www.google.com/search?q=",
   Baidu: "https://www.baidu.com/s?wd=",
   Bing: "https://www.bing.com/search?q=",
+  JueJin: "https://juejin.cn/search?query=",
 };
 
 export const URLRegExp =
