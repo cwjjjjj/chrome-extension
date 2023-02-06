@@ -133,24 +133,41 @@ Browser.storage.local.onChanged.addListener((res) => {
   }
 });
 
-Browser.runtime.onConnect.addListener(async (port) => {
-  /**
-   * 创建新标签时 更新其他页面的 tabs 数据 ，此时可以获取到新 tab 的 title 等信息
-   * 在 tabs onCreated 时 tab 在 loading 中无法获取到 title
-   */
+// Browser.runtime.onConnect.addListener(async (port) => {
+//   /**
+//    * 创建新标签时 更新其他页面的 tabs 数据 ，此时可以获取到新 tab 的 title 等信息
+//    * 在 tabs onCreated 时 tab 在 loading 中无法获取到 title
+//    */
+//   await updateTabs();
+//   port.onMessage.addListener(async (msg: Record<string, any>) => {
+//     if (msg.type === TAB_ACTION.REMOVE) {
+//       await Browser.tabs.remove(msg.tabIds);
+//     }
+//     if (msg.type === TAB_ACTION.CREATE) {
+//       await Browser.tabs.create({
+//         url: msg?.url,
+//         active: msg?.active ? true : false,
+//       });
+//     }
+//     if (msg.type === TAB_ACTION.ACTIVE) {
+//       await Browser.tabs.update(msg.tabId, { active: true });
+//     }
+//   });
+// });
+
+Browser.runtime.onMessage.addListener(async (msg: Record<string, any>) => {
   await updateTabs();
-  port.onMessage.addListener(async (msg: Record<string, any>) => {
-    if (msg.type === TAB_ACTION.REMOVE) {
-      await Browser.tabs.remove(msg.tabIds);
-    }
-    if (msg.type === TAB_ACTION.CREATE) {
-      await Browser.tabs.create({
-        url: msg?.url,
-        active: msg?.active ? true : false,
-      });
-    }
-    if (msg.type === TAB_ACTION.ACTIVE) {
-      await Browser.tabs.update(msg.tabId, { active: true });
-    }
-  });
+  if (msg.type === TAB_ACTION.REMOVE) {
+    await Browser.tabs.remove(msg.tabIds);
+  }
+  if (msg.type === TAB_ACTION.CREATE) {
+    await Browser.tabs.create({
+      url: msg?.url,
+      active: msg?.active ? true : false,
+    });
+  }
+  if (msg.type === TAB_ACTION.ACTIVE) {
+    console.log("active");
+    await Browser.tabs.update(msg.tabId, { active: true });
+  }
 });

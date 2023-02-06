@@ -21,6 +21,7 @@ import { Input, InputGroup } from "rsuite";
 import LinkIcon from "./components/SvgComponents/LinkIcon";
 import PinSvgIcon from "./components/SvgComponents/PinSvgIcon";
 import { NoiseBg } from "../assets/NoiseBg";
+import { postMessage } from "../utils/postMessage";
 
 export interface PinnedTab {
   url: string;
@@ -78,7 +79,7 @@ export default function App() {
       pinnedTabs: res,
     });
 
-    await port.postMessage({
+    await postMessage({
       type: TAB_ACTION.CREATE,
       url: nextValue,
     });
@@ -292,7 +293,7 @@ export default function App() {
                 data={item}
                 key={item.id}
                 onClick={() => {
-                  port.postMessage({
+                  postMessage({
                     type: TAB_ACTION.CREATE,
                     url: item.url,
                   });
@@ -515,19 +516,19 @@ export default function App() {
                     removeIds = [...removeIds, ...childrenIds];
                   }
 
-                  port.postMessage({
+                  postMessage({
                     type: TAB_ACTION.REMOVE,
                     tabIds: removeIds,
                   });
                 }}
                 onRemoveOne={() => {
-                  port.postMessage({
+                  postMessage({
                     type: TAB_ACTION.REMOVE,
                     tabIds: [item.id],
                   });
                 }}
                 onActive={() => {
-                  port.postMessage({
+                  postMessage({
                     type: TAB_ACTION.ACTIVE,
                     tabId: item.id,
                   });
@@ -561,6 +562,7 @@ export default function App() {
         }}
       >
         <PinSvgIcon fill={isSideBarExpanded ? "white" : "none"} />
+        test
       </div>
     </div>
   );

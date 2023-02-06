@@ -19,6 +19,7 @@ import GoogleIcon from "./SvgComponents/GoogleIcon";
 import BingIcon from "./SvgComponents/BingIcon";
 import SearchIcon from "./SvgComponents/SearchIcon";
 import BaiduIcon from "./SvgComponents/BaiduIcon";
+import { postMessage } from "../../utils/postMessage";
 
 export interface SearchProps extends InputProps {
   currentSearchEngine: SearchEngine;
@@ -68,7 +69,7 @@ const Search = forwardRef(
       if (!inputValue) {
         return;
       }
-      port.postMessage({
+      postMessage({
         type: TAB_ACTION.CREATE,
         url: `${searchEngineUrl}${value}`,
         active: true,
