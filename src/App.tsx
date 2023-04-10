@@ -8,7 +8,7 @@ function App() {
         whiteSpace: "nowrap",
       }}
     >
-      NaviTab
+      template
     </div>
   );
 }
